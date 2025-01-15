@@ -46,23 +46,23 @@ const BookPage = async ({
   ]);
   return (
     <div className="flex items-center flex-col py-[2.5%]">
-      {bookDetail !== "Invalid Book" ? (
+      {bookDetail !== "Invalid Book" && bookDetail !== null ? (
         <>
           {viewport === "desktop" && (
             <InfoCard
-              author={bookDetail!.author.name}
-              genres={bookDetail!.genre}
-              status={bookDetail!.status}
-              title={bookDetail!.title}
-              url={bookDetail!.imageUrl}
-              tags={bookDetail!.category}
-              aspectRatio={Number(bookDetail!.aspectRatio)}
-              views={bookDetail!.views}
-              ratings={Number(bookDetail!.Ratings)}
+              author={bookDetail.author.name}
+              genres={bookDetail.genre}
+              status={bookDetail.status}
+              title={bookDetail.title}
+              url={bookDetail.imageUrl}
+              tags={bookDetail.category}
+              aspectRatio={Number(bookDetail.aspectRatio)}
+              views={bookDetail.views}
+              ratings={Number(bookDetail.Ratings)}
               chOne={
-                bookDetail!.chapter.length > 0
-                  ? `/book/${bookDetail!.bookUrl}/${
-                      bookDetail!.chapter.filter((x) => x.number === 1)[0].url
+                bookDetail.chapter.length > 0
+                  ? `/book/${bookDetail.bookUrl}/${
+                      bookDetail.chapter.filter((x) => x.number === 1)[0].url
                     }`
                   : "disabled"
               }
@@ -70,19 +70,19 @@ const BookPage = async ({
           )}
           {viewport === "mobile" && (
             <SmallInfoCard
-              author={bookDetail!.author.name}
-              genres={bookDetail!.genre}
-              status={bookDetail!.status}
-              title={bookDetail!.title}
-              imgUrl={bookDetail!.imageUrl}
-              views={bookDetail!.views}
-              tags={bookDetail!.category}
-              ratings={Number(bookDetail!.Ratings)}
-              aspectRatio={Number(bookDetail!.aspectRatio)}
+              author={bookDetail.author.name}
+              genres={bookDetail.genre}
+              status={bookDetail.status}
+              title={bookDetail.title}
+              imgUrl={bookDetail.imageUrl}
+              views={bookDetail.views}
+              tags={bookDetail.category}
+              ratings={Number(bookDetail.Ratings)}
+              aspectRatio={Number(bookDetail.aspectRatio)}
               chOne={
-                bookDetail!.chapter.length > 0
-                  ? `/book/${bookDetail!.bookUrl}/${
-                      bookDetail!.chapter.filter((x) => x.number === 1)[0].url
+                bookDetail.chapter.length > 0
+                  ? `/book/${bookDetail.bookUrl}/${
+                      bookDetail.chapter.filter((x) => x.number === 1)[0].url
                     }`
                   : "disabled"
               }
@@ -96,23 +96,23 @@ const BookPage = async ({
             <div className="flex colrow justify-between w-[65%] lg:w-[73%] xl:w-[80%] sm:w-full smallmargin">
               <Link
                 href={
-                  bookDetail!.chapter.length > 1
-                    ? `/book/${bookDetail!.bookUrl}/${
-                        bookDetail!.chapter.filter((x) => x.number !== 1)[0].url
+                  bookDetail.chapter.length > 1
+                    ? `/book/${bookDetail.bookUrl}/${
+                        bookDetail.chapter.filter((x) => x.number !== 1)[0].url
                       }`
                     : "#"
                 }
               >
                 <Typography className="text-primary">
-                  {bookDetail!.chapter.length > 1
-                    ? bookDetail!.chapter.filter((x) => x.number !== 1)[0].title
+                  {bookDetail.chapter.length > 1
+                    ? bookDetail.chapter.filter((x) => x.number !== 1)[0].title
                     : `Book is updating...`}
                 </Typography>
               </Link>
               <Typography>
-                {bookDetail!.chapter.length > 1
+                {bookDetail.chapter.length > 1
                   ? getTimeDiff(
-                      bookDetail!.chapter.filter((x) => x.number !== 1)[0].addAt
+                      bookDetail.chapter.filter((x) => x.number !== 1)[0].addAt
                     )
                   : `Some days`}
                 &nbsp;ago
@@ -120,16 +120,18 @@ const BookPage = async ({
             </div>
           </div>
           <ChaptersCard
-            book={bookDetail!.id}
-            chapters={bookDetail!._count.chapter}
-            description={String.fromCharCode(...bookDetail!.description)}
+            book={bookDetail.id}
+            chapters={bookDetail._count.chapter}
+            description={String.fromCharCode(...bookDetail.description)}
           />
-          <GradBanner
-            main={`Genre ${like.random}`}
-            sub={`Books you might like`}
-          >
-            <InfoList data={like.data} />
-          </GradBanner>
+          {like !== "Invalid Book" && (
+            <GradBanner
+              main={`Genre ${like.random}`}
+              sub={`Books you might like`}
+            >
+              <InfoList data={like.data} cls="" />
+            </GradBanner>
+          )}
         </>
       ) : (
         <div className="w-ful h-full flex justify-center items-center">
@@ -150,9 +152,9 @@ export async function generateMetadata({
   const { book_name } = await params;
   const book = await fetchBookDetails(book_name);
 
-  if (book !== "Invalid Book") {
+  if (book !== "Invalid Book" && book !== null) {
     return {
-      title: book!.title,
+      title: book.title,
       referrer: "origin-when-cross-origin",
       keywords: [
         "Novel",
@@ -160,15 +162,15 @@ export async function generateMetadata({
         "Novelbin",
         "lightnovel",
         "webnovel",
-        book!.title,
-        ...book!.genre.map((e) => e.name),
+        book.title,
+        ...book.genre.map((e) => e.name),
         //...book!.Tags.split(", "),
       ],
       twitter: {
         card: "summary_large_image",
-        title: book!.title,
-        description: String.fromCharCode(...book!.description),
-        images: [book!.imageUrl], // Must be an absolute URL
+        title: book.title,
+        description: String.fromCharCode(...book.description),
+        images: [book.imageUrl], // Must be an absolute URL
       },
     };
   }

@@ -32,6 +32,7 @@ const DetailCard = ({
       href={`/book/${bookUrl}`}
       color="foreground"
       className="transition-transform duration-700 hover:transform hover:scale-[.99]"
+      prefetch={false}
     >
       <Badge
         color="warning"
