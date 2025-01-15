@@ -11,7 +11,7 @@ import "server-only";
 export const fetchMostPopular = async () => {
   const prisma = new PrismaClient();
   return await prisma.book.findMany({
-    orderBy: { ratings: "desc" },
+    orderBy: [{ ratings: "desc" }, { views: "desc" }],
     take: 12,
     select: {
       bookUrl: true,
@@ -208,18 +208,6 @@ export async function fetchMostPopularBooks(page: number = 1) {
     .then((data) => {
       return Math.ceil(data.length / 20);
     });
-  const finalData: Array<{
-    id: number;
-    title: string;
-    bookUrl: string;
-    imageUrl: string;
-    updatedAt: Date;
-    totalStars: number;
-    userrated: number;
-    aspectRatio: Decimal;
-    status: string;
-    chapters: number;
-  }> = [];
   let bookData: Array<{
     id: number;
     title: string;
@@ -230,6 +218,7 @@ export async function fetchMostPopularBooks(page: number = 1) {
     userrated: number;
     aspectRatio: Decimal;
     status: string;
+    _count: { chapter: number };
   }> = [];
   try {
     if (page > 1) {
@@ -257,6 +246,7 @@ export async function fetchMostPopularBooks(page: number = 1) {
           updatedAt: true,
           userrated: true,
           totalStars: true,
+          _count: { select: { chapter: true } },
         },
       });
     } else {
@@ -1307,4 +1297,31 @@ export async function fetchCategoryFromRoute(route: string) {
   }))!.name;
   await prisma.$disconnect();
   return r;
+}
+
+export async function fetchMatchingBooks(name: string) {
+  const prisma = new PrismaClient();
+  const genres = await prisma.genre.findMany({
+    where: { book: { some: { bookUrl: name } } },
+    select: { name: true },
+  });
+  const random = genres[Math.floor(Math.random() * genres.length) + 1].name;
+  const data = await prisma.book.findMany({
+    orderBy: [{ ratings: "desc" }, { views: "desc" }],
+    where: { genre: { some: { name: random } } },
+    take: 12,
+    select: {
+      bookUrl: true,
+      imageUrl: true,
+      title: true,
+      ratings: true,
+      views: true,
+      status: true,
+      id: true,
+      aspectRatio: true,
+      _count: { select: { chapter: true } },
+    },
+  });
+  await prisma.$disconnect();
+  return { data, random };
 }
