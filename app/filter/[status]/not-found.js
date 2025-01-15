@@ -15,8 +15,12 @@ export default async function NotFound() {
           </div>
           <div className="text-medium font-medium mb-3">
             The requested page{" "}
-            <Chip className="rounded-md px-0" color="primary" variant="flat">
-              {pathname.replaceAll("%20", " ")}
+            <Chip
+              className="rounded-md px-0 line-clamp-1 max-w-full min-w-0"
+              color="primary"
+              variant="flat"
+            >
+              {decodeURI(pathname)}
             </Chip>{" "}
             could not be found. Check that you typed the URL correctly.
           </div>

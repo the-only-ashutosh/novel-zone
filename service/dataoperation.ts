@@ -53,45 +53,49 @@ export async function fetchRecentUpdates() {
 
 export const fetchChapter = async (book_name: string, chapter: string) => {
   const prisma = new PrismaClient();
-
-  return await prisma.chapter
-    .findFirst({
-      where: { book: { bookUrl: book_name }, url: chapter },
-      select: {
-        content: true,
-        title: true,
-        likes: true,
-        addAt: true,
-        number: true,
-        book: { select: { title: true, bookUrl: true } },
-      },
-    })
-    .then(async (chapter) => {
-      if (chapter) {
-        const prev = prisma.chapter.findFirst({
-          where: {
-            number: chapter.number - 1,
-            book: { bookUrl: book_name },
-          },
-          select: { url: true },
-        });
-        const next = prisma.chapter.findFirst({
-          where: {
-            number: chapter.number + 1,
-            book: { bookUrl: book_name },
-          },
-          select: { url: true },
-        });
-        const [prevChapter, nextChapter] = await Promise.all([prev, next]);
-        await prisma.$disconnect();
-        return {
-          ...chapter,
-          content: String.fromCharCode(...chapter.content),
-          prevChapter: prevChapter ? prevChapter.url : null,
-          nextChapter: nextChapter ? nextChapter.url : null,
-        };
-      }
-    });
+  try {
+    return await prisma.chapter
+      .findFirst({
+        where: { book: { bookUrl: book_name }, url: chapter },
+        select: {
+          content: true,
+          title: true,
+          likes: true,
+          addAt: true,
+          number: true,
+          book: { select: { title: true, bookUrl: true } },
+        },
+      })
+      .then(async (chapter) => {
+        if (chapter) {
+          const prev = prisma.chapter.findFirst({
+            where: {
+              number: chapter.number - 1,
+              book: { bookUrl: book_name },
+            },
+            select: { url: true },
+          });
+          const next = prisma.chapter.findFirst({
+            where: {
+              number: chapter.number + 1,
+              book: { bookUrl: book_name },
+            },
+            select: { url: true },
+          });
+          const [prevChapter, nextChapter] = await Promise.all([prev, next]);
+          await prisma.$disconnect();
+          return {
+            ...chapter,
+            content: String.fromCharCode(...chapter.content),
+            prevChapter: prevChapter ? prevChapter.url : null,
+            nextChapter: nextChapter ? nextChapter.url : null,
+          };
+        }
+      });
+  } catch (e) {
+    await prisma.$disconnect();
+    return "Invalid Chapter";
+  }
 };
 
 export async function searchBook(toSearch: string) {
@@ -1301,27 +1305,32 @@ export async function fetchCategoryFromRoute(route: string) {
 
 export async function fetchMatchingBooks(name: string) {
   const prisma = new PrismaClient();
-  const genres = await prisma.genre.findMany({
-    where: { book: { some: { bookUrl: name } } },
-    select: { name: true },
-  });
-  const random = genres[Math.floor(Math.random() * genres.length) + 1].name;
-  const data = await prisma.book.findMany({
-    orderBy: [{ ratings: "desc" }, { views: "desc" }],
-    where: { genre: { some: { name: random } } },
-    take: 12,
-    select: {
-      bookUrl: true,
-      imageUrl: true,
-      title: true,
-      ratings: true,
-      views: true,
-      status: true,
-      id: true,
-      aspectRatio: true,
-      _count: { select: { chapter: true } },
-    },
-  });
-  await prisma.$disconnect();
-  return { data, random };
+  try {
+    const genres = await prisma.genre.findMany({
+      where: { book: { some: { bookUrl: name } } },
+      select: { name: true },
+    });
+    const random = genres[Math.floor(Math.random() * genres.length) + 1].name;
+    const data = await prisma.book.findMany({
+      orderBy: [{ ratings: "desc" }, { views: "desc" }],
+      where: { genre: { some: { name: random } }, bookUrl: { not: name } },
+      take: 12,
+      select: {
+        bookUrl: true,
+        imageUrl: true,
+        title: true,
+        ratings: true,
+        views: true,
+        status: true,
+        id: true,
+        aspectRatio: true,
+        _count: { select: { chapter: true } },
+      },
+    });
+    await prisma.$disconnect();
+    return { data, random };
+  } catch (err) {
+    await prisma.$disconnect();
+    return "Invalid Book";
+  }
 }

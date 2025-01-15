@@ -109,6 +109,7 @@ const ChaptersCard = ({
                         <Link
                           href={`${pathname}/${chapters.url}`}
                           className="line-clamp-1"
+                          prefetch={false}
                         >
                           {chapters.title}
                         </Link>

@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { Card, CardBody, Chip } from "@nextui-org/react";
-import { fetchRandomGenres } from "@/service/dataoperation";
+import { fetchRandomBooks } from "../../../../service/dataoperation";
 import { headers } from "next/headers";
 
 export default async function NotFound() {
-  const data = await fetchRandomGenres();
+  const data = await fetchRandomBooks();
   const headersList = await headers();
 
   const pathname = headersList.get("pathname");
@@ -30,16 +30,16 @@ export default async function NotFound() {
             You could possibly looking for:
           </div>
           <ul className="px-6 mb-3 list-disc">
-            {data.map((genre) => {
+            {data.map((book) => {
               return (
-                <li className="my-1" key={genre.route}>
-                  <Link href={`/filter/genre/${genre.name}`}>
+                <li className="my-1" key={book.id}>
+                  <Link href={`/book/${book.bookUrl}`}>
                     <Chip
-                      className="rounded-md px-0"
+                      className="rounded-md px-0 line-clamp-1 max-w-full min-w-0"
                       color="primary"
                       variant="flat"
                     >
-                      {genre.name}
+                      {book.title}
                     </Chip>
                   </Link>
                 </li>
@@ -47,7 +47,7 @@ export default async function NotFound() {
             })}
           </ul>
           <div className="text-medium font-semibold mb-3">
-            Or, Please visit page :&nbsp;
+            Or, Please visit home :&nbsp;
             <Link href={"/"}>
               <Chip className="rounded-md px-0" color="primary" variant="flat">
                 Home

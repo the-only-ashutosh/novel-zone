@@ -18,9 +18,9 @@ type bookData = {
   };
 };
 
-const InfoList = ({ data }: { data: Array<bookData> }) => {
+const InfoList = ({ data, cls }: { data: Array<bookData>; cls: string }) => {
   return (
-    <Grid className="mx-[5%] grid justify-center gap-4 maingrid">
+    <Grid className={`grid justify-center gap-4 maingrid ${cls}`}>
       {data.map((book) => {
         return (
           <InfoCard
