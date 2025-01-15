@@ -208,18 +208,6 @@ export async function fetchMostPopularBooks(page: number = 1) {
     .then((data) => {
       return Math.ceil(data.length / 20);
     });
-  const finalData: Array<{
-    id: number;
-    title: string;
-    bookUrl: string;
-    imageUrl: string;
-    updatedAt: Date;
-    totalStars: number;
-    userrated: number;
-    aspectRatio: Decimal;
-    status: string;
-    chapters: number;
-  }> = [];
   let bookData: Array<{
     id: number;
     title: string;
@@ -230,6 +218,7 @@ export async function fetchMostPopularBooks(page: number = 1) {
     userrated: number;
     aspectRatio: Decimal;
     status: string;
+    _count: { chapter: number };
   }> = [];
   try {
     if (page > 1) {
@@ -257,6 +246,7 @@ export async function fetchMostPopularBooks(page: number = 1) {
           updatedAt: true,
           userrated: true,
           totalStars: true,
+          _count: { select: { chapter: true } },
         },
       });
     } else {
