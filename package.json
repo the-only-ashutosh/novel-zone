@@ -1,0 +1,64 @@
+{
+  "name": "novel-zone",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.13.5",
+    "@emotion/styled": "^11.13.5",
+    "@mui/icons-material": "^6.2.0",
+    "@mui/material": "^6.1.10",
+    "@nextui-org/react": "^2.6.3",
+    "@prisma/client": "^6.1.0",
+    "axios": "^1.7.9",
+    "classnames": "^2.5.1",
+    "clsx": "^2.1.1",
+    "cookies-next": "^5.0.2",
+    "critters": "^0.0.23",
+    "framer-motion": "^12.0.0-alpha.0",
+    "next": "^15.2.0-canary.6",
+    "next-themes": "^0.4.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-icons": "^5.4.0",
+    "react-transition-group": "^4.4.5",
+    "react-window": "^1.8.11",
+    "styled-components": "^6.1.13",
+    "tailwind-merge": "^2.5.5",
+    "unfetch": "^5.0.0"
+  },
+  "overrides": {
+    "cookies-next": {
+      "next": "^15.2.0-canary.6"
+    },
+    "@emotion/react": {
+      "react": "^19.0.0",
+      "react-dom": "^19.0.0"
+    },
+    "@emotion/styled": {
+      "react": "^19.0.0",
+      "react-dom": "^19.0.0"
+    },
+    "@nextui-org/react": {
+      "react": "^19.0.0",
+      "react-dom": "^19.0.0"
+    }
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@types/react-window": "^1.8.8",
+    "eslint": "^8",
+    "eslint-config-next": "15.0.3",
+    "postcss": "^8",
+    "prisma": "^6.0.1",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
+}
