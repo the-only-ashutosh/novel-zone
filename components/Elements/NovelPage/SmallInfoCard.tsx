@@ -62,10 +62,12 @@ const SmallInfoCard = ({
                 {author}
               </Link>
             </h3>
-            <GenreGrid genres={genres} />
-            <ScrollShadow hideScrollBar className="h-[50px]" size={10}>
-              <CategoryGrid category={tags} />
-            </ScrollShadow>
+            {genres.length > 0 && <GenreGrid genres={genres} />}
+            {tags.length > 0 && (
+              <ScrollShadow hideScrollBar className="h-[50px]" size={10}>
+                <CategoryGrid category={tags} />
+              </ScrollShadow>
+            )}
             <h3 className="mt-1">
               Status:&nbsp;
               {

@@ -1,12 +1,18 @@
 import React from "react";
 import dynamic from "next/dynamic";
-import { addView, fetchBookDetails } from "@/service/dataoperation";
+import {
+  addView,
+  fetchBookDetails,
+  fetchMatchingBooks,
+} from "@/service/dataoperation";
 import AutoStoriesRoundedIcon from "@mui/icons-material/AutoStoriesRounded";
 import { Typography } from "@mui/material";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getTimeDiff } from "@/service/functions";
 import { notFound } from "next/navigation";
+import GradBanner from "@/components/Shared/GradBanner";
+import InfoList from "@/components/Elements/InfoCard/InfoList";
 const ChaptersCard = dynamic(
   () => import("@/components/Elements/NovelPage/ChaptersCard")
 );
@@ -31,9 +37,11 @@ const BookPage = async ({
   const { book_name } = await params;
   const v = searchParams;
   const b = fetchBookDetails(book_name);
-  const [bookDetail, { viewport }] = await Promise.all([
+  const m = fetchMatchingBooks(book_name);
+  const [bookDetail, { viewport }, like] = await Promise.all([
     b,
     v,
+    m,
     addView(book_name),
   ]);
   return (
@@ -116,6 +124,12 @@ const BookPage = async ({
             chapters={bookDetail!._count.chapter}
             description={String.fromCharCode(...bookDetail!.description)}
           />
+          <GradBanner
+            main={`Genre ${like.random}`}
+            sub={`Books you might like`}
+          >
+            <InfoList data={like.data} />
+          </GradBanner>
         </>
       ) : (
         <div className="w-ful h-full flex justify-center items-center">
