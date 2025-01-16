@@ -1,22 +1,22 @@
 import React from "react";
 import type { Metadata } from "next";
-// import localFont from "next/font/local";
+import localFont from "next/font/local";
 import { Providers } from "./providers";
 import "./globals.css";
 import Appbar from "@/components/Shared/Appbar/Appbar";
 import Footer from "./Footer";
 import { headers } from "next/headers";
 
-// const geistSans = localFont({
-//   src: "./fonts/GeistVF.woff",
-//   variable: "--font-geist-sans",
-//   weight: "100 900",
-// });
-// const geistMono = localFont({
-//   src: "./fonts/GeistMonoVF.woff",
-//   variable: "--font-geist-mono",
-//   weight: "100 900",
-// });
+const geistSans = localFont({
+  src: "./fonts/GeistVF.woff",
+  variable: "--font-geist-sans",
+  weight: "100 900",
+});
+const geistMono = localFont({
+  src: "./fonts/GeistMonoVF.woff",
+  variable: "--font-geist-mono",
+  weight: "100 900",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -38,7 +38,7 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${/*geistSans.variable} ${geistMono.variable*/} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
           <Appbar viewport={viewport} />
