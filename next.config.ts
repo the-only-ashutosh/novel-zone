@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
     domains: ["nextui.org", "idoxbjg.sufydely.com"],
   },
   compiler: {
-    // removeConsole: true,
+    removeConsole: true,
   },
   reactStrictMode: true,
   experimental: {
