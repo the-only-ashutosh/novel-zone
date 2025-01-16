@@ -18,7 +18,7 @@ const ChapterContent = ({
       id="content-page"
       className={`mx-[5%] sm:mx-[2%] md:mx-[3.5%] max-w-[-moz-available] my-6 ${getVar(
         fStyle
-      )}`}
+      )} w-full`}
       style={{ fontSize: `${fSize}px`, lineHeight: "160%", marginTop: "15px" }}
     >
       <h2 className="mb-[12px] font-bold text-2xl dark:text-[#F5F5F5]">

@@ -1310,7 +1310,7 @@ export async function fetchMatchingBooks(name: string) {
       where: { book: { some: { bookUrl: name } } },
       select: { name: true },
     });
-    const random = genres[Math.floor(Math.random() * genres.length) + 1].name;
+    const random = genres[Math.floor(Math.random() * genres.length)].name;
     const data = await prisma.book.findMany({
       orderBy: [{ ratings: "desc" }, { views: "desc" }],
       where: { genre: { some: { name: random } }, bookUrl: { not: name } },
