@@ -14,6 +14,9 @@ export const metadata: Metadata = {
   authors: [{ name: "Ashutosh" }],
   description:
     "Your stop to read novels at single stop. Read light novel, web novel, korean novel and chinese novel online for free. You can find hundreds of english translated light novel, web novel, korean novel and chinese novel which are daily updated! Read novels online, read light novel online, read online free, free light novel online. ",
+  other: {
+    "google-site-verification": "ooyq9xvP1155LRyWJpGkd_BehUDxYoLZkkbdVr--YqY",
+  },
 };
 
 export default function RootLayout({

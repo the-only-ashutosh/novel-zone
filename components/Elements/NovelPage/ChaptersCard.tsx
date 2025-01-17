@@ -53,7 +53,7 @@ const ChaptersCard = ({
     async function fetchData() {
       const axios = (await import("axios")).default;
       await axios
-        .get(`/api/getChapters?page=${1}?book=${book}`)
+        .post(`/api/getChapters`, { page: 1, book: book })
         .then((response) => {
           setChaptersList(response.data);
         });
@@ -86,7 +86,7 @@ const ChaptersCard = ({
               setPage(pageNum);
               const axios = (await import("axios")).default;
               await axios
-                .get(`/api/getChapters?page=${pageNum}?book=${book}`)
+                .post(`/api/getChapters`, { page: pageNum, book: book })
                 .then((response) => {
                   setChaptersList(response.data);
                 });
@@ -109,6 +109,7 @@ const ChaptersCard = ({
                         <Link
                           href={`${pathname}/${chapters.url}`}
                           className="line-clamp-1"
+                          prefetch={false}
                         >
                           {chapters.title}
                         </Link>

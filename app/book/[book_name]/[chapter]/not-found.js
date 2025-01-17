@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { Card, CardBody, Chip } from "@heroui/react";
-import { fetchRandomBooks } from "@/service/dataoperation";
+import { Card, CardBody, Chip } from "@nextui-org/react";
+import { fetchRandomBooks } from "../../../../service/dataoperation";
 import { headers } from "next/headers";
 
 export default async function NotFound() {
@@ -35,7 +35,7 @@ export default async function NotFound() {
                 <li className="my-1" key={book.id}>
                   <Link href={`/book/${book.bookUrl}`}>
                     <Chip
-                      className="rounded-md px-0"
+                      className="rounded-md px-0 line-clamp-1 max-w-full min-w-0"
                       color="primary"
                       variant="flat"
                     >
@@ -47,7 +47,7 @@ export default async function NotFound() {
             })}
           </ul>
           <div className="text-medium font-semibold mb-3">
-            Or, Please visit page :&nbsp;
+            Or, Please visit home :&nbsp;
             <Link href={"/"}>
               <Chip className="rounded-md px-0" color="primary" variant="flat">
                 Home
