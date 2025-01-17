@@ -1290,7 +1290,7 @@ export async function checkBook(book: { url: string; isHot: boolean }) {
       .then(async (data) => {
         await prisma.$disconnect();
         if (data.id) {
-          return { status: false };
+          return { status: false, id: data.id };
         }
       });
   } catch (err) {
