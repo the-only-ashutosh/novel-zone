@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Card, CardBody, Chip } from "@nextui-org/react";
+import { Card, CardBody, Chip } from "@heroui/react";
 import { fetchRandomBooks } from "@/service/dataoperation";
 import { headers } from "next/headers";
 
