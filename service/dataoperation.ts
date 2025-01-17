@@ -50,44 +50,48 @@ export async function fetchRecentUpdates() {
 }
 
 export const fetchChapter = async (book_name: string, chapter: string) => {
-  return await prisma.chapter
-    .findFirst({
-      where: { book: { bookUrl: book_name }, url: chapter },
-      select: {
-        content: true,
-        title: true,
-        likes: true,
-        addAt: true,
-        number: true,
-        book: { select: { title: true, bookUrl: true } },
-      },
-    })
-    .then(async (chapter) => {
-      if (chapter) {
-        const prev = prisma.chapter.findFirst({
-          where: {
-            number: chapter.number - 1,
-            book: { bookUrl: book_name },
-          },
-          select: { url: true },
-        });
-        const next = prisma.chapter.findFirst({
-          where: {
-            number: chapter.number + 1,
-            book: { bookUrl: book_name },
-          },
-          select: { url: true },
-        });
-        const [prevChapter, nextChapter] = await Promise.all([prev, next]);
+  try {
+    return await prisma.chapter
+      .findFirst({
+        where: { book: { bookUrl: book_name }, url: chapter },
+        select: {
+          content: true,
+          title: true,
+          likes: true,
+          addAt: true,
+          number: true,
+          book: { select: { title: true, bookUrl: true } },
+        },
+      })
+      .then(async (chapter) => {
+        if (chapter) {
+          const prev = prisma.chapter.findFirst({
+            where: {
+              number: chapter.number - 1,
+              book: { bookUrl: book_name },
+            },
+            select: { url: true },
+          });
+          const next = prisma.chapter.findFirst({
+            where: {
+              number: chapter.number + 1,
+              book: { bookUrl: book_name },
+            },
+            select: { url: true },
+          });
+          const [prevChapter, nextChapter] = await Promise.all([prev, next]);
 
-        return {
-          ...chapter,
-          content: String.fromCharCode(...chapter.content),
-          prevChapter: prevChapter ? prevChapter.url : null,
-          nextChapter: nextChapter ? nextChapter.url : null,
-        };
-      }
-    });
+          return {
+            ...chapter,
+            content: String.fromCharCode(...chapter.content),
+            prevChapter: prevChapter ? prevChapter.url : null,
+            nextChapter: nextChapter ? nextChapter.url : null,
+          };
+        }
+      });
+  } catch (error) {
+    return "Invalid Chapter";
+  }
 };
 
 export async function searchBook(toSearch: string) {
