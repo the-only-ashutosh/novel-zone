@@ -1,5 +1,5 @@
 import React from "react";
-import { NavbarMenuToggle, NavbarContent } from "@nextui-org/react";
+import { NavbarMenuToggle, NavbarContent } from "@heroui/react";
 
 const MenuToggle = ({ menuState }: { menuState: boolean }) => {
   return (

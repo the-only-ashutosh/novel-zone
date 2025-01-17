@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { Decimal } from "@prisma/client/runtime/library";
 const InfoBanner = dynamic(() => import("./InfoBanner"), { ssr: true });
 
-type bookData = {
+export type booksData = {
   book: {
     bookUrl: string;
     aspectRatio: Decimal;
@@ -18,7 +18,7 @@ type bookData = {
   addAt: Date;
 };
 
-const InfoBannerList = ({ data }: { data: Array<bookData> }) => {
+const InfoBannerList = ({ data }: { data: Array<booksData> }) => {
   return (
     <div className="grid updatedlistgrid gap-4 mt-8 mx-[5%] justify-center mb-10">
       {data.map((chap) => {

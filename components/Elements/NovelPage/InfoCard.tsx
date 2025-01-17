@@ -1,4 +1,4 @@
-import { Button, Card, CardBody, ScrollShadow } from "@nextui-org/react";
+import { Button, Card, CardBody, ScrollShadow } from "@heroui/react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -50,7 +50,7 @@ const InfoCard = ({
         />
         <div className="flex flex-col ml-6 my-5">
           <h1 className="text-2xl font-semibold">{title}</h1>
-          <div className="my-3 text-medium">
+          <div className="my-3 text-medium max-w-[50%]">
             <h3 className="mt-1">
               Author:&nbsp;
               <Link
@@ -60,11 +60,12 @@ const InfoCard = ({
                 {author}
               </Link>
             </h3>
-            <GenreGrid genres={genres} />
-
-            <ScrollShadow hideScrollBar className="h-[50px]" size={10}>
-              <CategoryGrid category={tags} />
-            </ScrollShadow>
+            {genres.length !== 0 && <GenreGrid genres={genres} />}
+            {tags.length !== 0 && (
+              <ScrollShadow hideScrollBar className="h-[50px]" size={10}>
+                <CategoryGrid category={tags} />
+              </ScrollShadow>
+            )}
             <h3 className="mt-1">
               Status:&nbsp;
               {

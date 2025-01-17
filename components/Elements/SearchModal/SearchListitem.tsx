@@ -1,5 +1,5 @@
 import React from "react";
-import { Spinner } from "@nextui-org/react";
+import { Spinner } from "@heroui/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 const SearchListitem = ({

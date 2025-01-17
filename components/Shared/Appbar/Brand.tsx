@@ -1,5 +1,5 @@
 import React from "react";
-import { NavbarContent, NavbarBrand } from "@nextui-org/react";
+import { NavbarContent, NavbarBrand } from "@heroui/react";
 import Link from "next/link";
 import Logo from "./Logo";
 

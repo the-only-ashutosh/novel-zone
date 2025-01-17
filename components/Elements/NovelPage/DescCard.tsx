@@ -1,6 +1,6 @@
 import React from "react";
 import { correctString } from "@/service/functions";
-import { Card, CardBody } from "@nextui-org/react";
+import { Card, CardBody } from "@heroui/react";
 
 const DescCard = ({ description }: { description: string }) => {
   return (

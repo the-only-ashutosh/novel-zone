@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { IconButton } from "@mui/material";
 import { FiSettings } from "react-icons/fi";
-import { Popover, PopoverTrigger } from "@nextui-org/react";
+import { Popover, PopoverTrigger } from "@heroui/react";
 import dynamic from "next/dynamic";
 const PopoverCont = dynamic(() => import("./PopoverCont"), { ssr: false });
 

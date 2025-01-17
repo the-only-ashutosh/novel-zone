@@ -6,7 +6,7 @@ import {
   DropdownItem,
   Button,
   Selection,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { getCookie, setCookie, hasCookie } from "cookies-next/client";
 import { ChevronDownIcon } from "../UI/ChevronDownIcon";
 

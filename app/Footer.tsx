@@ -1,4 +1,4 @@
-import { Button } from "@nextui-org/react";
+import { Button } from "@heroui/react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -24,7 +24,6 @@ const Footer = () => {
       <footer className="bg-white text-slate-500 dark:bg-[#0e0d0d] dark:text-gray-300">
         <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {/* About Us Section */}
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
                 <Image

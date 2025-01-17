@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardBody } from "@nextui-org/react";
+import { Card, CardBody } from "@heroui/react";
 import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
 import HistoryEduRoundedIcon from "@mui/icons-material/HistoryEduRounded";
 import Link from "next/link";

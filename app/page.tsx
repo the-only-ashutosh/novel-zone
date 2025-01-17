@@ -1,27 +1,22 @@
 import ScrollProgress from "@/components/Shared/ScrollProgress";
 import ViewMoreButton from "@/components/UI/ViewMoreButton";
-import dynamic from "next/dynamic";
 import type { Metadata } from "next";
 import { fetchMostPopular, fetchRecentUpdates } from "@/service/dataoperation";
-import { Suspense } from "react";
-import SkeletonInfoList from "@/components/Elements/InfoCard/SkeletonInfoList";
-import SkeletonInfoBannerList from "@/components/Elements/InfoBanner/SkeletonInfoBannerList";
-
-const InfoBannerList = dynamic(
-  () => import("@/components/Elements/InfoBanner/InfoBannerList"),
-  { ssr: true }
-);
-const InfoList = dynamic(
-  () => import("@/components/Elements/InfoCard/InfoList"),
-  { ssr: true }
-);
-
-export const revalidate = 0;
+import InfoListWithSuspense from "@/components/Elements/InfoCard/InfoListWithSuspense";
+import { headers } from "next/headers";
+import { bookData } from "@/components/Elements/InfoCard/InfoList";
+import { booksData } from "@/components/Elements/InfoBanner/InfoBannerList";
+import InfoBannerListWithSuspense from "@/components/Elements/InfoBanner/InfoBannerListWithSuspense";
 
 export default async function Home() {
-  const dat = fetchMostPopular();
-  const chapterDat = fetchRecentUpdates();
-  const [data, chapterData] = await Promise.all([dat, chapterDat]);
+  let data: bookData[] | undefined;
+  let chapterData: booksData[] | undefined;
+  if ((await headers()).get("accept")?.includes("text/html")) {
+    const dat = fetchMostPopular();
+    const chapterDat = fetchRecentUpdates();
+    [data, chapterData] = await Promise.all([dat, chapterDat]);
+  }
+
   return (
     <>
       <ScrollProgress />
@@ -37,9 +32,7 @@ export default async function Home() {
             <ViewMoreButton url="/filter/mostpopular" />
           </div>
         </div>
-        <Suspense fallback={<SkeletonInfoList />}>
-          <InfoList data={data} />
-        </Suspense>
+        <InfoListWithSuspense data={data} />
         <div className="mt-8 mx-[5%] rounded-md bg-gradient-to-r from-blue-700 via-teal-500 to-green-300 pl-2 pb-1">
           <div className="px-2 flex justify-between items-center bg-white dark:bg-gray-900 rounded-tr-md rounded-bl-md">
             <div>
@@ -49,9 +42,7 @@ export default async function Home() {
             <ViewMoreButton url="/filter/newupdates" />
           </div>
         </div>
-        <Suspense fallback={<SkeletonInfoBannerList />}>
-          <InfoBannerList data={chapterData} />
-        </Suspense>
+        <InfoBannerListWithSuspense data={chapterData} />
       </div>
     </>
   );

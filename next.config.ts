@@ -1,8 +1,9 @@
 import type { NextConfig } from "next";
+import withBundleAnalyzer from "@next/bundle-analyzer";
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ["nextui.org", "idoxbjg.sufydely.com"],
+    domains: ["heroui.org", "idoxbjg.sufydely.com"],
   },
   compiler: {
     // removeConsole: true,
@@ -12,11 +13,15 @@ const nextConfig: NextConfig = {
     optimizeCss: true,
     ppr: "incremental",
     optimizePackageImports: [
-      "@nextui-org/react",
+      "@heroui/react",
       "@emotion/react",
       "@emotion/styled",
     ],
   },
 };
 
-export default nextConfig;
+const withBA = withBundleAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+});
+
+export default withBA(nextConfig);

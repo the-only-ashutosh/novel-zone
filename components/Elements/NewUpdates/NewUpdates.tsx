@@ -2,7 +2,7 @@ import { getTimeDiff } from "@/service/functions";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { Card, CardBody } from "@nextui-org/react";
+import { Card, CardBody } from "@heroui/react";
 
 const NewUpdatesItem = ({
   url,

@@ -7,7 +7,7 @@ import {
   ModalBody,
   useDisclosure,
   Kbd,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import Fade from "@mui/material/Fade";
 import { IconButton } from "@mui/material";
 import { FiSearch } from "react-icons/fi";

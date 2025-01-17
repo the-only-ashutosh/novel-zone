@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { ScrollShadow } from "@nextui-org/react";
+import { ScrollShadow } from "@heroui/react";
 import Collapse from "@mui/material/Collapse";
 import { TransitionGroup } from "react-transition-group";
 import axios from "axios";

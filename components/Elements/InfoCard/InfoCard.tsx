@@ -1,6 +1,6 @@
 "use server";
 import React from "react";
-import { Tooltip, Badge } from "@nextui-org/react";
+import { Tooltip, Badge } from "@heroui/react";
 import Link from "next/link";
 import Image from "next/image";
 import Grid from "@mui/material/Grid2";

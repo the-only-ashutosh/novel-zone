@@ -3,7 +3,7 @@ import React from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 const Button = dynamic(
-  () => import("@nextui-org/react").then((mod) => mod.Button),
+  () => import("@heroui/react").then((mod) => mod.Button),
   { ssr: false }
 );
 

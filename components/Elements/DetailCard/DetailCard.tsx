@@ -1,6 +1,6 @@
 "use server";
 import React from "react";
-import { Card, CardBody, Chip, Badge } from "@nextui-org/react";
+import { Card, CardBody, Chip, Badge } from "@heroui/react";
 import Link from "next/link";
 import Image from "next/image";
 import HistoryEduRoundedIcon from "@mui/icons-material/HistoryEduRounded";

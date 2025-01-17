@@ -5,7 +5,7 @@ import cx from "classnames";
 import FontMenu from "./FontMenu";
 import FontSizeMenu from "./FontSizeMenu";
 import { ThemeSwitch } from "./theme-switch";
-import { PopoverContent } from "@nextui-org/react";
+import { PopoverContent } from "@heroui/react";
 import styled, { keyframes } from "styled-components";
 import { deleteCookie } from "cookies-next/client";
 

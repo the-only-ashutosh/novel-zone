@@ -1,5 +1,5 @@
 import React from "react";
-import { NavbarContent, NavbarItem } from "@nextui-org/react";
+import { NavbarContent, NavbarItem } from "@heroui/react";
 import SearchModal from "../SearchModal";
 import SettingsMenu from "../Settings";
 

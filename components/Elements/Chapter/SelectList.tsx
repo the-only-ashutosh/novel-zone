@@ -1,5 +1,5 @@
 import React from "react";
-import { Select, SelectItem, Button } from "@nextui-org/react";
+import { Select, SelectItem, Button } from "@heroui/react";
 import { FaList } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 

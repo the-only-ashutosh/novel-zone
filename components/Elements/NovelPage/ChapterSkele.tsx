@@ -1,5 +1,5 @@
 import React from "react";
-import { Skeleton, Card } from "@nextui-org/react";
+import { Skeleton, Card } from "@heroui/react";
 import Grid from "@mui/material/Grid2";
 
 const ChapterSkele = () => {

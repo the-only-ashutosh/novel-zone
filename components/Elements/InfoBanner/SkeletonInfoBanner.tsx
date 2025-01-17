@@ -1,5 +1,5 @@
 import React from "react";
-import { Skeleton, Card, CardBody } from "@nextui-org/react";
+import { Skeleton, Card, CardBody } from "@heroui/react";
 
 const SkeletonInfoBanner = () => {
   return (

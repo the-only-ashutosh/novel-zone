@@ -9,7 +9,7 @@ import {
   Button,
   DropdownTrigger,
   Dropdown,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { ChevronDownIcon } from "../../UI/ChevronDownIcon";
 import { usePathname } from "next/navigation";
 import dynamic from "next/dynamic";

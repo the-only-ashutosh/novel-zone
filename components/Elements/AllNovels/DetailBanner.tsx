@@ -1,4 +1,4 @@
-import { Card, Chip, CardBody } from "@nextui-org/react";
+import { Card, Chip, CardBody } from "@heroui/react";
 import Image from "next/image";
 import React from "react";
 import ModeEditRoundedIcon from "@mui/icons-material/ModeEditRounded";

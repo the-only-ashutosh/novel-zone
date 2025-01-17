@@ -1,5 +1,5 @@
 import React from "react";
-import { DropdownItem, DropdownMenu } from "@nextui-org/react";
+import { DropdownItem, DropdownMenu } from "@heroui/react";
 import { ALL_GENRE } from "@/service/genre";
 import { useRouter } from "next/navigation";
 

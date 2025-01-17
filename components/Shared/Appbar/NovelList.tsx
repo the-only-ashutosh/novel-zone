@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { DropdownItem, DropdownMenu } from "@nextui-org/react";
+import { DropdownItem, DropdownMenu } from "@heroui/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 

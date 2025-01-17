@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { Decimal } from "@prisma/client/runtime/library";
 const InfoCard = dynamic(() => import("./InfoCard"), { ssr: true });
 
-type bookData = {
+export type bookData = {
   id: number;
   title: string;
   bookUrl: string;
@@ -18,9 +18,9 @@ type bookData = {
   };
 };
 
-const InfoList = ({ data }: { data: Array<bookData> }) => {
+const InfoList = ({ data, cls }: { data: Array<bookData>; cls: string }) => {
   return (
-    <Grid className="mx-[5%] grid justify-center gap-4 maingrid">
+    <Grid className={`grid justify-center gap-4 maingrid ${cls}`}>
       {data.map((book) => {
         return (
           <InfoCard

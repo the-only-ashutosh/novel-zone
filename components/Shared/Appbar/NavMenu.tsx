@@ -7,7 +7,7 @@ import {
   NavbarMenuItem,
   DropdownTrigger,
   Button,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { ChevronDownIcon } from "@/components/UI/ChevronDownIcon";

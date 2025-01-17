@@ -1,6 +1,6 @@
 "use client";
 import React, { Suspense } from "react";
-import { Tabs, Tab, Card, Pagination } from "@nextui-org/react";
+import { Tabs, Tab, Card, Pagination } from "@heroui/react";
 import Grid from "@mui/material/Grid2";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

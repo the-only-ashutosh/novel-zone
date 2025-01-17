@@ -11,9 +11,12 @@
   "dependencies": {
     "@emotion/react": "^11.13.5",
     "@emotion/styled": "^11.13.5",
+    "@heroui/system": "2.4.6",
+    "@heroui/theme": "2.4.5",
     "@mui/icons-material": "^6.2.0",
     "@mui/material": "^6.1.10",
-    "@nextui-org/react": "^2.6.3",
+    "@next/bundle-analyzer": "^15.1.4",
+    "@heroui/react": "2.6.13",
     "@prisma/client": "^6.1.0",
     "axios": "^1.7.9",
     "classnames": "^2.5.1",
@@ -27,10 +30,7 @@
     "react-dom": "^19.0.0",
     "react-icons": "^5.4.0",
     "react-transition-group": "^4.4.5",
-    "react-window": "^1.8.11",
-    "styled-components": "^6.1.13",
-    "tailwind-merge": "^2.5.5",
-    "unfetch": "^5.0.0"
+    "styled-components": "^6.1.13"
   },
   "overrides": {
     "cookies-next": {
@@ -44,7 +44,7 @@
       "react": "^19.0.0",
       "react-dom": "^19.0.0"
     },
-    "@nextui-org/react": {
+    "@heroui/react": {
       "react": "^19.0.0",
       "react-dom": "^19.0.0"
     }
