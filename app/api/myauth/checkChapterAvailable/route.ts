@@ -5,7 +5,7 @@ export async function POST(req: NextRequest) {
   const {
     chapter,
     book,
-  }: { chapter: { ch: string; num: number }[]; book: string } =
+  }: { chapter: { ch: string; num: number; bookId: number }[]; book: string } =
     await req.json();
 
   return NextResponse.json({ chapters: await checkChapter(book, chapter) });

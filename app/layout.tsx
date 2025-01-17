@@ -30,7 +30,6 @@ export const metadata: Metadata = {
     "google-site-verification": "ooyq9xvP1155LRyWJpGkd_BehUDxYoLZkkbdVr--YqY",
   },
 };
-
 export default async function RootLayout({
   children,
 }: Readonly<{
