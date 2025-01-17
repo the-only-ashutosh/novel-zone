@@ -845,14 +845,14 @@ export async function addBook(book: IncomingBook) {
 
 export async function checkChapter(
   book: string,
-  chap: Array<{ ch: string; num: number }>
+  chap: Array<{ ch: string; num: number; bookId: number }>
 ) {
   const prisma = new PrismaClient();
-  const final: Array<{ ch: string; num: number }> = [];
+  const final: Array<{ ch: string; num: number; bookId: number }> = [];
   for (const element of chap) {
     const status = await prisma.chapter.findFirst({
       where: {
-        book: { bookUrl: book },
+        book: { id: chap[0].bookId },
         oldUrl: `${book}/${element.ch.split(`/${book}/`)[1]}`,
       },
       select: { id: true },
@@ -871,16 +871,9 @@ export async function addNewChapter(chapter: IncomingChapter) {
       ? chapter.url
       : titleToUrl(chapter.title.trim());
 
-  const prisma = new PrismaClient();
-  const count = (s: string) => (s.match(/\b\w+\b/g) || []).length;
-  const bookId = (await prisma.book.findFirst({
-    where: { bookUrl: chapter.bookUrl },
-    select: { id: true },
-  }))!.id;
-  await prisma.$disconnect();
+  // const count = (s: string) => (s.match(/\b\w+\b/g) || []).length;
   return {
     newUrl,
-    bookId,
     content: correctString(chapter.content.join("[hereisbreak]")),
   };
 }
@@ -1284,7 +1277,7 @@ export async function checkBook(book: { url: string; isHot: boolean }) {
       .then(async (data) => {
         await prisma.$disconnect();
         if (data.id) {
-          return { status: false };
+          return { status: false, bookId: data.id };
         }
       });
   } catch (err) {
