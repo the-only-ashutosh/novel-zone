@@ -4,6 +4,7 @@ import prisma from "./client";
 import { correctString, titleToUrl } from "./functions";
 import { ALL_GENRE } from "./genre";
 import "server-only";
+import { PrismaClient } from "@prisma/client";
 
 export const fetchMostPopular = async () => {
   return await prisma.book.findMany({
@@ -24,7 +25,8 @@ export const fetchMostPopular = async () => {
 };
 
 export async function fetchRecentUpdates() {
-  return await prisma.recents.findMany({
+  const pri = new PrismaClient();
+  const data = await pri.recents.findMany({
     orderBy: { addAt: "desc" },
     take: 30,
     select: {
@@ -41,6 +43,8 @@ export async function fetchRecentUpdates() {
       },
     },
   });
+  await pri.$disconnect();
+  return data;
 }
 
 export const fetchChapter = async (book_name: string, chapter: string) => {
@@ -264,35 +268,36 @@ export async function fetchHotBook(page: number = 1) {
 }
 
 export async function fetchRecentUpdatesPage(page: number = 1) {
+  const pri = new PrismaClient();
   try {
-    const p = await prisma.recents.count();
-    return await prisma.recents
-      .findMany({
-        orderBy: { addAt: "desc" },
-        skip: (page - 1) * 20,
-        take: 20,
-        select: {
-          addAt: true,
-          title: true,
-          url: true,
-          book: {
-            select: {
-              title: true,
-              imageUrl: true,
-              aspectRatio: true,
-              bookUrl: true,
-              author: { select: { name: true } },
-            },
+    const p = await pri.recents.count();
+    const data = await pri.recents.findMany({
+      orderBy: { addAt: "desc" },
+      skip: (page - 1) * 20,
+      take: 20,
+      select: {
+        addAt: true,
+        title: true,
+        url: true,
+        book: {
+          select: {
+            title: true,
+            imageUrl: true,
+            aspectRatio: true,
+            bookUrl: true,
+            author: { select: { name: true } },
           },
         },
-      })
-      .then((data) => {
-        if (data.length === 0) {
-          return "Invalid Page";
-        }
-        return { data, pages: Math.ceil(p / 20) };
-      });
+      },
+    });
+    if (data.length === 0) {
+      await pri.$disconnect();
+      return "Invalid Page";
+    }
+    await pri.$disconnect();
+    return { data, pages: Math.ceil(p / 20) };
   } catch (err) {
+    await pri.$disconnect();
     return "Invalid Page";
   }
 }
@@ -549,12 +554,13 @@ export async function addNewChapter(chapter: IncomingChapter) {
       : titleToUrl(chapter.title.trim());
 
   const count = (s: string) => (s.match(/\b\w+\b/g) || []).length;
-  await prisma.recents.upsert({
+  const pri = new PrismaClient();
+  await pri.recents.upsert({
     where: { bookId: chapter.bookId },
     create: { title: chapter.title, url: chapter.url, bookId: chapter.bookId },
     update: { title: chapter.title, url: chapter.url },
   });
-
+  await pri.$disconnect();
   return {
     newUrl,
     content: correctString(chapter.content.join("[hereisbreak]")),
