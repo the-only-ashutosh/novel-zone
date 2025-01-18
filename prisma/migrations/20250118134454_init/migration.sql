@@ -50,10 +50,8 @@ CREATE TABLE `chapter` (
     `title` VARCHAR(191) NOT NULL,
     `number` INTEGER NOT NULL,
     `bookId` INTEGER NOT NULL,
-    `oldUrl` VARCHAR(191) NOT NULL,
     `addAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
-    UNIQUE INDEX `chapter_oldUrl_key`(`oldUrl`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -64,6 +62,18 @@ CREATE TABLE `genre` (
     `route` VARCHAR(191) NOT NULL,
 
     UNIQUE INDEX `genre_name_key`(`name`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `recents` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `bookId` INTEGER NOT NULL,
+    `addAt` DATETIME(3) NOT NULL,
+    `url` VARCHAR(191) NOT NULL,
+    `title` VARCHAR(191) NOT NULL,
+
+    UNIQUE INDEX `recents_bookId_key`(`bookId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -90,6 +100,9 @@ ALTER TABLE `book` ADD CONSTRAINT `book_authorId_fkey` FOREIGN KEY (`authorId`) 
 
 -- AddForeignKey
 ALTER TABLE `chapter` ADD CONSTRAINT `chapter_bookId_fkey` FOREIGN KEY (`bookId`) REFERENCES `book`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `recents` ADD CONSTRAINT `recents_bookId_fkey` FOREIGN KEY (`bookId`) REFERENCES `book`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `_booktocategory` ADD CONSTRAINT `_booktocategory_A_fkey` FOREIGN KEY (`A`) REFERENCES `book`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
