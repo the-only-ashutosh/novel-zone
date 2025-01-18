@@ -11,7 +11,7 @@ const HotNovels = () => {
     <div className="flex mt-4 mb-10">
       <GradBanner main="Hot Novels" sub="New Books like by Readers">
         <Suspense fallback={<DetailsListSkeleton />}>
-          <DetailList func={fetchHotBook} onPage="hotnovel" />
+          <DetailList func={fetchHotBook} onPage="hotnovels" />
         </Suspense>
       </GradBanner>
     </div>
