@@ -1,55 +1,25 @@
-import DetailBanner from "@/components/Elements/AllNovels/DetailBanner";
 import GradBanner from "@/components/Shared/GradBanner";
 import { fetchAllNovelsPage } from "@/service/dataoperation";
-import { Metadata } from "next";
-import React from "react";
-import dynamic from "next/dynamic";
-import { notFound } from "next/navigation";
-const Pages = dynamic(() => import("@/components/Shared/Pages"));
+import { Metadata } from "next/types";
+import React, { Suspense } from "react";
+import DetailList from "@/components/Elements/DetailCard/DetailList";
+import DetailsListSkeleton from "@/components/Elements/DetailCard/DetailsListSkeleton";
 
-type SearchParams = Promise<{ [key: string]: string }>;
+export const experimental_ppr = true;
 
-const AllNovelsPage = async ({
-  params,
-  searchParams,
-}: {
-  params: Promise<{ page: number }>;
-  searchParams: SearchParams;
-}) => {
-  const { page } = await params;
-  const { viewport } = await searchParams;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const books = await fetchAllNovelsPage(page);
+const AllNovelsPage = ({ params }: { params: Promise<{ page: number }> }) => {
   return (
-    <GradBanner main="Novels" sub="All available novels">
-      {books !== "Invalid Page" ? (
-        <>
-          <div className="w-full gap-y-2 grid">
-            {books.data.map((book) => {
-              return (
-                <DetailBanner
-                  aspectRatio={Number(book.aspectRatio)}
-                  url={book.imageUrl}
-                  title={book.title}
-                  bookUrl={book.bookUrl}
-                  author={book.author.name}
-                  statu={book.status}
-                  totalChapters={book._count.chapter}
-                  key={`${book.imageUrl}`}
-                  ratings={book.totalStars}
-                  users={book.userrated}
-                  viewport={viewport}
-                  views={book.views}
-                />
-              );
-            })}
-          </div>
-          <Pages url={`/filter/allnovels`} totalPages={books.pages} />
-        </>
-      ) : (
-        notFound()
-      )}
-    </GradBanner>
+    <div className="mt-4 mb-10">
+      <GradBanner main="Novels" sub="All available novels">
+        <Suspense fallback={<DetailsListSkeleton />}>
+          <DetailList
+            func={fetchAllNovelsPage}
+            onPage="allnovels"
+            params={params}
+          />
+        </Suspense>
+      </GradBanner>
+    </div>
   );
 };
 

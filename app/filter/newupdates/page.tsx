@@ -1,37 +1,20 @@
-import NewUpdatesItem from "@/components/Elements/NewUpdates/NewUpdates";
+import React, { Suspense } from "react";
 import { fetchRecentUpdatesPage } from "@/service/dataoperation";
-import React from "react";
-import dynamic from "next/dynamic";
 import { Metadata } from "next";
 import GradBanner from "@/components/Shared/GradBanner";
-const Pages = dynamic(() => import("@/components/Shared/Pages"));
+import NewUpdatesList from "@/components/Elements/NewUpdates/NewUpdatesList";
+import NewUpdatesSkeleton from "@/components/Elements/NewUpdates/NewUpdatesSkeleton";
 
-const NewUpdates = async () => {
-  const newUpdates = await fetchRecentUpdatesPage();
+export const experimental_ppr = true;
+
+const NewUpdates = () => {
   return (
     <div className="flex items-center">
-      {newUpdates !== "Invalid Page" && (
-        <GradBanner main="New Updates" sub="Recent Updated Chapters">
-          <div className="flex flex-col justify-center items-center w-full">
-            {newUpdates.data.map((element) => {
-              return (
-                <NewUpdatesItem
-                  chapTitle={element.title}
-                  chapUrl={`/book/${element.book!.bookUrl}/${element.url}`}
-                  time={element.addAt}
-                  title={element.book!.title}
-                  url={element.book!.imageUrl}
-                  key={String(element.addAt)}
-                  aspectratio={Number(element.book!.aspectRatio)}
-                  bookUrl={element.book!.bookUrl}
-                  author={element.book!.author.name}
-                />
-              );
-            })}
-            <Pages url="/filter/newupdates" totalPages={5} />
-          </div>
-        </GradBanner>
-      )}
+      <GradBanner main="New Updates" sub="Recent Updated Chapters">
+        <Suspense fallback={<NewUpdatesSkeleton />}>
+          <NewUpdatesList />
+        </Suspense>
+      </GradBanner>
     </div>
   );
 };
@@ -49,7 +32,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const images =
     book !== "Invalid Page"
       ? book.data.map((bk) => {
-          return bk.book!.imageUrl;
+          return bk.book.imageUrl;
         })
       : [];
   return {

@@ -80,7 +80,13 @@ const SmallInfoCard = ({
                       : "text-primary"
                   }`}
                 >
-                  <Link href={`/filter/status/${status}`}>
+                  <Link
+                    href={
+                      status === "Completed"
+                        ? "/filter/completed"
+                        : "filter/ongoing"
+                    }
+                  >
                     {status.toUpperCase()}
                   </Link>
                 </span>

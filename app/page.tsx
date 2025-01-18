@@ -1,21 +1,16 @@
 import ScrollProgress from "@/components/Shared/ScrollProgress";
 import ViewMoreButton from "@/components/UI/ViewMoreButton";
 import type { Metadata } from "next";
-import { fetchMostPopular, fetchRecentUpdates } from "@/service/dataoperation";
 import InfoListWithSuspense from "@/components/Elements/InfoCard/InfoListWithSuspense";
-import { headers } from "next/headers";
 import { bookData } from "@/components/Elements/InfoCard/InfoList";
 import { booksData } from "@/components/Elements/InfoBanner/InfoBannerList";
 import InfoBannerListWithSuspense from "@/components/Elements/InfoBanner/InfoBannerListWithSuspense";
 
-export default async function Home() {
+export const experimental_ppr = true;
+
+export default function Home() {
   let data: bookData[] | undefined;
   let chapterData: booksData[] | undefined;
-  if ((await headers()).get("accept")?.includes("text/html")) {
-    const dat = fetchMostPopular();
-    const chapterDat = fetchRecentUpdates();
-    [data, chapterData] = await Promise.all([dat, chapterDat]);
-  }
 
   return (
     <>

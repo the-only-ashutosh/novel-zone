@@ -1,47 +1,17 @@
-import React from "react";
-import dynamic from "next/dynamic";
+import React, { Suspense } from "react";
 import type { Metadata } from "next";
 import { fetchCompletedBook } from "@/service/dataoperation";
 import GradBanner from "@/components/Shared/GradBanner";
-const DetailCard = dynamic(
-  () => import("@/components/Elements/DetailCard/DetailCard"),
-  { ssr: true }
-);
+import DetailList from "@/components/Elements/DetailCard/DetailList";
+import DetailsListSkeleton from "@/components/Elements/DetailCard/DetailsListSkeleton";
 
-const Pages = dynamic(() => import("@/components/Shared/Pages"));
-
-const Completed = async () => {
-  const books = await fetchCompletedBook();
+export const experimental_ppr = true;
+const Completed = () => {
   return (
     <GradBanner main="Completed Novels" sub="Completed by Author">
-      {books !== "Invalid Page" ? (
-        <div className="flex flex-col justify-center items-center w-full">
-          <div className="grid updatedlistgrid gap-4 justify-center w-full">
-            {books.fData.map((book) => {
-              return (
-                <DetailCard
-                  aspectRatio={Number(book.aspectRatio)}
-                  bookUrl={book.bookUrl}
-                  chapters={book.chapters}
-                  imageUrl={book.imageUrl}
-                  status={book.status}
-                  time={book.updatedAt}
-                  title={book.title}
-                  key={book.title + book.id}
-                  ratings={(book.totalStars / book.userrated).toFixed(1)}
-                />
-              );
-            })}
-          </div>
-          {books.pages > 1 && (
-            <Pages url="/filter/completed" totalPages={books.pages} />
-          )}
-        </div>
-      ) : (
-        <div className="flex w-[90%] h-full justify-center items-center">
-          Please enter a valid page
-        </div>
-      )}
+      <Suspense fallback={<DetailsListSkeleton />}>
+        <DetailList func={fetchCompletedBook} onPage="completed" />
+      </Suspense>
     </GradBanner>
   );
 };
@@ -52,13 +22,13 @@ export async function generateMetadata(): Promise<Metadata> {
   const book = await fetchCompletedBook();
   const books =
     book !== "Invalid Page"
-      ? book.fData.map((bk) => {
+      ? book.data.map((bk) => {
           return bk.title;
         })
       : ["Completed Novels"];
   const images =
     book !== "Invalid Page"
-      ? book.fData.map((bk) => {
+      ? book.data.map((bk) => {
           return bk.imageUrl;
         })
       : [];

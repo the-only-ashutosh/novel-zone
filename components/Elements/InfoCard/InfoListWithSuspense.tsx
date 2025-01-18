@@ -16,6 +16,7 @@ const InfoListWithSuspense = ({ data }: { data?: Array<bookData> }) => {
 
 async function InfoListLoader() {
   const data = await fetchMostPopular();
+
   return <InfoList data={data} cls="mx-[5%] " />;
 }
 

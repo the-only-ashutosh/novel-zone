@@ -48,9 +48,9 @@ const InfoCard = ({
             objectFit: "cover",
           }}
         />
-        <div className="flex flex-col ml-6 my-5">
+        <div className="flex flex-col ml-6 my-5 max-w-[50%]">
           <h1 className="text-2xl font-semibold">{title}</h1>
-          <div className="my-3 text-medium max-w-[50%]">
+          <div className="my-3 text-medium">
             <h3 className="mt-1">
               Author:&nbsp;
               <Link
@@ -79,7 +79,13 @@ const InfoCard = ({
                       : "text-primary"
                   }`}
                 >
-                  <Link href={`/filter/status/${status}`}>
+                  <Link
+                    href={
+                      status === "Completed"
+                        ? "/filter/completed"
+                        : "filter/ongoing"
+                    }
+                  >
                     {status.toUpperCase()}
                   </Link>
                 </span>

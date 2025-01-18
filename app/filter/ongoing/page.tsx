@@ -1,34 +1,25 @@
 import React, { Suspense } from "react";
 import type { Metadata } from "next";
-import { fetchCompletedBook } from "@/service/dataoperation";
+import { fetchOngoingBook } from "@/service/dataoperation";
 import GradBanner from "@/components/Shared/GradBanner";
 import DetailList from "@/components/Elements/DetailCard/DetailList";
 import DetailsListSkeleton from "@/components/Elements/DetailCard/DetailsListSkeleton";
 
 export const experimental_ppr = true;
-const CompletedPage = ({ params }: { params: Promise<{ page: number }> }) => {
+const Ongoing = () => {
   return (
-    <GradBanner main="Completed Novels" sub="Completed by Author">
+    <GradBanner main="Ongoing Novels" sub="Available for updates">
       <Suspense fallback={<DetailsListSkeleton />}>
-        <DetailList
-          params={params}
-          func={fetchCompletedBook}
-          onPage="completed"
-        />
+        <DetailList func={fetchOngoingBook} onPage="ongoing" />
       </Suspense>
     </GradBanner>
   );
 };
 
-export default CompletedPage;
+export default Ongoing;
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ page: number }>;
-}): Promise<Metadata> {
-  const { page } = await params;
-  const book = await fetchCompletedBook(page);
+export async function generateMetadata(): Promise<Metadata> {
+  const book = await fetchOngoingBook();
   const books =
     book !== "Invalid Page"
       ? book.data.map((bk) => {

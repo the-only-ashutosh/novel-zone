@@ -16,7 +16,7 @@ const ChapterContent = ({
   return (
     <div
       id="content-page"
-      className={`mx-[5%] sm:mx-[2%] md:mx-[3.5%] max-w-[-moz-available] my-6 ${getVar(
+      className={`mx-[5%] sm:mx-[2%] md:mx-[3.5%] max-w-[-moz-available] my-10 ${getVar(
         fStyle
       )} w-full`}
       style={{ fontSize: `${fSize}px`, lineHeight: "160%", marginTop: "15px" }}
@@ -24,10 +24,10 @@ const ChapterContent = ({
       <h2 className="mb-[12px] font-bold text-2xl dark:text-[#F5F5F5]">
         {title}
       </h2>
-      {content.map((para, i) => {
+      {content.map((para) => {
         return (
           <p
-            key={`paraatindex${i}`}
+            key={`paraatindex${para.slice(0, 10)}`}
             className="mb-[10px] font-medium dark:text-[#f5f5f5ba]"
           >
             {para}

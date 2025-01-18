@@ -27,4 +27,22 @@ export type IncomingChapter = {
   bookUrl: string;
   title: string;
   content: Array<string>;
+  bookId: number;
+};
+
+export type detailCardData = {
+  data: {
+    aspectRatio: Decimal;
+    title: string;
+    bookUrl: string;
+    imageUrl: string;
+    status: string;
+    updatedAt: Date;
+    totalStars: number;
+    userrated: number;
+    _count: {
+      chapter: number;
+    };
+  }[];
+  pages: number;
 };

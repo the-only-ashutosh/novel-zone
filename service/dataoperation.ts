@@ -1,12 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type { IncomingBook, IncomingChapter } from "@/types";
 import prisma from "./client";
-import { Decimal } from "@prisma/client/runtime/library";
 import { correctString, titleToUrl } from "./functions";
 import { ALL_GENRE } from "./genre";
 import "server-only";
-
-//String.fromCharCode(...singleData.description)
 
 export const fetchMostPopular = async () => {
   return await prisma.book.findMany({
@@ -27,9 +24,8 @@ export const fetchMostPopular = async () => {
 };
 
 export async function fetchRecentUpdates() {
-  const data = await prisma.chapter.findMany({
-    distinct: ["bookId"],
-    orderBy: { id: "desc" },
+  return await prisma.recents.findMany({
+    orderBy: { addAt: "desc" },
     take: 30,
     select: {
       addAt: true,
@@ -45,8 +41,6 @@ export async function fetchRecentUpdates() {
       },
     },
   });
-
-  return data;
 }
 
 export const fetchChapter = async (book_name: string, chapter: string) => {
@@ -117,368 +111,170 @@ export async function searchBook(toSearch: string) {
 }
 
 export async function fetchByGenre(genre: string, page: number = 1) {
-  let bookData: Array<{
-    id: number;
-    title: string;
-    bookUrl: string;
-    imageUrl: string;
-    updatedAt: Date;
-    totalStars: number;
-    userrated: number;
-    aspectRatio: Decimal;
-    status: string;
-    _count: {
-      chapter: number;
-    };
-  }> = [];
+  const pages = await prisma.book.count({
+    where: { genre: { some: { route: genre } } },
+  });
   try {
-    if (page > 1) {
-      const cursor = (
-        await prisma.book.findMany({
-          where: { genre: { some: { route: genre } } },
-          orderBy: { id: "desc" },
-          take: (page - 1) * 20,
-          select: { id: true },
-        })
-      )[(page - 1) * 20 - 1].id;
-      bookData = await prisma.book.findMany({
-        where: { genre: { some: { route: genre } } },
-        orderBy: { id: "desc" },
-        skip: 1,
-        cursor: { id: cursor },
-        take: 20,
-        select: {
-          aspectRatio: true,
-          title: true,
-          bookUrl: true,
-          imageUrl: true,
-          status: true,
-          id: true,
-          updatedAt: true,
-          userrated: true,
-          totalStars: true,
-          _count: { select: { chapter: true } },
-        },
-      });
-    } else {
-      bookData = await prisma.book.findMany({
-        where: { genre: { some: { route: genre } } },
-        orderBy: { id: "desc" },
-        take: 20,
-        select: {
-          aspectRatio: true,
-          title: true,
-          bookUrl: true,
-          imageUrl: true,
-          status: true,
-          id: true,
-          updatedAt: true,
-          userrated: true,
-          totalStars: true,
-          _count: { select: { chapter: true } },
-        },
-      });
-    }
-    if (!bookData) {
-      return { fData: [], total: 0 };
-    }
-
-    const total = await prisma.book.count({
+    const data = await prisma.book.findMany({
       where: { genre: { some: { route: genre } } },
+      orderBy: { id: "desc" },
+      skip: (page - 1) * 20,
+      take: 20,
+      select: {
+        aspectRatio: true,
+        title: true,
+        bookUrl: true,
+        imageUrl: true,
+        status: true,
+        updatedAt: true,
+        userrated: true,
+        totalStars: true,
+        _count: { select: { chapter: true } },
+      },
     });
-
-    return { fData: bookData, total };
+    if (data.length === 0) {
+      return "Invalid Page";
+    }
+    return { data, pages: Math.ceil(pages / 20) };
   } catch (e) {
     return "Invalid Page";
   }
 }
 
 export async function fetchMostPopularBooks(page: number = 1) {
-  const pages = await prisma.book
-    .findMany({
-      where: { ratings: { gt: -1 } },
-      orderBy: [{ id: "asc" }, { ratings: "desc" }],
-      select: { id: true },
-    })
-    .then((data) => {
-      return Math.ceil(data.length / 20);
-    });
-  let bookData: Array<{
-    id: number;
-    title: string;
-    bookUrl: string;
-    imageUrl: string;
-    updatedAt: Date;
-    totalStars: number;
-    userrated: number;
-    aspectRatio: Decimal;
-    status: string;
-    _count: { chapter: number };
-  }> = [];
+  const pages = await prisma.book.count({
+    where: { ratings: { gt: -1 } },
+  });
   try {
-    if (page > 1) {
-      const cursor = (
-        await prisma.book.findMany({
-          where: { ratings: { gt: -1 } },
-          orderBy: [{ id: "asc" }, { ratings: "desc" }],
-          take: (page - 1) * 20,
-          select: { id: true },
-        })
-      )[(page - 1) * 20 - 1].id;
-      bookData = await prisma.book.findMany({
-        where: { ratings: { gt: -1 } },
-        skip: 1,
-        cursor: { id: cursor },
-        orderBy: [{ id: "asc" }, { ratings: "desc" }],
-        take: 20,
-        select: {
-          aspectRatio: true,
-          title: true,
-          bookUrl: true,
-          imageUrl: true,
-          status: true,
-          id: true,
-          updatedAt: true,
-          userrated: true,
-          totalStars: true,
-          _count: { select: { chapter: true } },
-        },
-      });
-    } else {
-      bookData = await prisma.book.findMany({
-        where: { ratings: { gt: -1 } },
-        orderBy: [{ id: "asc" }, { ratings: "desc" }],
-        take: 20,
-        select: {
-          aspectRatio: true,
-          title: true,
-          bookUrl: true,
-          imageUrl: true,
-          status: true,
-          id: true,
-          updatedAt: true,
-          userrated: true,
-          totalStars: true,
-          _count: { select: { chapter: true } },
-        },
-      });
+    const data = await prisma.book.findMany({
+      where: { ratings: { gt: -1 } },
+      orderBy: [{ userrated: "desc" }, { ratings: "desc" }],
+      skip: (page - 1) * 20,
+      take: 20,
+      select: {
+        aspectRatio: true,
+        title: true,
+        bookUrl: true,
+        imageUrl: true,
+        status: true,
+        updatedAt: true,
+        userrated: true,
+        totalStars: true,
+        _count: { select: { chapter: true } },
+      },
+    });
+    if (data.length === 0) {
+      return "Invalid Page";
     }
-
-    return { fData: bookData, pages: bookData.length === 0 ? 0 : pages };
+    return { data, pages: Math.ceil(pages / 20) };
   } catch (e) {
     return "Invalid Page";
   }
 }
 
 export async function fetchCompletedBook(page: number = 1) {
-  const pages = await prisma.book
-    .findMany({
-      where: { status: "Completed" },
-      select: { id: true },
-    })
-    .then((data) => {
-      return Math.ceil(data.length / 20);
-    });
-  const finalData: Array<{
-    id: number;
-    title: string;
-    bookUrl: string;
-    imageUrl: string;
-    updatedAt: Date;
-    totalStars: number;
-    userrated: number;
-    aspectRatio: Decimal;
-    status: string;
-    chapters: number;
-  }> = [];
-  let bookData: Array<{
-    id: number;
-    title: string;
-    bookUrl: string;
-    imageUrl: string;
-    updatedAt: Date;
-    totalStars: number;
-    userrated: number;
-    aspectRatio: Decimal;
-    status: string;
-  }> = [];
+  const pages = await prisma.book.count({
+    where: { status: { contains: "Completed" } },
+  });
   try {
-    if (page > 1) {
-      const cursor = (
-        await prisma.book.findMany({
-          where: { status: "Completed" },
-          orderBy: { ratings: "desc" },
-          take: (page - 1) * 20,
-          select: { id: true },
-        })
-      )[(page - 1) * 20 - 1].id;
-      bookData = await prisma.book.findMany({
-        where: { status: "Completed" },
-        orderBy: { ratings: "desc" },
-        skip: 1,
-        cursor: { id: cursor },
-        take: 20,
-        select: {
-          aspectRatio: true,
-          title: true,
-          bookUrl: true,
-          imageUrl: true,
-          status: true,
-          id: true,
-          updatedAt: true,
-          userrated: true,
-          totalStars: true,
-        },
-      });
-    } else {
-      bookData = await prisma.book.findMany({
-        where: { status: "Completed" },
-        orderBy: { ratings: "desc" },
-        take: 20,
-        select: {
-          aspectRatio: true,
-          title: true,
-          bookUrl: true,
-          imageUrl: true,
-          status: true,
-          id: true,
-          updatedAt: true,
-          userrated: true,
-          totalStars: true,
-        },
-      });
-    }
-
-    if (bookData.length === 0) {
-      return { fData: finalData, pages: 0 };
-    }
-    bookData.forEach(async (book) => {
-      const chs = await prisma.chapter.count({ where: { bookId: book.id } });
-      finalData.push({ ...book, chapters: chs });
+    const data = await prisma.book.findMany({
+      where: { status: { contains: "Completed" } },
+      skip: (page - 1) * 20,
+      take: 20,
+      select: {
+        aspectRatio: true,
+        title: true,
+        bookUrl: true,
+        imageUrl: true,
+        status: true,
+        updatedAt: true,
+        userrated: true,
+        totalStars: true,
+        _count: { select: { chapter: true } },
+      },
     });
+    if (data.length === 0) {
+      return "Invalid Page";
+    }
+    return { data, pages: Math.ceil(pages / 20) };
+  } catch (e) {
+    return "Invalid Page";
+  }
+}
 
-    return { fData: finalData, pages: pages };
+export async function fetchOngoingBook(page: number = 1) {
+  const pages = await prisma.book.count({
+    where: { status: { contains: "Ongoing" } },
+  });
+  try {
+    const data = await prisma.book.findMany({
+      where: { status: { contains: "Ongoing" } },
+      skip: (page - 1) * 20,
+      take: 20,
+      select: {
+        aspectRatio: true,
+        title: true,
+        bookUrl: true,
+        imageUrl: true,
+        status: true,
+        updatedAt: true,
+        userrated: true,
+        totalStars: true,
+        _count: { select: { chapter: true } },
+      },
+    });
+    if (data.length === 0) {
+      return "Invalid Page";
+    }
+    return { data, pages: Math.ceil(pages / 20) };
   } catch (e) {
     return "Invalid Page";
   }
 }
 
 export async function fetchHotBook(page: number = 1) {
-  const pages = await prisma.book
-    .findMany({
-      where: { isHot: true },
-      select: { id: true },
-    })
-    .then((data) => {
-      return Math.ceil(data.length / 20);
-    });
-
-  const finalData: Array<{
-    id: number;
-    title: string;
-    bookUrl: string;
-    imageUrl: string;
-    updatedAt: Date;
-    totalStars: number;
-    userrated: number;
-    aspectRatio: Decimal;
-    status: string;
-    chapters: number;
-  }> = [];
-  let bookData: Array<{
-    id: number;
-    title: string;
-    bookUrl: string;
-    imageUrl: string;
-    updatedAt: Date;
-    totalStars: number;
-    userrated: number;
-    aspectRatio: Decimal;
-    status: string;
-  }> = [];
+  const pages = await prisma.book.count({
+    where: { status: { contains: "Completed" } },
+  });
   try {
-    if (page > 1) {
-      const cursor = (
-        await prisma.book.findMany({
-          where: { isHot: true },
-          orderBy: { id: "desc" },
-          take: (page - 1) * 20,
-          select: { id: true },
-        })
-      )[(page - 1) * 20 - 1].id;
-      bookData = await prisma.book.findMany({
-        where: { isHot: true },
-        orderBy: { id: "desc" },
-        skip: 1,
-        cursor: { id: cursor },
-        take: 20,
-        select: {
-          aspectRatio: true,
-          title: true,
-          bookUrl: true,
-          imageUrl: true,
-          status: true,
-          id: true,
-          updatedAt: true,
-          userrated: true,
-          totalStars: true,
-        },
-      });
-    } else {
-      bookData = await prisma.book.findMany({
-        where: { isHot: true },
-        orderBy: { id: "desc" },
-        take: 20,
-        select: {
-          aspectRatio: true,
-          title: true,
-          bookUrl: true,
-          imageUrl: true,
-          status: true,
-          id: true,
-          updatedAt: true,
-          userrated: true,
-          totalStars: true,
-        },
-      });
-    }
-    if (bookData.length === 0) {
-      return { fData: finalData, pages: 0 };
-    }
-    bookData.forEach(async (book) => {
-      const chs = await prisma.chapter.count({ where: { bookId: book.id } });
-      finalData.push({ ...book, chapters: chs });
+    const data = await prisma.book.findMany({
+      where: { isHot: true },
+      orderBy: { id: "desc" },
+      skip: (page - 1) * 20,
+      take: 20,
+      select: {
+        aspectRatio: true,
+        title: true,
+        bookUrl: true,
+        imageUrl: true,
+        status: true,
+        updatedAt: true,
+        userrated: true,
+        totalStars: true,
+        _count: { select: { chapter: true } },
+      },
     });
-
-    return { fData: finalData, pages: pages };
+    if (data.length === 0) {
+      return "Invalid Page";
+    }
+    return { data, pages: Math.ceil(pages / 20) };
   } catch (e) {
     return "Invalid Page";
   }
 }
 
 export async function fetchRecentUpdatesPage(page: number = 1) {
-  let updateData: Array<{
-    url: string;
-    title: string;
-    addAt: Date;
-    book: {
-      title: string;
-      imageUrl: string;
-      bookUrl: string;
-      aspectRatio: Decimal;
-      author: { name: string };
-    } | null;
-  }> = [];
   try {
-    if (page > 0 && page <= 5) {
-      updateData = await prisma.chapter.findMany({
-        distinct: ["bookId"],
+    const p = await prisma.recents.count();
+    return await prisma.recents
+      .findMany({
         orderBy: { addAt: "desc" },
-        take: 100,
+        skip: (page - 1) * 20,
+        take: 20,
         select: {
+          addAt: true,
           title: true,
           url: true,
-          addAt: true,
           book: {
             select: {
               title: true,
@@ -489,14 +285,14 @@ export async function fetchRecentUpdatesPage(page: number = 1) {
             },
           },
         },
+      })
+      .then((data) => {
+        if (data.length === 0) {
+          return "Invalid Page";
+        }
+        return { data, pages: Math.ceil(p / 20) };
       });
-      updateData = updateData.splice(20 * (page - 1), 20);
-
-      return { data: updateData };
-    } else {
-      return "Invalid Page";
-    }
-  } catch (e) {
+  } catch (err) {
     return "Invalid Page";
   }
 }
@@ -616,81 +412,6 @@ export async function fetchBookDetails(name: string) {
   }
 }
 
-export async function fetchAllNovels(page: number = 1) {
-  const pages = await prisma.book
-    .count({
-      orderBy: { id: "asc", ratings: "desc" },
-    })
-    .then((data) => {
-      return Math.ceil(data / 20);
-    });
-  let bookData: Array<{
-    title: string;
-    bookUrl: string;
-    imageUrl: string;
-    views: number;
-    chapter: {
-      number: number;
-      url: string;
-    }[];
-    _count: {
-      chapter: number;
-    };
-  }> = [];
-  try {
-    if (page > 1) {
-      const cursor = (
-        await prisma.book.findMany({
-          orderBy: { id: "asc", ratings: "desc" },
-          take: (page - 1) * 20,
-          select: { id: true },
-        })
-      )[(page - 1) * 20 - 1].id;
-      bookData = await prisma.book.findMany({
-        orderBy: { id: "asc", ratings: "desc" },
-        skip: 1,
-        take: 20,
-        cursor: { id: cursor },
-        select: {
-          title: true,
-          bookUrl: true,
-          imageUrl: true,
-          views: true,
-          chapter: {
-            orderBy: { number: "desc" },
-            take: 2,
-            select: { url: true, number: true },
-          },
-          _count: { select: { chapter: true } },
-        },
-      });
-
-      return { data: bookData, pages: pages };
-    } else {
-      bookData = await prisma.book.findMany({
-        orderBy: { id: "asc", ratings: "desc" },
-        take: 20,
-        select: {
-          title: true,
-          bookUrl: true,
-          imageUrl: true,
-          views: true,
-          chapter: {
-            orderBy: { number: "desc" },
-            take: 2,
-            select: { url: true, number: true },
-          },
-          _count: { select: { chapter: true } },
-        },
-      });
-
-      return { data: bookData, pages: pages };
-    }
-  } catch (e) {
-    return "Invalid Page";
-  }
-}
-
 export async function newRating(stars: number, title: string) {
   const ratingData = await prisma.book.findFirst({
     where: { title: title },
@@ -803,14 +524,14 @@ export async function addBook(book: IncomingBook) {
 
 export async function checkChapter(
   book: string,
-  chap: Array<{ ch: string; num: number }>
+  chap: Array<{ ch: string; num: number; bookId: number }>
 ) {
   const final: Array<{ ch: string; num: number }> = [];
   for (const element of chap) {
     const status = await prisma.chapter.findFirst({
       where: {
         book: { bookUrl: book },
-        oldUrl: `${book}/${element.ch.split(`/${book}/`)[1]}`,
+        number: element.num,
       },
       select: { id: true },
     });
@@ -818,7 +539,6 @@ export async function checkChapter(
       final.push(element);
     }
   }
-
   return final;
 }
 
@@ -829,109 +549,47 @@ export async function addNewChapter(chapter: IncomingChapter) {
       : titleToUrl(chapter.title.trim());
 
   const count = (s: string) => (s.match(/\b\w+\b/g) || []).length;
-  const bookId = (await prisma.book.findFirst({
-    where: { bookUrl: chapter.bookUrl },
-    select: { id: true },
-  }))!.id;
+  await prisma.recents.upsert({
+    where: { bookId: chapter.bookId },
+    create: { title: chapter.title, url: chapter.url, bookId: chapter.bookId },
+    update: { title: chapter.title, url: chapter.url },
+  });
 
   return {
     newUrl,
-    bookId,
     content: correctString(chapter.content.join("[hereisbreak]")),
   };
 }
 
-export async function fetchByCategory(
-  name: string,
-  toFetch: {
-    aspectRatio: boolean;
-    bookUrl: boolean;
-    imageUrl: boolean;
-    title: boolean;
-    status: boolean;
-    Ratings: boolean;
-    updatedAt: boolean;
-    _count: boolean;
-  } = {
-    aspectRatio: true,
-    bookUrl: true,
-    imageUrl: true,
-    title: true,
-    status: true,
-    Ratings: true,
-    updatedAt: true,
-    _count: true,
-  },
-  page: number = 1
-) {
-  const pages = await prisma.book.count({
-    where: { category: { some: { route: name } } },
-  });
+export async function fetchByCategory(name: string, page: number = 1) {
   try {
-    if (page > 1) {
-      const cursor = (
-        await prisma.book.findMany({
-          where: { category: { some: { name } } },
-          orderBy: { chapter: { _count: "desc" } },
-          take: (page - 1) * 20,
-          select: { id: true },
-        })
-      ).reverse()[0].id;
-      const booksData = await prisma.book.findMany({
+    const pages = await prisma.book.count({
+      where: { category: { some: { route: name } } },
+    });
+    return await prisma.book
+      .findMany({
         where: { category: { some: { route: name } } },
-        orderBy: { chapter: { _count: "desc" } },
-        take: 20,
-        skip: 1,
-        cursor: { id: cursor },
-        select: {
-          aspectRatio: toFetch.aspectRatio,
-          bookUrl: toFetch.bookUrl,
-          imageUrl: toFetch.imageUrl,
-          title: toFetch.title,
-          status: toFetch.status,
-          Ratings: toFetch.Ratings,
-          updatedAt: toFetch.updatedAt,
-          chapter: {
-            orderBy: { addAt: "desc" },
-            take: 1,
-            select: { addAt: true },
-          },
-          _count: { select: { chapter: toFetch._count } },
-        },
-      });
-
-      if (booksData.length === 0) {
-        return "Invalid Page";
-      }
-
-      return { booksData, pages: Math.ceil(pages / 20) };
-    } else {
-      const booksData = await prisma.book.findMany({
-        where: { category: { some: { route: name } } },
-        orderBy: { chapter: { _count: "desc" } },
+        orderBy: [{ id: "desc" }, { chapter: { _count: "desc" } }],
+        skip: (page - 1) * 20,
         take: 20,
         select: {
-          aspectRatio: toFetch.aspectRatio,
-          bookUrl: toFetch.bookUrl,
-          imageUrl: toFetch.imageUrl,
-          title: toFetch.title,
-          status: toFetch.status,
-          Ratings: toFetch.Ratings,
-          updatedAt: toFetch.updatedAt,
-          chapter: {
-            orderBy: { addAt: "desc" },
-            take: 1,
-            select: { addAt: true },
-          },
-          _count: { select: { chapter: toFetch._count } },
+          aspectRatio: true,
+          title: true,
+          bookUrl: true,
+          imageUrl: true,
+          status: true,
+          updatedAt: true,
+          userrated: true,
+          totalStars: true,
+          _count: { select: { chapter: true } },
         },
+      })
+      .then((data) => {
+        if (data.length === 0) {
+          return "Invalid Page";
+        }
+        return { data, pages: Math.ceil(pages / 20) };
       });
-      if (booksData.length === 0) {
-        return "Invalid Page";
-      }
-
-      return { booksData, pages: Math.ceil(pages / 20) };
-    }
   } catch (err) {
     return "Invalid Page";
   }
@@ -947,54 +605,64 @@ export async function fetchAllCategories() {
 }
 
 export async function fetchAllNovelsPage(page: number = 1) {
-  const pages = Math.ceil((await prisma.book.count({ where: {} })) / 20);
   try {
-    if (page > 1) {
-      const cursor = (
-        await prisma.book.findMany({
-          orderBy: { views: "desc" },
-          take: (page - 1) * 20,
-          select: { id: true },
-        })
-      )[(page - 1) * 20 - 1].id;
-      const data = await prisma.book.findMany({
-        orderBy: { views: "desc" },
-        take: 20,
-        cursor: { id: cursor },
-        skip: 1,
-        select: {
-          imageUrl: true,
-          title: true,
-          aspectRatio: true,
-          bookUrl: true,
-          _count: { select: { chapter: true } },
-          author: { select: { name: true } },
-          status: true,
-          userrated: true,
-          totalStars: true,
-          views: true,
-        },
-      });
-      return { data, pages };
-    } else {
-      const data = await prisma.book.findMany({
-        orderBy: { views: "desc" },
+    const pages = await prisma.book.count({
+      where: {},
+    });
+    return await prisma.book
+      .findMany({
+        where: {},
+        orderBy: [{ userrated: "desc" }, { chapter: { _count: "desc" } }],
+        skip: (page - 1) * 20,
         take: 20,
         select: {
-          imageUrl: true,
-          title: true,
           aspectRatio: true,
+          title: true,
           bookUrl: true,
-          _count: { select: { chapter: true } },
-          author: { select: { name: true } },
+          imageUrl: true,
           status: true,
+          updatedAt: true,
           userrated: true,
           totalStars: true,
-          views: true,
+          _count: { select: { chapter: true } },
         },
+      })
+      .then((data) => {
+        if (data.length === 0) {
+          return "Invalid Page";
+        }
+        return { data, pages: Math.ceil(pages / 20) };
       });
-      return { data, pages };
+  } catch (err) {
+    return "Invalid Page";
+  }
+}
+
+export async function fetchByStatus(status: string, page: number = 1) {
+  try {
+    const pages = await prisma.book.count({
+      where: { status: { contains: status } },
+    });
+    const data = await prisma.book.findMany({
+      where: { status: { contains: status } },
+      skip: (page - 1) * 20,
+      take: 20,
+      select: {
+        aspectRatio: true,
+        title: true,
+        bookUrl: true,
+        imageUrl: true,
+        status: true,
+        updatedAt: true,
+        userrated: true,
+        totalStars: true,
+        _count: { select: { chapter: true } },
+      },
+    });
+    if (data.length === 0) {
+      return "Invalid Page";
     }
+    return { data, pages: Math.ceil(pages / 20) };
   } catch (err) {
     return "Invalid Page";
   }
@@ -1002,35 +670,32 @@ export async function fetchAllNovelsPage(page: number = 1) {
 
 export async function fetchByAuthor(name: string) {
   name = decodeURI(name);
-  const result = await prisma.author.findFirst({
-    where: { name },
-    select: {
-      book: {
-        orderBy: { ratings: "desc" },
-        select: {
-          aspectRatio: true,
-          bookUrl: true,
-          imageUrl: true,
-          title: true,
-          status: true,
-          totalStars: true,
-          userrated: true,
-          updatedAt: true,
-          chapter: {
-            orderBy: { number: "desc" },
-            take: 1,
-            select: { addAt: true },
+  try {
+    const data = await prisma.author.findFirst({
+      where: { name },
+      select: {
+        book: {
+          select: {
+            aspectRatio: true,
+            title: true,
+            bookUrl: true,
+            imageUrl: true,
+            status: true,
+            updatedAt: true,
+            userrated: true,
+            totalStars: true,
+            _count: { select: { chapter: true } },
           },
-          _count: { select: { chapter: true } },
         },
       },
-    },
-  });
-  if (!result) {
-    return "Invalid Author";
+    });
+    if (!data) {
+      return "Invalid Page";
+    }
+    return { data: data.book, pages: 0 };
+  } catch (err) {
+    return "Invalid Page";
   }
-
-  return result;
 }
 
 export async function fetchAllBooks(host: string) {

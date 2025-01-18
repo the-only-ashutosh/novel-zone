@@ -1,15 +1,12 @@
 import GradBanner from "@/components/Shared/GradBanner";
 import { fetchByGenre } from "@/service/dataoperation";
 import { Metadata } from "next";
-import dynamic from "next/dynamic";
-import { notFound } from "next/navigation";
-import React from "react";
+import React, { Suspense } from "react";
 import { ALL_GENRE } from "@/service/genre";
-const DetailCard = dynamic(
-  () => import("@/components/Elements/DetailCard/DetailCard"),
-  { ssr: true }
-);
-const Pages = dynamic(() => import("@/components/Shared/Pages"));
+import DetailList from "@/components/Elements/DetailCard/DetailList";
+import DetailsListSkeleton from "@/components/Elements/DetailCard/DetailsListSkeleton";
+
+export const experimental_ppr = true;
 
 const SingleGenrePage = async ({
   params,
@@ -17,44 +14,19 @@ const SingleGenrePage = async ({
   params: Promise<{ genre_name: string; page: number }>;
 }) => {
   const { genre_name, page } = await params;
-  const genreData = await fetchByGenre(genre_name, page);
   const genre = ALL_GENRE.find((x) => x.route === genre_name);
-
   return (
     <div className="mt-4 mb-10">
       <GradBanner main={`Filtered by Genre`} sub={`${genre?.name}`}>
-        {genreData !== "Invalid Page" && (
-          <div className="flex flex-col justify-center items-center w-full">
-            <div className="grid updatedlistgrid gap-4 w-full">
-              {genreData.fData.map((book) => {
-                return (
-                  <DetailCard
-                    aspectRatio={Number(book.aspectRatio)}
-                    bookUrl={book.bookUrl}
-                    chapters={book._count.chapter}
-                    imageUrl={book.imageUrl}
-                    status={book.status}
-                    time={book.updatedAt}
-                    title={book.title}
-                    key={book.title + book.id}
-                    ratings={(book.totalStars / book.userrated).toFixed(1)}
-                  />
-                );
-              })}
-            </div>
-            {Math.ceil(genreData.total / 20) > 1 && (
-              <Pages
-                totalPages={Math.ceil(genreData.total / 20)}
-                url={`/filter/genre/${genre_name}`}
-              />
-            )}
-          </div>
-        )}
-        {genreData !== "Invalid Page" && genreData.fData.length === 0 && (
-          <div className="w-[90vw] h-[100vh] flex justify-center items-center">
-            {notFound()}
-          </div>
-        )}
+        <Suspense fallback={<DetailsListSkeleton />}>
+          <DetailList
+            onPage={`genre/${genre_name}`}
+            func={(page: number) => {
+              return fetchByGenre(genre_name, page);
+            }}
+            params={Promise.resolve({ page })}
+          />
+        </Suspense>
       </GradBanner>
     </div>
   );
@@ -73,13 +45,13 @@ export async function generateMetadata({
 
   const books =
     book !== "Invalid Page"
-      ? book.fData.map((bk) => {
+      ? book.data.map((bk) => {
           return bk.title;
         })
       : ["By Genre", genre?.name ?? genre_name];
   const images =
     book !== "Invalid Page"
-      ? book.fData.map((bk) => {
+      ? book.data.map((bk) => {
           return bk.imageUrl;
         })
       : [];

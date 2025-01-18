@@ -38,7 +38,7 @@ const NewUpdatesItem = ({
               href={`/book/${bookUrl}`}
               className="hover:dark:text-primary hover:text-primary dark:text-white"
             >
-              <h2 className="font-semibold text-medium line-clamp-3 sm:line-clamp-2 lg:text-lg xl:text-xl">
+              <h2 className="font-semibold text-medium line-clamp-1 sm:line-clamp-2 md:line-clamp-2 lg:text-lg xl:text-xl">
                 {title}
               </h2>
             </Link>

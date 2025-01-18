@@ -1,18 +1,14 @@
-import GradBanner from "@/components/Shared/GradBanner";
 import {
   fetchByCategory,
   fetchCategoryFromRoute,
 } from "@/service/dataoperation";
-import React from "react";
-import dynamic from "next/dynamic";
-import { notFound } from "next/navigation";
+import React, { Suspense } from "react";
+import GradBanner from "@/components/Shared/GradBanner";
 import { Metadata } from "next";
+import DetailList from "@/components/Elements/DetailCard/DetailList";
+import DetailsListSkeleton from "@/components/Elements/DetailCard/DetailsListSkeleton";
 
-const DetailCard = dynamic(
-  () => import("@/components/Elements/DetailCard/DetailCard"),
-  { ssr: true }
-);
-const Pages = dynamic(() => import("@/components/Shared/Pages"));
+export const experimental_ppr = true;
 
 const NumberCategoriesPage = async ({
   params,
@@ -20,60 +16,19 @@ const NumberCategoriesPage = async ({
   params: Promise<{ name: string; page: number }>;
 }) => {
   const { name, page } = await params;
-  const d = fetchByCategory(
-    decodeURI(name),
-    {
-      _count: true,
-      aspectRatio: true,
-      bookUrl: true,
-      imageUrl: true,
-      Ratings: true,
-      status: true,
-      title: true,
-      updatedAt: true,
-    },
-    page
-  );
-  const c = fetchCategoryFromRoute(name);
-  const [data, Category] = await Promise.all([d, c]);
+  const c = await fetchCategoryFromRoute(name);
   return (
-    <div className="flex mt-8 mb-10">
-      <GradBanner main="Filtered by Categories" sub={`${Category}`}>
-        {data !== "Invalid Page" ? (
-          <div className="flex flex-col justify-center items-center w-full">
-            <div className="grid updatedlistgrid gap-4 justify-center w-full">
-              {data.booksData.map((book) => {
-                return (
-                  <DetailCard
-                    aspectRatio={Number(book.aspectRatio)}
-                    bookUrl={book.bookUrl}
-                    chapters={book._count.chapter}
-                    imageUrl={book.imageUrl}
-                    status={book.status}
-                    time={
-                      book.chapter.length > 0
-                        ? book.chapter[0].addAt
-                        : book.updatedAt
-                    }
-                    title={book.title}
-                    key={book.title + book.status}
-                    ratings={book.Ratings.toFixed(1)}
-                  />
-                );
-              })}
-            </div>
-            {data.pages > 1 && (
-              <Pages
-                url={`/filter/categories/${name}`}
-                totalPages={data.pages}
-              />
-            )}
-          </div>
-        ) : (
-          <div className="flex w-[90%] h-full justify-center items-center">
-            {notFound()}
-          </div>
-        )}
+    <div className="mt-4 mb-10">
+      <GradBanner main="Filtered by Categories" sub={`${c}`}>
+        <Suspense fallback={<DetailsListSkeleton />}>
+          <DetailList
+            onPage={`categories/${name}`}
+            func={(page: number) => {
+              return fetchByCategory(decodeURI(name), page);
+            }}
+            params={Promise.resolve({ page })}
+          />
+        </Suspense>
       </GradBanner>
     </div>
   );
@@ -87,29 +42,16 @@ export async function generateMetadata({
   params: Promise<{ name: string; page: number }>;
 }): Promise<Metadata> {
   const { name, page } = await params;
-  const book = await fetchByCategory(
-    name,
-    {
-      aspectRatio: false,
-      imageUrl: true,
-      title: true,
-      updatedAt: false,
-      _count: false,
-      bookUrl: false,
-      Ratings: false,
-      status: false,
-    },
-    page
-  );
+  const book = await fetchByCategory(name, page);
   const books =
     book !== "Invalid Page"
-      ? book.booksData.map((bk) => {
+      ? book.data.map((bk) => {
           return bk.title;
         })
       : ["By Genre", name];
   const images =
     book !== "Invalid Page"
-      ? book.booksData.map((bk) => {
+      ? book.data.map((bk) => {
           return bk.imageUrl;
         })
       : [];
