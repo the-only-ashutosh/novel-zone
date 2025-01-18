@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import NewUpdatesItem from "@/components/Elements/NewUpdates/NewUpdates";
 import { fetchRecentUpdatesPage } from "@/service/dataoperation";
 import { notFound } from "next/navigation";
+import { newUpdates } from "@/types";
 
 const Pages = dynamic(() => import("@/components/Shared/Pages"));
 
@@ -12,7 +13,7 @@ const NewUpdatesList = async ({
   params?: Promise<{ page: number }>;
 }) => {
   const page = await params;
-  const newUpdates = await fetchRecentUpdatesPage(page?.page ?? 1);
+  const newUpdates: newUpdates = await fetchRecentUpdatesPage(page?.page ?? 1);
   if (newUpdates === "Invalid Page") notFound();
   return (
     <div className="flex flex-col justify-center items-center w-full">

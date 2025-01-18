@@ -46,3 +46,23 @@ export type detailCardData = {
   }[];
   pages: number;
 };
+
+export type newUpdates =
+  | "Invalid Page"
+  | {
+      data: {
+        book: {
+          author: {
+            name: string;
+          };
+          title: string;
+          bookUrl: string;
+          imageUrl: string;
+          aspectRatio: Decimal;
+        };
+        title: string;
+        addAt: Date;
+        url: string;
+      }[];
+      pages: number;
+    };
