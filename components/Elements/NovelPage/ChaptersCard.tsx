@@ -100,6 +100,7 @@ const ChaptersCard = ({
                   <Grid
                     key={`${chapters.number}${index}`}
                     size={{ xs: 12, sm: 12, md: 6, lg: 6 }}
+                    className="transition-transform duration-300 hover:transform hover:scale-95"
                   >
                     <Card className={`flex flex-row pr-2 rounded-sm`}>
                       <div className="flex justify-center items-center min-w-20 border-small rounded-l-sm border-gray-800 dark:border-white">

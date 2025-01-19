@@ -3,6 +3,7 @@ import DetailList from "@/components/Elements/DetailCard/DetailList";
 import DetailsListSkeleton from "@/components/Elements/DetailCard/DetailsListSkeleton";
 import GradBanner from "@/components/Shared/GradBanner";
 import { fetchByAuthor } from "@/service/dataoperation";
+import Script from "next/script";
 import React, { Suspense } from "react";
 
 const AuthorPage = async ({
@@ -24,6 +25,14 @@ const AuthorPage = async ({
           />
         </Suspense>
       </GradBanner>
+      <Script
+        async
+        src="https://www.googletagmanager.com/gtag/js?id=G-TESRE0F8SW"
+      />
+      <Script id="tag-manager">{`window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-TESRE0F8SW');`}</Script>
     </div>
   );
 };

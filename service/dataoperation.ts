@@ -705,34 +705,35 @@ export async function fetchByAuthor(name: string) {
 }
 
 export async function fetchAllBooks(host: string) {
-  return await prisma.book
-    .findMany({
-      select: {
-        bookUrl: true,
-        imageUrl: true,
-        updatedAt: true,
-        chapter: {
-          orderBy: { number: "desc" },
-          select: { addAt: true },
-          take: 1,
-        },
+  const pri = new PrismaClient();
+  const data = [];
+  const books = await pri.book.findMany({
+    select: {
+      bookUrl: true,
+      imageUrl: true,
+      updatedAt: true,
+      chapter: {
+        orderBy: { number: "desc" },
+        select: { addAt: true },
+        take: 1,
       },
-    })
-    .then(async (books) => {
-      return books.map((book) => {
-        return {
-          url: `https://${host}/book/${book.bookUrl}`,
-          lastModified: new Date(
-            book.chapter.length > 0
-              ? book.chapter[0].addAt.getTime()
-              : book.updatedAt
-          ),
-          changeFrequency: "weekly",
-          priority: 0.8,
-          images: [book.imageUrl],
-        };
-      });
+    },
+  });
+  for (const book of books) {
+    await pri.$disconnect();
+    data.push({
+      url: `https://${host}/book/${book.bookUrl}`,
+      lastModified: new Date(
+        book.chapter.length > 0
+          ? book.chapter[0].addAt.getTime()
+          : book.updatedAt
+      ),
+      changeFrequency: "weekly",
+      priority: 0.8,
+      images: [book.imageUrl],
     });
+  }
+  return data;
 }
 
 export async function fetchGenreSitemap(host: string) {
@@ -743,8 +744,9 @@ export async function fetchGenreSitemap(host: string) {
     priority: number;
     images: string[];
   }[] = [];
+  const pri = new PrismaClient();
   for (const element of ALL_GENRE) {
-    const imageArr = await prisma.book
+    const imageArr = await pri.book
       .findMany({
         where: { genre: { some: { route: element.route } } },
         select: { imageUrl: true },
@@ -752,13 +754,13 @@ export async function fetchGenreSitemap(host: string) {
       .then((res) => res.map((u) => u.imageUrl));
     sitemapData.push({
       url: `https://${host}/genre/${element.route}`,
-      lastModified: `2025-01-06`,
+      lastModified: Date.now().toLocaleString(),
       changeFrequency: "weekly",
       priority: 0.6,
       images: imageArr,
     });
   }
-
+  await pri.$disconnect();
   return sitemapData;
 }
 
@@ -773,8 +775,9 @@ export async function fetchCategorySitemap(host: string) {
     priority: number;
     images: string[];
   }[] = [];
+  const pri = new PrismaClient();
   categories.forEach(async (category) => {
-    const imgArr = await prisma.category
+    const imgArr = await pri.category
       .findFirst({
         where: { name: category },
         select: { book: { select: { imageUrl: true } } },
@@ -788,7 +791,7 @@ export async function fetchCategorySitemap(host: string) {
       images: imgArr,
     });
   });
-
+  await pri.$disconnect();
   return sitemapData;
 }
 

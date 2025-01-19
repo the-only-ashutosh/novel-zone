@@ -8,6 +8,7 @@ import { getCookie } from "cookies-next/server";
 import { cookies } from "next/headers";
 import { correctString } from "@/service/functions";
 import { notFound } from "next/navigation";
+import Script from "next/script";
 
 type SearchParams = Promise<{ [key: string]: string }>;
 
@@ -72,6 +73,14 @@ const ChapterPage = async ({
               Note: To change chapters use Z and N or ← and →
             </div>
           )}
+          <Script
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=G-TESRE0F8SW"
+          />
+          <Script id="tag-manager">{`window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-TESRE0F8SW');`}</Script>
         </>
       ) : (
         notFound()

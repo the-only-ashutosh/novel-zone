@@ -5,6 +5,7 @@ import InfoListWithSuspense from "@/components/Elements/InfoCard/InfoListWithSus
 import { bookData } from "@/components/Elements/InfoCard/InfoList";
 import { booksData } from "@/components/Elements/InfoBanner/InfoBannerList";
 import InfoBannerListWithSuspense from "@/components/Elements/InfoBanner/InfoBannerListWithSuspense";
+import Script from "next/script";
 
 export const experimental_ppr = true;
 
@@ -39,6 +40,14 @@ export default function Home() {
         </div>
         <InfoBannerListWithSuspense data={chapterData} />
       </div>
+      <Script
+        async
+        src="https://www.googletagmanager.com/gtag/js?id=G-TESRE0F8SW"
+      />
+      <Script id="tag-manager">{`window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-TESRE0F8SW');`}</Script>
     </>
   );
 }

@@ -4,6 +4,7 @@ import { Metadata } from "next/types";
 import React, { Suspense } from "react";
 import DetailList from "@/components/Elements/DetailCard/DetailList";
 import DetailsListSkeleton from "@/components/Elements/DetailCard/DetailsListSkeleton";
+import Script from "next/script";
 
 export const experimental_ppr = true;
 
@@ -15,6 +16,14 @@ const AllNovels = () => {
           <DetailList func={fetchAllNovelsPage} onPage="allnovels" />
         </Suspense>
       </GradBanner>
+      <Script
+        async
+        src="https://www.googletagmanager.com/gtag/js?id=G-TESRE0F8SW"
+      />
+      <Script id="tag-manager">{`window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-TESRE0F8SW');`}</Script>
     </div>
   );
 };

@@ -24,7 +24,7 @@ const NewUpdatesItem = ({
   author: string;
 }) => {
   return (
-    <Card className="w-full my-2 rounded-sm">
+    <Card className="w-full my-2 rounded-md">
       <CardBody className="flex flex-row p-0">
         <Image
           src={url}

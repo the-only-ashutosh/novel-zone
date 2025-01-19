@@ -3,10 +3,10 @@ import withBundleAnalyzer from "@next/bundle-analyzer";
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ["heroui.org", "idoxbjg.sufydely.com"],
+    domains: ["idoxbjg.sufydely.com"],
   },
   compiler: {
-    // removeConsole: true,
+    removeConsole: true,
   },
   reactStrictMode: true,
   experimental: {

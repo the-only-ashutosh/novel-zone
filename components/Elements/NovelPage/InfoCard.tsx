@@ -83,7 +83,7 @@ const InfoCard = ({
                     href={
                       status === "Completed"
                         ? "/filter/completed"
-                        : "filter/ongoing"
+                        : "/filter/ongoing"
                     }
                   >
                     {status.toUpperCase()}

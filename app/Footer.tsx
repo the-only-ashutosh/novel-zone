@@ -1,5 +1,5 @@
+import Logo from "@/components/Shared/Appbar/Logo";
 import { Button } from "@heroui/react";
-import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { FaFacebook, FaTwitter, FaInstagram, FaEnvelope } from "react-icons/fa";
@@ -26,13 +26,7 @@ const Footer = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
-                <Image
-                  src="/book.jpg"
-                  alt="Novel Zone"
-                  className="w-8 h-8 rounded-full"
-                  width={32}
-                  height={32}
-                />
+                <Logo />
                 <h2 className="text-xl font-bold">Novel Zone</h2>
               </div>
               <p className="text-sm">

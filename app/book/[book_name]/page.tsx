@@ -13,6 +13,7 @@ import { getTimeDiff } from "@/service/functions";
 import { notFound } from "next/navigation";
 import GradBanner from "@/components/Shared/GradBanner";
 import InfoList from "@/components/Elements/InfoCard/InfoList";
+import Script from "next/script";
 const ChaptersCard = dynamic(
   () => import("@/components/Elements/NovelPage/ChaptersCard")
 );
@@ -132,6 +133,14 @@ const BookPage = async ({
               <InfoList data={like.data} cls="" />
             </GradBanner>
           )}
+          <Script
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=G-TESRE0F8SW"
+          />
+          <Script id="tag-manager">{`window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-TESRE0F8SW');`}</Script>
         </>
       ) : (
         <div className="w-ful h-full flex justify-center items-center">
