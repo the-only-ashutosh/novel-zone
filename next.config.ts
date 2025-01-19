@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
     domains: ["heroui.org", "idoxbjg.sufydely.com"],
   },
   compiler: {
-    removeConsole: true,
+    // removeConsole: true,
   },
   reactStrictMode: true,
   experimental: {

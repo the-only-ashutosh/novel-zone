@@ -45,7 +45,8 @@ const NewUpdatesItem = ({
             <div className="mt-auto flex flex-col">
               <p className="sm:text-small line-clamp-1">{author}</p>
               <p className="sm:text-small mt-1">
-                Updated:&nbsp;{getTimeDiff(time)}&nbsp;ago
+                Updated:&nbsp;{getTimeDiff(time)}
+                &nbsp;ago
               </p>
             </div>
           </div>

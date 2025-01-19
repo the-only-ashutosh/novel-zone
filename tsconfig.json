@@ -28,7 +28,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "app/not-found.js", // "service/temp.ts"
-    "app/sitemap.js" // "service/temp.mjs"
+    "app/s.js" // "service/temp.mjs"
   ],
   "exclude": ["node_modules"]
 }

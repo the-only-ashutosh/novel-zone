@@ -1,8 +1,6 @@
 export const getTimeDiff = (ftime: Date) => {
   if (!ftime) return "none";
-  const timeDiff = Math.abs(
-    (Date.now() - (new Date(ftime).getTime() - 330 * 60 * 1000)) / 1000
-  );
+  const timeDiff = Math.abs((Date.now() - new Date(ftime).getTime()) / 1000);
   if (timeDiff < 60) {
     return timeDiff > 1
       ? `${Math.round(timeDiff)} seconds`

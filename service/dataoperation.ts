@@ -8,7 +8,7 @@ import { PrismaClient } from "@prisma/client";
 
 export const fetchMostPopular = async () => {
   return await prisma.book.findMany({
-    orderBy: { ratings: "desc" },
+    orderBy: [{ views: "desc" }, { ratings: "desc" }],
     take: 12,
     select: {
       bookUrl: true,
