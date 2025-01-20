@@ -66,3 +66,13 @@ export type newUpdates =
       }[];
       pages: number;
     };
+
+export type Chapter = {
+  bookId: number;
+  number: number;
+  views: number;
+  likes: number;
+  url: string;
+  content: Uint8Array<ArrayBufferLike>;
+  title: string;
+};

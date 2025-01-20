@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import type { IncomingBook, IncomingChapter } from "@/types";
+import type { Chapter, IncomingBook, IncomingChapter } from "@/types";
 import prisma from "./client";
 import { correctString, titleToUrl } from "./functions";
 import { ALL_GENRE } from "./genre";
@@ -565,6 +565,18 @@ export async function addNewChapter(chapter: IncomingChapter) {
     newUrl,
     content: correctString(chapter.content.join("[hereisbreak]")),
   };
+}
+
+export async function addChapters(chapters: Chapter[]) {
+  const pri = new PrismaClient();
+  const ids: number[] = [];
+  for (const chapter of chapters) {
+    ids.push(
+      (await pri.chapter.create({ data: chapter, select: { id: true } })).id
+    );
+  }
+  await pri.$disconnect();
+  return ids;
 }
 
 export async function fetchByCategory(name: string, page: number = 1) {
