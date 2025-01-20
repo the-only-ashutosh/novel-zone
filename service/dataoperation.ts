@@ -547,36 +547,39 @@ export async function checkChapter(
   return final;
 }
 
-export async function addNewChapter(chapter: IncomingChapter) {
-  const newUrl =
-    chapter.url.split("-").length > 2
-      ? chapter.url
-      : titleToUrl(chapter.title.trim());
-
+export async function addChapters(chapters: Chapter[]) {
   const count = (s: string) => (s.match(/\b\w+\b/g) || []).length;
   const pri = new PrismaClient();
-  await pri.recents.upsert({
-    where: { bookId: chapter.bookId },
-    create: { title: chapter.title, url: chapter.url, bookId: chapter.bookId },
-    update: { title: chapter.title, url: chapter.url },
-  });
-  await pri.$disconnect();
-  return {
-    newUrl,
-    content: correctString(chapter.content.join("[hereisbreak]")),
-  };
-}
-
-export async function addChapters(chapters: Chapter[]) {
-  const pri = new PrismaClient();
-  const ids: number[] = [];
+  const encoder = new TextEncoder();
   for (const chapter of chapters) {
-    ids.push(
-      (await pri.chapter.create({ data: chapter, select: { id: true } })).id
-    );
+    const newUrl =
+      chapter.url.split("-").length > 2
+        ? chapter.url
+        : titleToUrl(chapter.title.trim());
+    await pri.chapter.create({
+      data: {
+        ...chapter,
+        content: encoder.encode(
+          correctString(chapter.content.join("[hereisbreak]"))
+        ),
+        url: newUrl,
+      },
+      select: { id: true },
+    });
+
+    if (chapters.indexOf(chapter) === chapters.length - 1) {
+      await pri.recents.upsert({
+        where: { bookId: chapter.bookId },
+        create: {
+          title: chapter.title,
+          url: chapter.url,
+          bookId: chapter.bookId,
+        },
+        update: { title: chapter.title, url: chapter.url },
+      });
+    }
   }
   await pri.$disconnect();
-  return ids;
 }
 
 export async function fetchByCategory(name: string, page: number = 1) {

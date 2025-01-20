@@ -73,6 +73,6 @@ export type Chapter = {
   views: number;
   likes: number;
   url: string;
-  content: Uint8Array<ArrayBufferLike>;
+  content: string[];
   title: string;
 };
