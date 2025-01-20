@@ -109,6 +109,7 @@ export async function generateMetadata({
       title: `${chapterData.title} | ${chapterData.book.title}`,
       applicationName: chapterData.title,
       referrer: "origin-when-cross-origin",
+      description: chapterData.content.replaceAll("[hereisbreak]", " "),
       keywords: [
         "Novel",
         "Novel Zone",

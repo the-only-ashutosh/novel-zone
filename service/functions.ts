@@ -60,6 +60,7 @@ export const correctString = (value: string): string => {
     .replaceAll("Find your next read at empire", "")
     .replaceAll(`Explore more stories with empire`, "")
     .replaceAll("Enjoy exclusive adventures from empire", "")
+    .replaceAll("Explore more stories at empire", "")
     .replaceAll("Nôv(el)B\\jnn", "")
     .replaceAll(`n/o/vel/b//in dot c//om`, "")
     .replaceAll(`KÃ¶prÃ¼lÃ¼`, "")

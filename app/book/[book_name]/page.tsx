@@ -163,8 +163,12 @@ export async function generateMetadata({
 
   if (book !== "Invalid Book" && book !== null) {
     return {
-      title: book.title,
+      title: `${book.title} | Novel Zone`,
       referrer: "origin-when-cross-origin",
+      description: String.fromCharCode(...book.description).replaceAll(
+        "[hereisbreak]",
+        " "
+      ),
       keywords: [
         "Novel",
         "Novel Zone",
@@ -173,13 +177,16 @@ export async function generateMetadata({
         "webnovel",
         book.title,
         ...book.genre.map((e) => e.name),
-        //...book!.Tags.split(", "),
+        ...book.category.map((e) => e.name),
       ],
       twitter: {
         card: "summary_large_image",
         title: book.title,
-        description: String.fromCharCode(...book.description),
-        images: [book.imageUrl], // Must be an absolute URL
+        description: String.fromCharCode(...book.description).replaceAll(
+          "[hereisbreak]",
+          " "
+        ),
+        images: book.imageUrl,
       },
     };
   }

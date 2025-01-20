@@ -547,6 +547,27 @@ export async function checkChapter(
   return final;
 }
 
+export async function addSingleChapter(ch: Chapter) {
+  const pri = new PrismaClient();
+  const encoder = new TextEncoder();
+  const newUrl =
+    ch.url.split("-").length > 2 ? ch.url : titleToUrl(ch.title.trim());
+  const id = (
+    await pri.chapter.create({
+      data: {
+        ...ch,
+        content: encoder.encode(
+          correctString(ch.content.join("[hereisbreak]"))
+        ),
+        url: newUrl,
+      },
+      select: { id: true },
+    })
+  ).id;
+  await pri.$disconnect();
+  return { id };
+}
+
 export async function addChapters(chapters: Chapter[]) {
   const count = (s: string) => (s.match(/\b\w+\b/g) || []).length;
   const pri = new PrismaClient();
@@ -580,6 +601,10 @@ export async function addChapters(chapters: Chapter[]) {
     }
   }
   await pri.$disconnect();
+}
+
+export async function deleteBook(url: string) {
+  await prisma.book.delete({ where: { bookUrl: url } });
 }
 
 export async function fetchByCategory(name: string, page: number = 1) {
