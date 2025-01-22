@@ -564,6 +564,15 @@ export async function addSingleChapter(ch: Chapter) {
       select: { id: true },
     })
   ).id;
+  await pri.recents.upsert({
+    where: { bookId: ch.bookId },
+    create: {
+      title: ch.title,
+      url: ch.url,
+      bookId: ch.bookId,
+    },
+    update: { title: ch.title, url: ch.url },
+  });
   await pri.$disconnect();
   return { id };
 }

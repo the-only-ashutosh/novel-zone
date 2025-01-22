@@ -42,13 +42,15 @@ const InfoBanner = ({
             fetchPriority="low"
           />
           <div className="flex flex-col items-start ml-8 justify-between margin-y max-w-full">
-            <span className="h-6 line-clamp-1">{book}</span>
+            <span className="h-6 line-clamp-1 w-[95%]">{book}</span>
 
             <div className="flex justify-between text-sm colrow">
               <span className="flex items-center">
                 <CalendarMonthRoundedIcon className="text-md" />
                 &nbsp;
-                {`Updated ${getTimeDiff(time)} ago`}
+                {`Updated ${getTimeDiff(
+                  new Date(new Date(time).getTime() - 330 * 60 * 1000)
+                )} ago`}
               </span>
               <span className="smallmargin flex items-center">
                 <HistoryEduRoundedIcon className="text-md" />

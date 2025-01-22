@@ -16,6 +16,7 @@
     "@mui/material": "^6.1.10",
     "@next/bundle-analyzer": "^15.1.4",
     "@prisma/client": "^6.1.0",
+    "aws-sdk": "^2.1692.0",
     "axios": "^1.7.9",
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",

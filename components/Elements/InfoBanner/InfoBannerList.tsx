@@ -21,10 +21,10 @@ export type booksData = {
 const InfoBannerList = ({ data }: { data: Array<booksData> }) => {
   return (
     <div className="grid updatedlistgrid gap-4 mt-8 mx-[5%] justify-center mb-10">
-      {data.map((chap) => {
+      {data.map((chap, _) => {
         return (
           <InfoBanner
-            key={chap.addAt.toISOString()}
+            key={chap.addAt.toISOString() + _}
             book={chap.book.title}
             bookUrl={chap.book.bookUrl}
             img={chap.book.imageUrl}
