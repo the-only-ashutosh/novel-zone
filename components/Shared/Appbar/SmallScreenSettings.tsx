@@ -6,7 +6,7 @@ const SmallScreenSettings = () => {
   return (
     <NavbarContent className="searchicon" justify="end">
       <NavbarItem>
-        <SearchModal />
+        <SearchModal viewport="mobile" />
       </NavbarItem>
     </NavbarContent>
   );

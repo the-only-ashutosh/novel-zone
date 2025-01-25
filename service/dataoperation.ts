@@ -93,6 +93,7 @@ export const fetchChapter = async (book_name: string, chapter: string) => {
 };
 
 export async function searchBook(toSearch: string) {
+  console.log(toSearch);
   const bookData = await prisma.book.findMany({
     where: {
       title: {
@@ -815,8 +816,8 @@ export async function fetchGenreSitemap(host: string) {
 
 export async function fetchCategorySitemap(host: string) {
   const categories = await prisma.category
-    .findMany({ select: { name: true } })
-    .then((res) => res.map((c) => c.name));
+    .findMany({ select: { route: true } })
+    .then((res) => res.map((c) => c.route));
   const sitemapData: {
     url: string;
     lastModified: string;
@@ -883,7 +884,7 @@ export async function fetchRandomCategories() {
   return await prisma.category
     .findMany({
       where: { id: { in: randomIndex } },
-      select: { name: true, id: true },
+      select: { name: true, id: true, route: true },
     })
     .then(async (categories) => {
       return categories;
@@ -913,7 +914,7 @@ export async function fetchRandomAuthors() {
   return await prisma.author
     .findMany({
       where: { id: { in: randomIndex } },
-      select: { name: true, id: true },
+      select: { name: true, id: true, route: true },
     })
     .then(async (authors) => {
       return authors;

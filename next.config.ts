@@ -8,6 +8,16 @@ const nextConfig: NextConfig = {
   compiler: {
     removeConsole: true,
   },
+  async redirects() {
+    return [
+      {
+        source: "/ads.txt",
+        destination:
+          "https://adstxt.pubfuture.com/site/6794df25cc853e7a46071f78/novelzone.fun/ads.txt",
+        permanent: true,
+      },
+    ];
+  },
   reactStrictMode: true,
   experimental: {
     optimizeCss: true,

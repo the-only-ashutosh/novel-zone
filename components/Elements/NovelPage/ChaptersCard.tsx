@@ -1,6 +1,12 @@
 "use client";
 import React, { Suspense } from "react";
-import { Tabs, Tab, Card, Pagination } from "@heroui/react";
+import {
+  Tabs,
+  Tab,
+  Card,
+  Pagination,
+  // ScrollShadow
+} from "@heroui/react";
 import Grid from "@mui/material/Grid2";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -21,6 +27,12 @@ export type SingleChapter = {
 
 const ChListSkele = (
   <Grid container spacing={1} className="mt-2 w-full">
+    <ChapterSkele />
+    <ChapterSkele />
+    <ChapterSkele />
+    <ChapterSkele />
+    <ChapterSkele />
+    <ChapterSkele />
     <ChapterSkele />
     <ChapterSkele />
     <ChapterSkele />
@@ -93,6 +105,7 @@ const ChaptersCard = ({
             }}
           />
           <Suspense fallback={ChListSkele}>
+            {/* <ScrollShadow > */}
             <Grid container spacing={1} className="mt-2 w-full">
               {chaptersList.map((chapters, index) => {
                 index++;
@@ -102,25 +115,22 @@ const ChaptersCard = ({
                     size={{ xs: 12, sm: 12, md: 6, lg: 6 }}
                     className="transition-transform duration-300 hover:transform hover:scale-95"
                   >
-                    <Card className={`flex flex-row pr-2 rounded-sm`}>
-                      <div className="flex justify-center items-center min-w-20 border-small rounded-l-sm border-gray-800 dark:border-white">
-                        {chapters.number}
-                      </div>
-                      <div className={`flex flex-col p-2`}>
-                        <Link
-                          href={`${pathname}/${chapters.url}`}
-                          className="line-clamp-1"
-                          prefetch={false}
-                        >
+                    <Link href={`${pathname}/${chapters.url}`} prefetch={false}>
+                      <Card className={`flex flex-row pr-2 rounded-sm`}>
+                        <div className="flex justify-center items-center min-w-20 border-small rounded-l-sm border-gray-800 dark:border-white">
+                          {chapters.number}
+                        </div>
+                        <div className={`flex flex-col p-2 line-clamp-1`}>
                           {chapters.title}
-                        </Link>
-                        <p>{getTimeDiff(chapters.addAt)}&nbsp;ago</p>
-                      </div>
-                    </Card>
+                          <p>{getTimeDiff(chapters.addAt)}&nbsp;ago</p>
+                        </div>
+                      </Card>
+                    </Link>
                   </Grid>
                 );
               })}
             </Grid>
+            {/* </ScrollShadow> */}
           </Suspense>
         </Tab>
         <Tab
