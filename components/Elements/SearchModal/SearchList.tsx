@@ -2,16 +2,16 @@ import React, { useEffect } from "react";
 import { ScrollShadow } from "@heroui/react";
 import Collapse from "@mui/material/Collapse";
 import { TransitionGroup } from "react-transition-group";
-import axios from "axios";
-
 import Searchlistitem from "./SearchListitem";
 
 const SearchList = ({
   toSearch,
   closeModal,
+  viewport,
 }: {
   toSearch: string | null;
   closeModal: () => void;
+  viewport: string;
 }) => {
   const [data, setData] = React.useState<
     | Array<{
@@ -25,14 +25,10 @@ const SearchList = ({
   >(null);
   const [error, setError] = React.useState<boolean>(false);
   useEffect(() => {
-    if (toSearch!.length === 0) {
-      setData(null);
-      setError(false);
-    } else if (toSearch!.length > 2) {
-      setError(false);
-      setData(null);
-      axios
-        .get(`/api/search?toSearch=${toSearch}`)
+    async function d(s: string) {
+      const axios = (await import("axios")).default;
+      await axios
+        .post(`/api/search`, { search: s })
         .then((res) => {
           setData(res.data);
         })
@@ -40,13 +36,26 @@ const SearchList = ({
           setError(true);
         });
     }
+    if (toSearch!.length === 0) {
+      setData(null);
+      setError(false);
+    } else if (toSearch!.length > 2) {
+      setError(false);
+      setData(null);
+      d(toSearch!);
+    }
   }, [toSearch]);
 
   return (
     <div className="bg-none rounded-none absolute flex-grow overflow-y-auto w-full m-0 p-0 top-[56px]">
       {error && (
         <Collapse>
-          <Searchlistitem state={"Error Occured"} data={null} clMd={() => {}} />
+          <Searchlistitem
+            state={"Error Occured"}
+            data={null}
+            clMd={() => {}}
+            viewport={viewport}
+          />
         </Collapse>
       )}
       {data && (
@@ -64,6 +73,7 @@ const SearchList = ({
                       }}
                       state={null}
                       clMd={closeModal}
+                      viewport={viewport}
                     />
                   </Collapse>
                 );
@@ -74,6 +84,7 @@ const SearchList = ({
                   state={"No Books"}
                   data={null}
                   clMd={() => {}}
+                  viewport={viewport}
                 />
               </Collapse>
             )}
@@ -83,7 +94,12 @@ const SearchList = ({
       {data === null && toSearch!.length > 2 && (
         <TransitionGroup>
           <Collapse>
-            <Searchlistitem state={"Loading"} data={null} clMd={() => {}} />
+            <Searchlistitem
+              state={"Loading"}
+              data={null}
+              clMd={() => {}}
+              viewport={viewport}
+            />
           </Collapse>
         </TransitionGroup>
       )}

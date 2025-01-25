@@ -17,7 +17,7 @@ const NewUpdatesList = async ({
   if (newUpdates === "Invalid Page") notFound();
   return (
     <div className="flex flex-col justify-center items-center w-full">
-      {newUpdates.data.map((element) => {
+      {newUpdates.data.map((element, i) => {
         return (
           <NewUpdatesItem
             chapTitle={element.title}
@@ -25,7 +25,7 @@ const NewUpdatesList = async ({
             time={element.addAt}
             title={element.book.title}
             url={element.book.imageUrl}
-            key={String(element.addAt)}
+            key={String(element.addAt) + i}
             aspectratio={Number(element.book.aspectRatio)}
             bookUrl={element.book.bookUrl}
             author={element.book.author.name}

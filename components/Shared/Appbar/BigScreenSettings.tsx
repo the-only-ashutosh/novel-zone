@@ -7,7 +7,7 @@ const BigScreenSettings = () => {
   return (
     <NavbarContent justify="end" className="modeswitch">
       <NavbarItem>
-        <SearchModal />
+        <SearchModal viewport="desktop" />
       </NavbarItem>
       <NavbarItem>
         <SettingsMenu />

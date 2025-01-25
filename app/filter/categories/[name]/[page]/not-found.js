@@ -33,7 +33,7 @@ export default async function NotFound() {
             {data.map((category) => {
               return (
                 <li className="my-1" key={category.id}>
-                  <Link href={`/filter/categories/${category.name}`}>
+                  <Link href={`/filter/categories/${category.route}`}>
                     <Chip
                       className="rounded-md px-0"
                       color="primary"

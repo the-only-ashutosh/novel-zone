@@ -61,10 +61,12 @@ export const correctString = (value: string): string => {
     .replaceAll(`Explore more stories with empire`, "")
     .replaceAll("Enjoy exclusive adventures from empire", "")
     .replaceAll("Explore more stories at empire", "")
+    .replaceAll("Experience more tales on empire", "")
+    .replaceAll("Your journey continues on empire", "")
     .replaceAll("Nôv(el)B\\jnn", "")
     .replaceAll(`n/o/vel/b//in dot c//om`, "")
     .replaceAll(`KÃ¶prÃ¼lÃ¼`, "")
-    .replaceAll(` n/Ã´/vel/b//jn dot c//om`, "")
+    .replaceAll(`n/Ã´/vel/b//jn dot c//om`, "")
     .replaceAll("pÎ±ndÎ±,noÎ½É1,ÑoÐ .", "");
 };
 

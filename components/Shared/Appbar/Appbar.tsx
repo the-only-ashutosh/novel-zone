@@ -40,7 +40,7 @@ export default function Appbar({
       classNames={{ wrapper: "max-w-full justify-start" }}
     >
       <MenuToggle menuState={isMenuOpen} />
-      <Brand />
+      <Brand menustate={setIsMenuOpen} />
 
       {viewport === "desktop" && (
         <NavbarContent

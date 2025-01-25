@@ -14,7 +14,9 @@ import { FiSearch } from "react-icons/fi";
 import { SearchIcon } from "../UI/SearchIcon";
 import SearchList from "../Elements/SearchModal/SearchList";
 
-export default function SearchModal() {
+export default function SearchModal({
+  viewport,
+}: Readonly<{ viewport: string }>) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [search, setSearch] = useState("");
   const [focus, setFocus] = useState(false);
@@ -128,6 +130,7 @@ export default function SearchModal() {
                       onOpenChange();
                       setSearch("");
                     }}
+                    viewport={viewport}
                   />
                 </div>
               </Fade>

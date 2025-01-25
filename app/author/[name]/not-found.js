@@ -33,7 +33,7 @@ export default async function NotFound() {
             {data.map((author) => {
               return (
                 <li className="my-1" key={author.id}>
-                  <Link href={`/author/${author.name}`}>
+                  <Link href={`/author/${author.route}`}>
                     <Chip
                       className="rounded-md px-0 line-clamp-1 max-w-full min-w-0"
                       color="primary"
