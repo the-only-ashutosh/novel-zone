@@ -9,6 +9,7 @@ import { cookies } from "next/headers";
 import { correctString } from "@/service/functions";
 import { notFound } from "next/navigation";
 import Script from "next/script";
+import { Typography } from "@mui/material";
 
 type SearchParams = Promise<{ [key: string]: string }>;
 
@@ -37,16 +38,16 @@ const ChapterPage = async ({
       : [""];
 
   return (
-    <div className="flex justify-center flex-col items-center">
+    <div className="flex justify-center flex-col items-center px-[2.5%] py-[2%] dark:bg-[#121212]">
       {chapterData && chapterData !== "Invalid Chapter" ? (
         <>
           <div className="flex flex-col justify-center items-center mb-6">
             <Link href={`/book/${chapterData.book.bookUrl}`}>
               <h1 className="font-bold text-2xl">{chapterData.book.title}</h1>
             </Link>
-            {/* <Typography variant="subtitle1" className="text-sm text-gray-700">
-          {chapterData.addAt.toDateString()}
-        </Typography> */}
+            <Typography variant="subtitle1" className="text-gray-700">
+              {chapterData.addAt.toDateString()}
+            </Typography>
           </div>
           <ChangeChapters
             book_name={book_name}
@@ -102,7 +103,7 @@ export async function generateMetadata({
   params: Promise<{ chapter: string; book_name: string }>;
 }): Promise<Metadata> {
   const { chapter, book_name } = await params;
-  const chapterData = await fetchChapter(book_name, chapter);
+  const chapterData = await fetchChapter(book_name, decodeURI(chapter));
 
   if (chapterData && chapterData !== "Invalid Chapter") {
     return {

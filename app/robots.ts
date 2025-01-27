@@ -8,6 +8,5 @@ export default function robots(): MetadataRoute.Robots {
       disallow: ["/api/", "/fonts/"],
     },
     sitemap: "https://novelzone.fun/sitemap-new.xml",
-    host: "https://novelzone.fun",
   };
 }

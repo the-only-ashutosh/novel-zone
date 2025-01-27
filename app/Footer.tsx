@@ -1,38 +1,48 @@
-import Logo from "@/components/Shared/Appbar/Logo";
 import {
   fetchRandomBooks,
   fetchRandomCategories,
+  fetchRandomGenres,
 } from "@/service/dataoperation";
 import { Button } from "@heroui/react";
 import Link from "next/link";
 import React from "react";
 import { FaFacebook, FaTwitter, FaInstagram, FaEnvelope } from "react-icons/fa";
 
+const aboutUs = (
+  <Button
+    className="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md text-sm transition duration-300"
+    aria-label="Learn more about Novel Reader"
+  >
+    About Us
+  </Button>
+);
+
 const Footer = async () => {
   const categories = await fetchRandomCategories();
 
   const popularNovels = await fetchRandomBooks();
+  const genres = await fetchRandomGenres();
 
   return (
     <div className="">
       <footer className="bg-white dark:bg-[#0e0d0d] dark:text-gray-300">
         <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-8">
-            <div className="space-y-4 justify-center flex items-center flex-col">
-              <div className="flex items-center space-x-2">
-                <Logo />
-                <h2 className="text-xl font-bold">Novel Zone</h2>
-              </div>
-              <p className="text-sm justify-center flex">
-                Your gateway to endless stories across cultures. Discover
-                captivating novels from around the world, all in one place.
-              </p>
-              <Button
-                className="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md text-sm transition duration-300"
-                aria-label="Learn more about Novel Reader"
-              >
-                About Us
-              </Button>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-8 mx-3">
+            <div className="space-y-4">
+              <h2 className="text-lg font-semibold">Genres</h2>
+              <ul className="space-y-2">
+                {genres.map((genre) => (
+                  <li key={genre.name}>
+                    <Link
+                      href={`/filter/genre/${genre.route}`}
+                      className="text-sm hover:text-primary transition duration-300"
+                      aria-label={`Browse ${genre.name}`}
+                    >
+                      {genre.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
 
             {/* Categories Section */}
@@ -107,6 +117,7 @@ const Footer = async () => {
                   <FaInstagram size={24} />
                 </a>
               </div>
+              {aboutUs}
             </div>
           </div>
 

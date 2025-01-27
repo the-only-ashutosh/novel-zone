@@ -124,6 +124,7 @@ const BookPage = async ({
             book={bookDetail.id}
             chapters={bookDetail._count.chapter}
             description={String.fromCharCode(...bookDetail.description)}
+            viewport={viewport}
           />
           {like !== "Invalid Book" && (
             <GradBanner

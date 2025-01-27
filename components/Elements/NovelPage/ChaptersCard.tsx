@@ -1,19 +1,12 @@
 "use client";
-import React, { Suspense } from "react";
-import {
-  Tabs,
-  Tab,
-  Card,
-  Pagination,
-  // ScrollShadow
-} from "@heroui/react";
+import React from "react";
+import { Tabs, Tab, Pagination, ScrollShadow } from "@heroui/react";
 import Grid from "@mui/material/Grid2";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { getTimeDiff } from "@/service/functions";
 import ChapterSkele from "./ChapterSkele";
 import Comments from "./Comments";
 import dynamic from "next/dynamic";
+import Chapters from "./Chapters";
 const DescCard = dynamic(() => import("./DescCard"), {
   ssr: true,
 });
@@ -50,10 +43,12 @@ const ChaptersCard = ({
   chapters,
   book,
   description,
+  viewport,
 }: {
   chapters: number;
   book: number;
   description: string;
+  viewport: string;
 }) => {
   const [chaptersList, setChaptersList] = React.useState<Array<SingleChapter>>(
     []
@@ -88,50 +83,36 @@ const ChaptersCard = ({
           title={"Chapters"}
           className="flex justify-center flex-col items-center"
         >
-          <Pagination
-            isCompact
-            showControls
-            initialPage={1}
-            page={page}
-            total={Math.ceil(chapters / 100)}
-            onChange={async (pageNum) => {
-              setPage(pageNum);
-              const axios = (await import("axios")).default;
-              await axios
-                .post(`/api/getChapters`, { page: pageNum, book: book })
-                .then((response) => {
-                  setChaptersList(response.data);
-                });
-            }}
-          />
-          <Suspense fallback={ChListSkele}>
-            {/* <ScrollShadow > */}
-            <Grid container spacing={1} className="mt-2 w-full">
-              {chaptersList.map((chapters, index) => {
-                index++;
-                return (
-                  <Grid
-                    key={`${chapters.number}${index}`}
-                    size={{ xs: 12, sm: 12, md: 6, lg: 6 }}
-                    className="transition-transform duration-300 hover:transform hover:scale-95"
-                  >
-                    <Link href={`${pathname}/${chapters.url}`} prefetch={false}>
-                      <Card className={`flex flex-row pr-2 rounded-sm`}>
-                        <div className="flex justify-center items-center min-w-20 border-small rounded-l-sm border-gray-800 dark:border-white">
-                          {chapters.number}
-                        </div>
-                        <div className={`flex flex-col p-2 line-clamp-1`}>
-                          {chapters.title}
-                          <p>{getTimeDiff(chapters.addAt)}&nbsp;ago</p>
-                        </div>
-                      </Card>
-                    </Link>
-                  </Grid>
-                );
-              })}
-            </Grid>
-            {/* </ScrollShadow> */}
-          </Suspense>
+          {Math.ceil(chapters / 100) > 0 && (
+            <Pagination
+              isCompact
+              showControls
+              initialPage={1}
+              page={page}
+              total={Math.ceil(chapters / 100)}
+              onChange={async (pageNum) => {
+                setPage(pageNum);
+                const axios = (await import("axios")).default;
+                await axios
+                  .post(`/api/getChapters`, { page: pageNum, book: book })
+                  .then((response) => {
+                    setChaptersList(response.data);
+                  });
+              }}
+            />
+          )}
+          {chaptersList.length === 0 ? (
+            ChListSkele
+          ) : viewport === "desktop" ? (
+            <Chapters chaptersList={chaptersList} pathname={pathname} />
+          ) : (
+            <ScrollShadow className="h-[736px] my-4" size={0}>
+              <Chapters chaptersList={chaptersList} pathname={pathname} />
+            </ScrollShadow>
+          )}
+          {/* <ScrollShadow > */}
+
+          {/* </ScrollShadow> */}
         </Tab>
         <Tab
           key={"comments"}

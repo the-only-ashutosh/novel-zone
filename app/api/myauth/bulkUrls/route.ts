@@ -22,5 +22,5 @@ export async function POST(req: NextRequest) {
     keyLocation: "https://novelzone.fun/72386b31e608472c9443a57c787d3177.txt",
     urlList: urls,
   });
-  return NextResponse.json({ message: res.data });
+  return NextResponse.json({ message: res.statusText });
 }

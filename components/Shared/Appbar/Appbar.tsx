@@ -14,10 +14,11 @@ import { ChevronDownIcon } from "../../UI/ChevronDownIcon";
 import { usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
 import Logo from "./Logo";
+import GenreList from "./GenreList";
 const MenuToggle = dynamic(() => import("./MenuToggle"), { ssr: true });
 const Brand = dynamic(() => import("./Brand"), { ssr: true });
 const NovelList = dynamic(() => import("./NovelList"), { ssr: true });
-const GenreList = dynamic(() => import("./GenreList"), { ssr: true });
+
 const BigScreenSettings = dynamic(() => import("./BigScreenSettings"), {
   ssr: false,
 });

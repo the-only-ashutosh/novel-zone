@@ -803,7 +803,7 @@ export async function fetchGenreSitemap(host: string) {
       })
       .then((res) => res.map((u) => u.imageUrl));
     sitemapData.push({
-      url: `https://${host}/genre/${element.route}`,
+      url: `https://${host}/filter/genre/${element.route}`,
       lastModified: Date.now().toLocaleString(),
       changeFrequency: "weekly",
       priority: 0.6,
@@ -834,7 +834,7 @@ export async function fetchCategorySitemap(host: string) {
       })
       .then((res) => res!.book.map((b) => b.imageUrl));
     sitemapData.push({
-      url: `https://${host}/categories/${category}`,
+      url: `https://${host}/filter/categories/${category}`,
       lastModified: `2025-01-06`,
       changeFrequency: "weekly",
       priority: 0.5,
@@ -975,4 +975,8 @@ export async function fetchMatchingBooks(name: string) {
   } catch (err) {
     return "Invalid Book";
   }
+}
+
+export async function deleteChapters() {
+  await prisma.chapter.deleteMany({ where: { title: "None" } });
 }

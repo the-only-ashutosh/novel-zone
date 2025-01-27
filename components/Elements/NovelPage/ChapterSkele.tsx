@@ -11,12 +11,12 @@ const ChapterSkele = () => {
             <div className="h-6 w-6"></div>
           </Skeleton>
         </div>
-        <div className={`flex flex-col p-2`}>
-          <Skeleton>
-            <div className="w-[75%] h-6" />
+        <div className={`flex flex-col p-2 w-full`}>
+          <Skeleton className="rounded-sm w-[75%] mb-1">
+            <div className="w-[75%] h-5" />
           </Skeleton>
-          <Skeleton>
-            <div className="w-[45%] h-6" />
+          <Skeleton className="rounded-sm w-[45%] mt-1">
+            <div className="w-[45%] h-5" />
           </Skeleton>
         </div>
       </Card>
