@@ -16,7 +16,7 @@ const NumberCategoriesPage = async ({
   params: Promise<{ name: string; page: number }>;
 }) => {
   const { name, page } = await params;
-  const c = await fetchCategoryFromRoute(name);
+  const c = await fetchCategoryFromRoute(decodeURI(name));
   return (
     <div className="mt-4 mb-10">
       <GradBanner main="Filtered by Categories" sub={`${c}`}>

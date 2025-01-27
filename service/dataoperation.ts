@@ -792,22 +792,14 @@ export async function fetchGenreSitemap(host: string) {
     lastModified: string;
     changeFrequency: string;
     priority: number;
-    images: string[];
   }[] = [];
   const pri = new PrismaClient();
   for (const element of ALL_GENRE) {
-    const imageArr = await pri.book
-      .findMany({
-        where: { genre: { some: { route: element.route } } },
-        select: { imageUrl: true },
-      })
-      .then((res) => res.map((u) => u.imageUrl));
     sitemapData.push({
       url: `https://${host}/filter/genre/${element.route}`,
       lastModified: Date.now().toLocaleString(),
       changeFrequency: "weekly",
       priority: 0.6,
-      images: imageArr,
     });
   }
   await pri.$disconnect();
@@ -823,22 +815,14 @@ export async function fetchCategorySitemap(host: string) {
     lastModified: string;
     changeFrequency: string;
     priority: number;
-    images: string[];
   }[] = [];
   const pri = new PrismaClient();
   categories.forEach(async (category) => {
-    const imgArr = await pri.category
-      .findFirst({
-        where: { name: category },
-        select: { book: { select: { imageUrl: true } } },
-      })
-      .then((res) => res!.book.map((b) => b.imageUrl));
     sitemapData.push({
       url: `https://${host}/filter/categories/${category}`,
       lastModified: `2025-01-06`,
       changeFrequency: "weekly",
       priority: 0.5,
-      images: imgArr,
     });
   });
   await pri.$disconnect();
@@ -940,12 +924,18 @@ export async function checkBook(book: { url: string; isHot: boolean }) {
 }
 
 export async function fetchCategoryFromRoute(route: string) {
-  const r = (await prisma.category.findFirst({
-    where: { route },
-    select: { name: true },
-  }))!.name;
+  try {
+    const r = (
+      await prisma.category.findMany({
+        where: { route },
+        select: { name: true },
+      })
+    )[0].name;
 
-  return r;
+    return r;
+  } catch (error) {
+    return "";
+  }
 }
 
 export async function fetchMatchingBooks(name: string) {

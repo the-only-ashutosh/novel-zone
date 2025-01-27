@@ -37,13 +37,13 @@ const BookPage = async ({
 }) => {
   const { book_name } = await params;
   const v = searchParams;
-  const b = fetchBookDetails(book_name);
-  const m = fetchMatchingBooks(book_name);
+  const b = fetchBookDetails(decodeURI(book_name));
+  const m = fetchMatchingBooks(decodeURI(book_name));
   const [bookDetail, { viewport }, like] = await Promise.all([
     b,
     v,
     m,
-    addView(book_name),
+    addView(decodeURI(book_name)),
   ]);
   return (
     <div className="flex items-center flex-col py-[2.5%]">
