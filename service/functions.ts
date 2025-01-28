@@ -48,6 +48,7 @@ export const correctString = (value: string): string => {
     .replaceAll(String.raw`Nôv(el)B\\jnn`, "")
     .replaceAll(`n/ô/vel/b//in dot c//om`, "")
     .replaceAll(`n/o/vel/b//in dot c//om`, "")
+    .replaceAll("Stay updated via empire", "")
     .replaceAll(`Your next read awaits at empire`, "")
     .replaceAll(`Read exclusive adventures at empire`, "")
     .replaceAll("Read latest stories on empire", "")
@@ -67,7 +68,14 @@ export const correctString = (value: string): string => {
     .replaceAll("Enjoy new tales from empire", "")
     .replaceAll("Your next chapter is on empire", "")
     .replaceAll("Explore stories on empire", "")
+    .replaceAll("Experience exclusive tales on empire", "")
+    .replaceAll("Your next chapter awaits on empire", "")
+    .replaceAll("Continue your story on empire", "")
     .replaceAll("Nôv(el)B\\jnn", "")
+    .replaceAll(
+      /^(Continue|Your|Find|Experience|Explore|Enjoy|Stay|Discover|Read)((?:.|\n)+?)(empire)/g,
+      ""
+    )
     .replaceAll(`n/o/vel/b//in dot c//om`, "")
     .replaceAll(`KÃ¶prÃ¼lÃ¼`, "")
     .replaceAll(`n/Ã´/vel/b//jn dot c//om`, "")

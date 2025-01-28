@@ -520,6 +520,7 @@ export async function addBook(book: IncomingBook) {
         connectOrCreate: [...categories],
       },
       ratings: book.totalStars / book.userrated,
+      source:book.source
     },
     update: { isHot: book.isHot },
     where: { bookUrl: book.bookUrl },

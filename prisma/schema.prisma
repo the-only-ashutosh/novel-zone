@@ -26,6 +26,7 @@ model book {
   aspectRatio Decimal    @default(0.0)
   ratings     Decimal
   views       Int
+  source      String     @default("novelbin")
   status      String
   description Bytes
   authorId    Int

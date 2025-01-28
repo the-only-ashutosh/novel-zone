@@ -20,6 +20,7 @@ export type IncomingBook = {
   views: number;
   authId: number;
   aspectRatio: Decimal;
+  source: string;
 };
 
 export type IncomingChapter = {

@@ -164,7 +164,7 @@ export async function generateMetadata({
 
   if (book !== "Invalid Book" && book !== null) {
     return {
-      title: `${book.title} | Novel Zone`,
+      title: `${book.title}`,
       referrer: "origin-when-cross-origin",
       description: String.fromCharCode(...book.description).replaceAll(
         "[hereisbreak]",
