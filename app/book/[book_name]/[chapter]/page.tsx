@@ -21,7 +21,10 @@ const ChapterPage = async ({
   searchParams: SearchParams;
 }) => {
   const { chapter, book_name } = await params;
-  const c = fetchChapter(book_name, chapter);
+  const c = fetchChapter(
+    decodeURIComponent(book_name),
+    decodeURIComponent(chapter)
+  );
   const v = searchParams;
   const fst = getCookie("fontStyle", { cookies });
   const fs = getCookie("fontSize", { cookies });
@@ -30,7 +33,7 @@ const ChapterPage = async ({
     v,
     fst,
     fs,
-    addChapterView(chapter, book_name),
+    addChapterView(decodeURIComponent(chapter), decodeURIComponent(book_name)),
   ]);
   const content =
     chapterData && chapterData !== "Invalid Chapter"

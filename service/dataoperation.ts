@@ -51,7 +51,7 @@ export const fetchChapter = async (book_name: string, chapter: string) => {
   try {
     return await prisma.chapter
       .findFirst({
-        where: { book: { bookUrl: book_name }, url: chapter },
+        where: { book: { bookUrl: book_name }, url: { contains: chapter } },
         select: {
           content: true,
           title: true,
@@ -520,13 +520,14 @@ export async function addBook(book: IncomingBook) {
         connectOrCreate: [...categories],
       },
       ratings: book.totalStars / book.userrated,
-      source:book.source
+      source: book.source,
     },
     update: { isHot: book.isHot },
     where: { bookUrl: book.bookUrl },
+    select: { id: true, source: true },
   });
 
-  return createdBook.id;
+  return createdBook;
 }
 
 export async function checkChapter(
