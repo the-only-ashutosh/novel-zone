@@ -19,7 +19,9 @@ export default async function sitemap({
   const end = start + 50000;
   const chapters = await getChapterUrl(start, end);
   return chapters.map((chapter) => ({
-    url: `${url}/book/${chapter.book.bookUrl}/${chapter.url}`,
+    url: `${url}/book/${encodeURIComponent(
+      chapter.book.bookUrl
+    )}/${encodeURIComponent(chapter.url)}`,
     lastModified: chapter.addAt,
   }));
 }

@@ -3,7 +3,13 @@ import withBundleAnalyzer from "@next/bundle-analyzer";
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ["img.novelzone.fun"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "img.novelzone.fun",
+        pathname: "/nz/**",
+      },
+    ],
   },
   compiler: {
     removeConsole: true,

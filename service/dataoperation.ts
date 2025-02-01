@@ -6,20 +6,6 @@ import { ALL_GENRE } from "./genre";
 import "server-only";
 import { PrismaClient } from "@prisma/client";
 
-type Sitemap = {
-  url: string;
-  lastModified?: string | Date;
-  changeFrequency?:
-    | "always"
-    | "hourly"
-    | "daily"
-    | "weekly"
-    | "monthly"
-    | "yearly"
-    | "never";
-  priority: number;
-};
-
 export const fetchMostPopular = async () => {
   return await prisma.book.findMany({
     orderBy: [{ views: "desc" }, { ratings: "desc" }],
@@ -787,69 +773,43 @@ export async function getChapterUrl(start: number, end: number) {
   return data;
 }
 
-export async function fetchAllBooks(host: string) {
+export async function fetchAllBooks() {
   const pri = new PrismaClient();
-  const data: Sitemap[] = [];
   const books = await pri.book.findMany({
     select: {
       bookUrl: true,
-      imageUrl: true,
       updatedAt: true,
-      chapter: {
-        orderBy: { number: "desc" },
-        select: { addAt: true },
-        take: 1,
-      },
     },
   });
-  for (const book of books) {
-    await pri.$disconnect();
-    data.push({
-      url: `https://${host}/book/${book.bookUrl}`,
-      lastModified: new Date(
-        book.chapter.length > 0
-          ? book.chapter[0].addAt.getTime()
-          : book.updatedAt
-      ),
-      changeFrequency: "weekly",
-      priority: 0.8,
-    });
-  }
   await pri.$disconnect();
-  return data;
+  return books;
 }
 
-export async function fetchGenreSitemap(host: string) {
-  const sitemapData: Sitemap[] = [];
+export async function fetchGenreSitemap() {
   const pri = new PrismaClient();
-  for (const element of ALL_GENRE) {
-    sitemapData.push({
-      url: `https://${host}/filter/genre/${element.route}`,
-      lastModified: Date.now().toLocaleString(),
-      changeFrequency: "weekly",
-      priority: 0.6,
-    });
-  }
-  await pri.$disconnect();
-  return sitemapData;
-}
-
-export async function fetchCategorySitemap(host: string) {
-  const categories = await prisma.category
+  const genres = await pri.genre
     .findMany({ select: { route: true } })
     .then((res) => res.map((c) => c.route));
-  const sitemapData: Sitemap[] = [];
-  const pri = new PrismaClient();
-  categories.forEach(async (category) => {
-    sitemapData.push({
-      url: `https://${host}/filter/categories/${category}`,
-      lastModified: `2025-01-06`,
-      changeFrequency: "weekly",
-      priority: 0.5,
-    });
-  });
   await pri.$disconnect();
-  return sitemapData;
+  return genres;
+}
+
+export async function fetchCategorySitemap() {
+  const pri = new PrismaClient();
+  const categories = await pri.category
+    .findMany({ select: { route: true } })
+    .then((res) => res.map((c) => c.route));
+  await pri.$disconnect();
+  return categories;
+}
+
+export async function fetchAllAuthors() {
+  const pri = new PrismaClient();
+  const authors = await pri.author
+    .findMany({ select: { route: true } })
+    .then((res) => res.map((c) => c.route));
+  await pri.$disconnect();
+  return authors;
 }
 
 export async function fetchBookOg(book: string) {

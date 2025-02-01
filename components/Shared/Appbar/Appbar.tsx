@@ -20,12 +20,12 @@ const Brand = dynamic(() => import("./Brand"), { ssr: true });
 const NovelList = dynamic(() => import("./NovelList"), { ssr: true });
 
 const BigScreenSettings = dynamic(() => import("./BigScreenSettings"), {
-  ssr: false,
+  ssr: true,
 });
 const SmallScreenSettings = dynamic(() => import("./SmallScreenSettings"), {
-  ssr: false,
+  ssr: true,
 });
-const NavMenu = dynamic(() => import("./NavMenu"), { ssr: false });
+import NavMenu from "./NavMenu";
 
 export default function Appbar({
   viewport,
@@ -40,8 +40,12 @@ export default function Appbar({
       onMenuOpenChange={setIsMenuOpen}
       classNames={{ wrapper: "max-w-full justify-start" }}
     >
-      <MenuToggle menuState={isMenuOpen} />
-      <Brand menustate={setIsMenuOpen} />
+      {viewport === "mobile" && (
+        <>
+          <MenuToggle menuState={isMenuOpen} />
+          <Brand menustate={setIsMenuOpen} />
+        </>
+      )}
 
       {viewport === "desktop" && (
         <NavbarContent
@@ -117,8 +121,12 @@ export default function Appbar({
 
       {viewport === "desktop" && <BigScreenSettings />}
 
-      <SmallScreenSettings />
-      <NavMenu loc={loc} menuclose={setIsMenuOpen} />
+      {viewport === "mobile" && (
+        <>
+          <SmallScreenSettings />
+          <NavMenu loc={loc} menuclose={setIsMenuOpen} />
+        </>
+      )}
     </Navbar>
   );
 }
