@@ -3,7 +3,7 @@ import withBundleAnalyzer from "@next/bundle-analyzer";
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ["idoxbjg.sufydely.com", "img.novelzone.fun"],
+    domains: ["img.novelzone.fun"],
   },
   compiler: {
     removeConsole: true,

@@ -5,6 +5,7 @@ import "./globals.css";
 import Appbar from "@/components/Shared/Appbar/Appbar";
 import Footer from "./Footer";
 import { headers } from "next/headers";
+import "@/service/fonts";
 
 export const metadata: Metadata = {
   title: {

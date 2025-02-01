@@ -6,6 +6,20 @@ import { ALL_GENRE } from "./genre";
 import "server-only";
 import { PrismaClient } from "@prisma/client";
 
+type Sitemap = {
+  url: string;
+  lastModified?: string | Date;
+  changeFrequency?:
+    | "always"
+    | "hourly"
+    | "daily"
+    | "weekly"
+    | "monthly"
+    | "yearly"
+    | "never";
+  priority: number;
+};
+
 export const fetchMostPopular = async () => {
   return await prisma.book.findMany({
     orderBy: [{ views: "desc" }, { ratings: "desc" }],
@@ -756,9 +770,26 @@ export async function fetchByAuthor(name: string) {
   }
 }
 
+export async function totalChapters() {
+  const pri = new PrismaClient();
+  const count = Math.ceil((await pri.chapter.count()) / 50000);
+  await pri.$disconnect();
+  return count;
+}
+
+export async function getChapterUrl(start: number, end: number) {
+  const pri = new PrismaClient();
+  const data = await pri.chapter.findMany({
+    where: { id: { gt: start, lte: end } },
+    select: { url: true, addAt: true, book: { select: { bookUrl: true } } },
+  });
+  await pri.$disconnect();
+  return data;
+}
+
 export async function fetchAllBooks(host: string) {
   const pri = new PrismaClient();
-  const data = [];
+  const data: Sitemap[] = [];
   const books = await pri.book.findMany({
     select: {
       bookUrl: true,
@@ -782,19 +813,14 @@ export async function fetchAllBooks(host: string) {
       ),
       changeFrequency: "weekly",
       priority: 0.8,
-      images: [book.imageUrl],
     });
   }
+  await pri.$disconnect();
   return data;
 }
 
 export async function fetchGenreSitemap(host: string) {
-  const sitemapData: {
-    url: string;
-    lastModified: string;
-    changeFrequency: string;
-    priority: number;
-  }[] = [];
+  const sitemapData: Sitemap[] = [];
   const pri = new PrismaClient();
   for (const element of ALL_GENRE) {
     sitemapData.push({
@@ -812,12 +838,7 @@ export async function fetchCategorySitemap(host: string) {
   const categories = await prisma.category
     .findMany({ select: { route: true } })
     .then((res) => res.map((c) => c.route));
-  const sitemapData: {
-    url: string;
-    lastModified: string;
-    changeFrequency: string;
-    priority: number;
-  }[] = [];
+  const sitemapData: Sitemap[] = [];
   const pri = new PrismaClient();
   categories.forEach(async (category) => {
     sitemapData.push({

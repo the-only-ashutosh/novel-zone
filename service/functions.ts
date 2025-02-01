@@ -26,7 +26,7 @@ export const getTimeDiff = (ftime: Date) => {
 export const correctString = (value: string): string => {
   return (
     value
-      .replaceAll("â", `"`)
+      .replaceAll("â", ` `)
       .replaceAll("Â¯", "¯")
       .replaceAll(`"½`, "")
       .replaceAll(`ï»¿`, "")
@@ -50,7 +50,7 @@ export const correctString = (value: string): string => {
       .replaceAll(`n/ô/vel/b//in dot c//om`, "")
       .replaceAll(`n/o/vel/b//in dot c//om`, "")
       .replaceAll(
-        /(Continue|Your|Find|Experience|Explore|Enjoy|Stay|Discover|Read).*(empire)/g,
+        /(Continue|Your|Find|Experience|Explore|Enjoy|Stay|Discover|Read).*(\sempire)^./gi,
         ""
       )
       // .replaceAll("Stay updated via empire", "")
