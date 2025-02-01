@@ -48,10 +48,7 @@ export default function Appbar({
       )}
 
       {viewport === "desktop" && (
-        <NavbarContent
-          className="hidden lg:flex xl:flex gap-4"
-          justify="center"
-        >
+        <NavbarContent className="gap-4" justify="center">
           <NavbarBrand>
             <Link href="/" color="foreground">
               <Logo />
@@ -74,6 +71,13 @@ export default function Appbar({
                   }
                   radius="sm"
                   variant="light"
+                  color={
+                    loc.match(
+                      /(allnovels|completed|hotnovels|mostpopular|newupdates)/g
+                    )
+                      ? "primary"
+                      : "default"
+                  }
                 >
                   Novel List
                 </Button>

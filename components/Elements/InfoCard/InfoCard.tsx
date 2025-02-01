@@ -85,7 +85,7 @@ const InfoCard = ({
             }}
           />
         </Badge>
-        <div className="flex flex-col w-full text-sm px-[2px]">
+        <div className="flex flex-col w-[158px] text-sm px-[2px] ">
           <Tooltip
             showArrow
             classNames={{

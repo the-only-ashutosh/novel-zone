@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import type { Chapter, IncomingBook, IncomingChapter } from "@/types";
+import "server-only";
+import type { Chapter, IncomingBook } from "@/types";
 import prisma from "./client";
 import { correctString, titleToUrl } from "./functions";
 import { ALL_GENRE } from "./genre";
-import "server-only";
 import { PrismaClient } from "@prisma/client";
 
 export const fetchMostPopular = async () => {
@@ -122,7 +122,7 @@ export async function fetchByGenre(genre: string, page: number = 1) {
   try {
     const data = await prisma.book.findMany({
       where: { genre: { some: { route: genre } } },
-      orderBy: { id: "desc" },
+      orderBy: [{ updatedAt: "desc" }, { ratings: "desc" }, { views: "desc" }],
       skip: (page - 1) * 20,
       take: 20,
       select: {
@@ -184,6 +184,7 @@ export async function fetchCompletedBook(page: number = 1) {
   try {
     const data = await prisma.book.findMany({
       where: { status: { contains: "Completed" } },
+      orderBy: [{ views: "desc" }],
       skip: (page - 1) * 20,
       take: 20,
       select: {
@@ -214,6 +215,7 @@ export async function fetchOngoingBook(page: number = 1) {
   try {
     const data = await prisma.book.findMany({
       where: { status: { contains: "Ongoing" } },
+      orderBy: [{ views: "desc" }, { updatedAt: "desc" }],
       skip: (page - 1) * 20,
       take: 20,
       select: {
@@ -244,7 +246,7 @@ export async function fetchHotBook(page: number = 1) {
   try {
     const data = await prisma.book.findMany({
       where: { isHot: true },
-      orderBy: { id: "desc" },
+      orderBy: [{ updatedAt: "desc" }, { views: "desc" }, { ratings: "desc" }],
       skip: (page - 1) * 20,
       take: 20,
       select: {
@@ -627,7 +629,11 @@ export async function fetchByCategory(name: string, page: number = 1) {
     return await prisma.book
       .findMany({
         where: { category: { some: { route: name } } },
-        orderBy: [{ id: "desc" }, { chapter: { _count: "desc" } }],
+        orderBy: [
+          { updatedAt: "desc" },
+          { ratings: "desc" },
+          { views: "desc" },
+        ],
         skip: (page - 1) * 20,
         take: 20,
         select: {
@@ -670,7 +676,11 @@ export async function fetchAllNovelsPage(page: number = 1) {
     return await prisma.book
       .findMany({
         where: {},
-        orderBy: [{ userrated: "desc" }, { chapter: { _count: "desc" } }],
+        orderBy: [
+          { updatedAt: "desc" },
+          { ratings: "desc" },
+          { views: "desc" },
+        ],
         skip: (page - 1) * 20,
         take: 20,
         select: {
