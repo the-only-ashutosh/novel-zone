@@ -14,20 +14,20 @@ const SingleGenre = async ({
   params: Promise<{ genre_name: string }>;
 }) => {
   const { genre_name } = await params;
-  const genre = ALL_GENRE.find((x) => x.route === genre_name);
+  const genre = ALL_GENRE.find(
+    (x) => x.route === decodeURIComponent(genre_name)
+  );
   return (
-    <div className="mt-4 mb-10">
-      <GradBanner main={`Filtered by Genre`} sub={`${genre?.name}`}>
-        <Suspense fallback={<DetailsListSkeleton />}>
-          <DetailList
-            onPage={`genre/${genre_name}`}
-            func={(page: number) => {
-              return fetchByGenre(genre_name);
-            }}
-          />
-        </Suspense>
-      </GradBanner>
-    </div>
+    <GradBanner main={`Filtered by Genre`} sub={`${genre?.name}`}>
+      <Suspense fallback={<DetailsListSkeleton />}>
+        <DetailList
+          onPage={`genre/${decodeURIComponent(genre_name)}`}
+          func={(page: number) => {
+            return fetchByGenre(decodeURIComponent(genre_name));
+          }}
+        />
+      </Suspense>
+    </GradBanner>
   );
 };
 
@@ -38,7 +38,7 @@ export async function generateMetadata({
 }: {
   params: Promise<{ genre_name: string }>;
 }): Promise<Metadata> {
-  const { genre_name } = await params;
+  const genre_name = decodeURIComponent((await params).genre_name);
   const book = await fetchByGenre(genre_name);
   const genre = ALL_GENRE.find((x) => x.route === genre_name);
   const books =

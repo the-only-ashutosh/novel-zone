@@ -87,7 +87,10 @@ const DetailCard = ({
                 </span>
                 <span className="flex items-center text-black dark:text-white">
                   <UpdateRoundedIcon className="text-md" />
-                  &nbsp; {`Updated ${getTimeDiff(time)} ago`}
+                  &nbsp;{" "}
+                  {`Updated ${getTimeDiff(
+                    new Date(new Date(time).getTime() - 330 * 60 * 1000)
+                  )} ago`}
                 </span>
                 <span className="text-black dark:text-white">
                   {`Status: `}

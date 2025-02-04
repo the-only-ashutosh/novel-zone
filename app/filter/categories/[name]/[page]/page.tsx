@@ -16,21 +16,19 @@ const NumberCategoriesPage = async ({
   params: Promise<{ name: string; page: number }>;
 }) => {
   const { name, page } = await params;
-  const c = await fetchCategoryFromRoute(decodeURI(name));
+  const c = await fetchCategoryFromRoute(decodeURIComponent(name));
   return (
-    <div className="mt-4 mb-10">
-      <GradBanner main="Filtered by Categories" sub={`${c}`}>
-        <Suspense fallback={<DetailsListSkeleton />}>
-          <DetailList
-            onPage={`categories/${name}`}
-            func={(page: number) => {
-              return fetchByCategory(decodeURI(name), page);
-            }}
-            params={Promise.resolve({ page })}
-          />
-        </Suspense>
-      </GradBanner>
-    </div>
+    <GradBanner main="Filtered by Categories" sub={`${c}`}>
+      <Suspense fallback={<DetailsListSkeleton />}>
+        <DetailList
+          onPage={`categories/${name}`}
+          func={(page: number) => {
+            return fetchByCategory(decodeURIComponent(name), page);
+          }}
+          params={Promise.resolve({ page })}
+        />
+      </Suspense>
+    </GradBanner>
   );
 };
 

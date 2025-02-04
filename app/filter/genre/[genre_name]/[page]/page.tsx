@@ -14,21 +14,21 @@ const SingleGenrePage = async ({
   params: Promise<{ genre_name: string; page: number }>;
 }) => {
   const { genre_name, page } = await params;
-  const genre = ALL_GENRE.find((x) => x.route === genre_name);
+  const genre = ALL_GENRE.find(
+    (x) => x.route === decodeURIComponent(genre_name)
+  );
   return (
-    <div className="mt-4 mb-10">
-      <GradBanner main={`Filtered by Genre`} sub={`${genre?.name}`}>
-        <Suspense fallback={<DetailsListSkeleton />}>
-          <DetailList
-            onPage={`genre/${genre_name}`}
-            func={(page: number) => {
-              return fetchByGenre(genre_name, page);
-            }}
-            params={Promise.resolve({ page })}
-          />
-        </Suspense>
-      </GradBanner>
-    </div>
+    <GradBanner main={`Filtered by Genre`} sub={`${genre?.name}`}>
+      <Suspense fallback={<DetailsListSkeleton />}>
+        <DetailList
+          onPage={`genre/${decodeURIComponent(genre_name)}`}
+          func={(page: number) => {
+            return fetchByGenre(decodeURIComponent(genre_name), page);
+          }}
+          params={Promise.resolve({ page })}
+        />
+      </Suspense>
+    </GradBanner>
   );
 };
 
@@ -40,15 +40,17 @@ export async function generateMetadata({
   params: Promise<{ genre_name: string; page: number }>;
 }): Promise<Metadata> {
   const { page, genre_name } = await params;
-  const book = await fetchByGenre(genre_name, page);
-  const genre = ALL_GENRE.find((x) => x.route === genre_name);
+  const book = await fetchByGenre(decodeURIComponent(genre_name), page);
+  const genre = ALL_GENRE.find(
+    (x) => x.route === decodeURIComponent(genre_name)
+  );
 
   const books =
     book !== "Invalid Page"
       ? book.data.map((bk) => {
           return bk.title;
         })
-      : ["By Genre", genre?.name ?? genre_name];
+      : ["By Genre", genre?.name ?? decodeURIComponent(genre_name)];
   const images =
     book !== "Invalid Page"
       ? book.data.map((bk) => {
@@ -67,7 +69,7 @@ export async function generateMetadata({
     ],
     twitter: {
       card: "summary_large_image",
-      title: `Books filtered by Genre:${genre_name}`,
+      title: `Books filtered by Genre:${decodeURIComponent(genre_name)}`,
       images: [...images], // Must be an absolute URL
     },
   };

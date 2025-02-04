@@ -6,6 +6,7 @@ const ChangeButtons = (props: ButtonProps) => {
     <Button
       className="text-small rounded-sm mx-2 font-medium px-2 gap-0"
       color="primary"
+      as={"a"}
       {...props}
     >
       {props.children}

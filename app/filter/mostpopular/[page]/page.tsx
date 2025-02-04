@@ -9,20 +9,15 @@ export const experimental_ppr = true;
 
 const MostPopularPage = ({ params }: { params: Promise<{ page: number }> }) => {
   return (
-    <div className="flex mt-4 mb-10 w-full">
-      <GradBanner
-        main="Most Popular"
-        sub={`Popular novels selected by readers`}
-      >
-        <Suspense fallback={<DetailsListSkeleton />}>
-          <DetailList
-            func={fetchMostPopularBooks}
-            params={params}
-            onPage="mostpopular"
-          />
-        </Suspense>
-      </GradBanner>
-    </div>
+    <GradBanner main="Most Popular" sub={`Popular novels selected by readers`}>
+      <Suspense fallback={<DetailsListSkeleton />}>
+        <DetailList
+          func={fetchMostPopularBooks}
+          params={params}
+          onPage="mostpopular"
+        />
+      </Suspense>
+    </GradBanner>
   );
 };
 

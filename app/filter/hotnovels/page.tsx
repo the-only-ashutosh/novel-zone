@@ -8,13 +8,11 @@ import DetailsListSkeleton from "@/components/Elements/DetailCard/DetailsListSke
 export const experimental_ppr = true;
 const HotNovels = () => {
   return (
-    <div className="flex mt-4 mb-10">
-      <GradBanner main="Hot Novels" sub="New Books like by Readers">
-        <Suspense fallback={<DetailsListSkeleton />}>
-          <DetailList func={fetchHotBook} onPage="hotnovels" />
-        </Suspense>
-      </GradBanner>
-    </div>
+    <GradBanner main="Hot Novels" sub="New Books like by Readers">
+      <Suspense fallback={<DetailsListSkeleton />}>
+        <DetailList func={fetchHotBook} onPage="hotnovels" />
+      </Suspense>
+    </GradBanner>
   );
 };
 

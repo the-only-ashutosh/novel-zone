@@ -18,10 +18,11 @@ const aboutUs = (
 );
 
 const Footer = async () => {
-  const categories = await fetchRandomCategories();
+  const c = fetchRandomCategories();
 
-  const popularNovels = await fetchRandomBooks();
-  const genres = await fetchRandomGenres();
+  const p = fetchRandomBooks();
+  const g = fetchRandomGenres();
+  const [categories, popularNovels, genres] = await Promise.all([c, p, g]);
 
   return (
     <div className="">
@@ -133,3 +134,5 @@ const Footer = async () => {
 };
 
 export default Footer;
+
+export const revalidate = 3600 * 12;

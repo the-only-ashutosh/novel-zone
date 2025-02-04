@@ -26,6 +26,7 @@ export default function SearchModal({
       if (event.ctrlKey && event.key === "k") {
         event.preventDefault();
         onOpen();
+        localStorage.setItem("search", "true");
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -48,14 +49,20 @@ export default function SearchModal({
         size="sm"
         startContent={<SearchIcon size={18} />}
         type="search"
-        onClick={onOpen}
+        onClick={() => {
+          localStorage.setItem("search", "true");
+          onOpen();
+        }}
         isReadOnly
         endContent={<Kbd keys={["ctrl"]}>K</Kbd>}
       />
       <div className="searchicon">
         <IconButton
           className="searchicon text-gray-600 dark:text-white"
-          onClick={onOpen}
+          onClick={() => {
+            localStorage.setItem("search", "true");
+            onOpen();
+          }}
         >
           <FiSearch size={24} />
         </IconButton>
@@ -87,6 +94,7 @@ export default function SearchModal({
           },
         }}
         onOpenChange={() => {
+          localStorage.setItem("search", "false");
           onOpenChange();
           setSearch("");
         }}
@@ -127,6 +135,7 @@ export default function SearchModal({
                   <SearchList
                     toSearch={search}
                     closeModal={() => {
+                      localStorage.setItem("search", "false");
                       onOpenChange();
                       setSearch("");
                     }}

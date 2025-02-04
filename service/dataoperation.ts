@@ -5,6 +5,7 @@ import prisma from "./client";
 import { correctString, titleToUrl } from "./functions";
 import { ALL_GENRE } from "./genre";
 import { PrismaClient } from "@prisma/client";
+import { cache } from "react";
 
 export const fetchMostPopular = async () => {
   return await prisma.book.findMany({
@@ -117,11 +118,11 @@ export async function searchBook(toSearch: string) {
 
 export async function fetchByGenre(genre: string, page: number = 1) {
   const pages = await prisma.book.count({
-    where: { genre: { some: { route: genre } } },
+    where: { genre: { some: { route: { contains: genre } } } },
   });
   try {
     const data = await prisma.book.findMany({
-      where: { genre: { some: { route: genre } } },
+      where: { genre: { some: { route: { contains: genre } } } },
       orderBy: [{ updatedAt: "desc" }, { ratings: "desc" }, { views: "desc" }],
       skip: (page - 1) * 20,
       take: 20,
@@ -833,7 +834,7 @@ export async function fetchBookOg(book: string) {
     });
 }
 
-export async function fetchRandomBooks() {
+export const fetchRandomBooks = cache(async () => {
   const count = await prisma.book.count();
   const randomIndex: number[] = [];
   for (let i = 0; i < 5; i++) {
@@ -847,9 +848,9 @@ export async function fetchRandomBooks() {
     .then(async (books) => {
       return books;
     });
-}
+});
 
-export async function fetchRandomCategories() {
+export const fetchRandomCategories = cache(async () => {
   const count = await prisma.category.count();
   const randomIndex: number[] = [];
   while (randomIndex.length < 5) {
@@ -866,9 +867,9 @@ export async function fetchRandomCategories() {
     .then(async (categories) => {
       return categories;
     });
-}
+});
 
-export async function fetchRandomGenres() {
+export const fetchRandomGenres = cache(() => {
   const randomIndex: number[] = [];
   while (randomIndex.length < 5) {
     const random = Math.floor(Math.random() * ALL_GENRE.length);
@@ -877,7 +878,7 @@ export async function fetchRandomGenres() {
     }
   }
   return ALL_GENRE.filter((x, i) => randomIndex.includes(i));
-}
+});
 
 export async function fetchRandomAuthors() {
   const count = await prisma.author.count();

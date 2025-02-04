@@ -44,6 +44,18 @@ const ChapterPage = async ({
     <div className="flex justify-center flex-col items-center px-[2.5%] py-[2%] dark:bg-[#121212]">
       {chapterData && chapterData !== "Invalid Chapter" ? (
         <>
+          {chapterData.nextChapter && (
+            <link
+              rel="prefetch"
+              href={`/book/${book_name}/${chapterData.nextChapter}`}
+            />
+          )}
+          {chapterData.prevChapter && (
+            <link
+              rel="prefetch"
+              href={`/book/${book_name}/${chapterData.prevChapter}`}
+            />
+          )}
           <div className="flex flex-col justify-center items-center mb-6">
             <Link href={`/book/${chapterData.book.bookUrl}`}>
               <h1 className="font-bold text-2xl">{chapterData.book.title}</h1>

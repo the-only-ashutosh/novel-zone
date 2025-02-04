@@ -131,7 +131,7 @@ const BookPage = async ({
               main={`Genre ${like.random}`}
               sub={`Books you might like`}
             >
-              <InfoList data={like.data} cls="" />
+              <InfoList data={like.data} cls="w-full" />
             </GradBanner>
           )}
           <Script
