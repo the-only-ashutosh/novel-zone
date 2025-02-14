@@ -4,8 +4,13 @@ import { Providers } from "./providers";
 import "./globals.css";
 import Appbar from "@/components/Shared/Appbar/Appbar";
 import Footer from "./Footer";
-import { headers } from "next/headers";
 import "@/service/fonts";
+import { auth } from "@/auth";
+import dynamic from "next/dynamic";
+const MyAvatar = dynamic(
+  () => import("@/components/Shared/Appbar/Avatar/MyAvatar"),
+  { ssr: true }
+);
 
 export const metadata: Metadata = {
   title: {
@@ -14,7 +19,7 @@ export const metadata: Metadata = {
   },
   authors: [{ name: "Ashutosh" }],
   description:
-    "Your stop to read novels at single stop. Read light novel, web novel, korean novel and chinese novel online for free. You can find hundreds of english translated light novel, web novel, korean novel and chinese novel which are daily updated! Read novels online, read light novel online, read online free, free light novel online. ",
+    "Your stop to read novels at single stop. Read light novel, web novel, korean novel and chinese novel online for free. You can find hundreds of english translated light novel, web novel, korean novel and chinese novel which are daily updated",
   other: {
     "google-site-verification": "ooyq9xvP1155LRyWJpGkd_BehUDxYoLZkkbdVr--YqY",
   },
@@ -31,13 +36,26 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const headersList = React.use(headers());
-  const viewport = headersList.get("viewport");
+  const session = React.use(auth());
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`antialiased`}>
         <Providers>
-          <Appbar viewport={viewport} />
+          <Appbar
+            ava={
+              <MyAvatar
+                session={
+                  session
+                    ? {
+                        name: session.user!.name!,
+                        image: session.user!.image!,
+                        email: session.user!.email!,
+                      }
+                    : null
+                }
+              />
+            }
+          />
           {children}
           <Footer />
         </Providers>

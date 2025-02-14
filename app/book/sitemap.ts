@@ -1,6 +1,6 @@
 import { getChapterUrl, totalChapters } from "@/service/dataoperation";
 import type { MetadataRoute } from "next";
-const url = "https://novelzone.fun";
+import { HOST as url } from "@/types";
 
 export async function generateSitemaps() {
   const pages = [];

@@ -21,7 +21,7 @@ export type bookData = {
 const InfoList = ({ data, cls }: { data: Array<bookData>; cls: string }) => {
   return (
     <Grid className={`grid justify-center gap-4 maingrid ${cls}`}>
-      {data.map((book) => {
+      {data.map((book, i) => {
         return (
           <InfoCard
             key={book.bookUrl}
@@ -33,6 +33,7 @@ const InfoList = ({ data, cls }: { data: Array<bookData>; cls: string }) => {
             status={book.status}
             totalChapters={book._count.chapter}
             aspectRatio={Number(book.aspectRatio)}
+            priority={i < 2}
           />
         );
       })}

@@ -16,6 +16,7 @@ const InfoCard = ({
   status,
   totalChapters,
   aspectRatio,
+  priority,
 }: {
   imgUrl: string | null;
   title: string | null;
@@ -25,6 +26,7 @@ const InfoCard = ({
   status: string;
   totalChapters: number | null;
   aspectRatio: number;
+  priority: boolean;
 }) => {
   const badgePos = {
     Ongoing: " top-[8px] right-[31.5px]",
@@ -77,12 +79,12 @@ const InfoCard = ({
             width={Math.ceil(210 * aspectRatio)}
             height={210}
             loading="eager"
-            fetchPriority="low"
             style={{
               borderRadius: "0.375rem",
               height: "210px",
               width: `${Math.ceil(210 * aspectRatio)}px`,
             }}
+            priority={priority}
           />
         </Badge>
         <div className="flex flex-col w-[158px] text-sm px-[2px] ">
@@ -101,7 +103,7 @@ const InfoCard = ({
             content={title}
             placement="top"
           >
-            <span className="line-clamp-1">{title}</span>
+            <h2 className="line-clamp-1">{title}</h2>
           </Tooltip>
           <div className="flex flex-row justify-between w-full">
             <span>Chapters</span>

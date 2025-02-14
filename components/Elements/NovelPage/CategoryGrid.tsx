@@ -23,7 +23,10 @@ const CategoryGrid = ({
           sx={{ width: "fit-content" }}
           className="hover:text-primary dark:hover:text-primary"
         >
-          <Link href={`/filter/categories/${category[i].route.toLowerCase()}`}>
+          <Link
+            href={`/filter/categories/${category[i].route.toLowerCase()}`}
+            prefetch={false}
+          >
             <h4>
               {`${category[i].name}${i < category.length - 1 ? "," : ""}`}&nbsp;
             </h4>

@@ -1,0 +1,105 @@
+{
+  "tables": [
+    {
+      "name": "users",
+      "columns": [
+        {
+          "name": "userId",
+          "type": "string",
+          "unique": true
+        },
+        {
+          "name": "firstName",
+          "type": "text"
+        },
+        {
+          "name": "userName",
+          "type": "string",
+          "unique": true
+        },
+        {
+          "name": "gender",
+          "type": "text"
+        },
+        {
+          "name": "lastName",
+          "type": "text"
+        },
+        {
+          "name": "email",
+          "type": "text"
+        },
+        {
+          "name": "avatar",
+          "type": "text"
+        },
+        {
+          "name": "bio",
+          "type": "text"
+        },
+        {
+          "name": "age",
+          "type": "datetime"
+        },
+        {
+          "name": "joinedAt",
+          "type": "datetime",
+          "notNull": true,
+          "defaultValue": "now"
+        }
+      ]
+    },
+    {
+      "name": "history",
+      "columns": [
+        {
+          "name": "userId",
+          "type": "link",
+          "link": {
+            "table": "users"
+          }
+        },
+        {
+          "name": "bookTitle",
+          "type": "text"
+        },
+        {
+          "name": "bookUrl",
+          "type": "text"
+        },
+        {
+          "name": "chapNumber",
+          "type": "int"
+        },
+        {
+          "name": "chapUrl",
+          "type": "text"
+        },
+        {
+          "name": "chapTitle",
+          "type": "text"
+        },
+        {
+          "name": "readAt",
+          "type": "datetime",
+          "defaultValue": "now"
+        }
+      ]
+    },
+    {
+      "name": "settings",
+      "columns": [
+        { "name": "userId", "type": "link", "link": { "table": "users" } },
+        { "name": "theme", "type": "text" },
+        { "name": "fontSize", "type": "int" },
+        { "name": "fontStyle", "type": "text" },
+        { "name": "lineHeight", "type": "float" },
+        { "name": "indent", "type": "bool" },
+        { "name": "customFont", "type": "text" },
+        { "name": "makePublic", "type": "bool" },
+        { "name": "upVotes", "type": "int" },
+        { "name": "downVotes", "type": "int" }
+      ]
+    }
+  ]
+}

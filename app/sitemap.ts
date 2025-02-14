@@ -5,7 +5,7 @@ import {
   fetchGenreSitemap,
 } from "@/service/dataoperation";
 import type { MetadataRoute } from "next";
-const host = "https://novelzone.fun";
+import { HOST as host } from "@/types";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const pages: MetadataRoute.Sitemap = [];

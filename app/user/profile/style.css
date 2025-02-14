@@ -1,0 +1,10 @@
+@media screen and (min-width: 771px) {
+
+    .inputs {
+        width: 50%;
+    }
+
+    .inputs-container {
+        flex-direction: row;
+    }
+}

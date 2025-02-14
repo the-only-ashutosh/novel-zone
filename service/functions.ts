@@ -27,11 +27,16 @@ export const correctString = (value: string): string => {
   const content = value
     .replaceAll("â", ` `)
     .replaceAll("Â", "")
+    .replaceAll(" s ", "'s ")
+    .replaceAll(" t ", "'t ")
+    .replaceAll(" d ", "'d ")
+    .replaceAll(" ll ", "'ll ")
     .replaceAll(`"½`, "")
     .replaceAll(`ï»¿`, "")
     .replaceAll(`"¦..`, "")
     .replaceAll(`"¦.`, "")
     .replaceAll(`"¦...`, "")
+    .replaceAll(" ", "→")
     .replaceAll(`Ä±`, "I")
     .replaceAll(`"s `, "'s ")
     .replaceAll(`"ll `, "'ll ")
@@ -54,22 +59,34 @@ export const correctString = (value: string): string => {
     .replaceAll(`n/o/vel/b//in dot c//om`, "")
     .replaceAll(`KÃ¶prÃ¼lÃ¼`, "")
     .replaceAll(`n/Ã´/vel/b//jn dot c//om`, "")
-    .replaceAll("pÎ±ndÎ±,noÎ½É1,ÑoÐ .", "");
+    .replaceAll("pÎ±ndÎ±,noÎ½É1,ÑoÐ .", "")
+    .replaceAll("@@novelbin@@", "");
   return content
     .split("[hereisbreak]")
     .map((line) => {
-      if (line.endsWith("empire")) {
-        return line
-          .split("")
-          .reverse()
-          .join("")
-          .replace(
-            /(eripme\s)((?:.|\n)+?)(eunitnoC\s|dniF\s|ecneirepxE\s|erolpxE\s|yojnE\s|revocsiD\s|daeR\s|ruoY\s|yatS\s)/g,
-            ""
-          )
-          .split("")
-          .reverse()
-          .join("");
+      if (
+        line.endsWith("empire") ||
+        line.endsWith("My Virtual Library Empire") ||
+        line.endsWith("m v|le|mp|yr")
+      ) {
+        return (
+          line
+            .split("")
+            .reverse()
+            .join("")
+            .replace(
+              /(eripme\s|eripmE\s|môC\.niBlevoN\s)((?:.|\n)+?)(eunitnoC\s|dniF\s|ecneirepxE\s|erolpxE\s|yojnE\s|revocsiD\s|daeR\s|ruoY\s|yatS\s|ylnO\s)/g,
+              ""
+            )
+            //Continue reading on NovelBin.Côm
+            .replace(
+              /(ry\|pm\|el\|v m)((?:.|\n)+?)(eunitnoC\s|dniF\s|ecneirepxE\s|erolpxE\s|yojnE\s|revocsiD\s|daeR\s|ruoY\s|yatS\s|ylnO\s)/g,
+              ""
+            )
+            .split("")
+            .reverse()
+            .join("")
+        );
       } else {
         return line;
       }

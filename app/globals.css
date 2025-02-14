@@ -9,6 +9,8 @@
 
 html {
   overscroll-behavior: none;
+  scrollbar-color: transparent transparent;
+  scrollbar-width: none;
 }
 
 img {

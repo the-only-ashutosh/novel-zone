@@ -7,12 +7,41 @@ import {
   ModalBody,
   useDisclosure,
   Kbd,
+  Button,
 } from "@heroui/react";
 import Fade from "@mui/material/Fade";
-import { IconButton } from "@mui/material";
-import { FiSearch } from "react-icons/fi";
-import { SearchIcon } from "../UI/SearchIcon";
 import SearchList from "../Elements/SearchModal/SearchList";
+import type { SVGProps } from "react";
+
+export function IconParkSearch(props: Readonly<SVGProps<SVGSVGElement>>) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={48}
+      height={48}
+      viewBox="0 0 48 48"
+      {...props}
+    >
+      <g fill="none" strokeLinejoin="round" strokeWidth={4}>
+        <path
+          fill="#2f88ff"
+          stroke="#333"
+          d="M21 38C30.3888 38 38 30.3888 38 21C38 11.6112 30.3888 4 21 4C11.6112 4 4 11.6112 4 21C4 30.3888 11.6112 38 21 38Z"
+        ></path>
+        <path
+          stroke="#fff"
+          strokeLinecap="round"
+          d="M26.657 14.3431C25.2093 12.8954 23.2093 12 21.0001 12C18.791 12 16.791 12.8954 15.3433 14.3431"
+        ></path>
+        <path
+          stroke="#333"
+          strokeLinecap="round"
+          d="M33.2216 33.2217L41.7069 41.707"
+        ></path>
+      </g>
+    </svg>
+  );
+}
 
 export default function SearchModal({
   viewport,
@@ -23,7 +52,8 @@ export default function SearchModal({
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent): void => {
-      if (event.ctrlKey && event.key === "k") {
+      const w = window.innerWidth;
+      if (w > 687 && event.ctrlKey && event.key === "k") {
         event.preventDefault();
         onOpen();
         localStorage.setItem("search", "true");
@@ -36,36 +66,38 @@ export default function SearchModal({
 
   return (
     <>
-      <Input
-        className="modeswitch"
-        classNames={{
-          base: "max-w-full sm:max-w-[10rem] h-10",
-          mainWrapper: "h-full",
-          input: "text-xs",
-          inputWrapper:
-            "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
-        }}
-        placeholder="Type to search..."
-        size="sm"
-        startContent={<SearchIcon size={18} />}
-        type="search"
-        onClick={() => {
+      <Button
+        disableRipple
+        className="data-[hover=true]:bg-transparent hidden xl:flex bg-default-400/20 dark:bg-default-500/20 text-default-500 h-10"
+        startContent={<IconParkSearch width={20} />}
+        endContent={
+          <Kbd
+            keys={["ctrl"]}
+            classNames={{
+              base: "bg-white dark:bg-black",
+            }}
+          >
+            K
+          </Kbd>
+        }
+        onPress={() => {
           localStorage.setItem("search", "true");
           onOpen();
         }}
-        isReadOnly
-        endContent={<Kbd keys={["ctrl"]}>K</Kbd>}
-      />
-      <div className="searchicon">
-        <IconButton
-          className="searchicon text-gray-600 dark:text-white"
-          onClick={() => {
+      >
+        Search...
+      </Button>
+      <div className="hidden lg:flex">
+        <Button
+          className="data-[hover=true]:bg-transparent bg-transparent h-10"
+          disableRipple
+          isIconOnly
+          onPress={() => {
             localStorage.setItem("search", "true");
             onOpen();
           }}
-        >
-          <FiSearch size={24} />
-        </IconButton>
+          startContent={<IconParkSearch width={24} />}
+        />
       </div>
       <Modal
         backdrop="blur"

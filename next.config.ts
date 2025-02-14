@@ -9,10 +9,22 @@ const nextConfig: NextConfig = {
         hostname: "img.novelzone.fun",
         pathname: "/nz/**",
       },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.discordapp.com",
+      },
+      {
+        protocol: "https",
+        hostname: "avatars.githubusercontent.com",
+      },
     ],
   },
   compiler: {
-    removeConsole: true,
+    // removeConsole: true,
   },
   async redirects() {
     return [

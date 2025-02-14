@@ -3,7 +3,7 @@ import { IconButton } from "@mui/material";
 import { FiSettings } from "react-icons/fi";
 import { Popover, PopoverTrigger } from "@heroui/react";
 import dynamic from "next/dynamic";
-const PopoverCont = dynamic(() => import("./PopoverCont"), { ssr: false });
+const PopoverCont = dynamic(() => import("./PopoverCont"), { ssr: true });
 
 const SettingsMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,6 +15,11 @@ const SettingsMenu = () => {
       placement="bottom"
       isOpen={isOpen}
       onOpenChange={(open) => setIsOpen(open)}
+      showArrow
+      classNames={{
+        base: "before:bg-default-200", // change arrow background
+        content: "px-2.5 py-1 border-small border-divider bg-background",
+      }}
     >
       <PopoverTrigger>
         <IconButton

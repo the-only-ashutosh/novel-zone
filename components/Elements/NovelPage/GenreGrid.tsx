@@ -24,7 +24,10 @@ const GenreGrid = ({
           className="hover:text-primary dark:hover:text-primary"
         >
           <h3>
-            <Link href={`/filter/genre/${genres[i].route.toLowerCase()}`}>
+            <Link
+              href={`/filter/genre/${genres[i].route.toLowerCase()}`}
+              prefetch={false}
+            >
               {`${genres[i].name}${i < genres.length - 1 ? "," : ""}`}&nbsp;
             </Link>
           </h3>

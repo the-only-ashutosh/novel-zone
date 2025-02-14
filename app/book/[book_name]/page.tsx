@@ -14,6 +14,7 @@ import { notFound } from "next/navigation";
 import GradBanner from "@/components/Shared/GradBanner";
 import InfoList from "@/components/Elements/InfoCard/InfoList";
 import Script from "next/script";
+import DescCard from "@/components/Elements/NovelPage/DescCard";
 const ChaptersCard = dynamic(
   () => import("@/components/Elements/NovelPage/ChaptersCard")
 );
@@ -103,6 +104,7 @@ const BookPage = async ({
                       }`
                     : "#"
                 }
+                prefetch={false}
               >
                 <Typography className="text-primary">
                   {bookDetail.chapter.length > 1
@@ -123,8 +125,12 @@ const BookPage = async ({
           <ChaptersCard
             book={bookDetail.id}
             chapters={bookDetail._count.chapter}
-            description={String.fromCharCode(...bookDetail.description)}
             viewport={viewport}
+            descCard={
+              <DescCard
+                description={new TextDecoder().decode(bookDetail.description)}
+              />
+            }
           />
           {like !== "Invalid Book" && (
             <GradBanner
@@ -164,12 +170,12 @@ export async function generateMetadata({
 
   if (book !== "Invalid Book" && book !== null) {
     return {
-      title: `${book.title}`,
+      title: `${book.title.trim().substring(0, 55)}`,
       referrer: "origin-when-cross-origin",
-      description: String.fromCharCode(...book.description).replaceAll(
-        "[hereisbreak]",
-        " "
-      ),
+      description: new TextDecoder()
+        .decode(book.description)
+        .replaceAll("[hereisbreak]", " ")
+        .substring(0, 155),
       keywords: [
         "Novel",
         "Novel Zone",
@@ -183,10 +189,10 @@ export async function generateMetadata({
       twitter: {
         card: "summary_large_image",
         title: book.title,
-        description: String.fromCharCode(...book.description).replaceAll(
-          "[hereisbreak]",
-          " "
-        ),
+        description: new TextDecoder()
+          .decode(book.description)
+          .replaceAll("[hereisbreak]", " ")
+          .substring(0, 155),
         images: book.imageUrl,
       },
     };

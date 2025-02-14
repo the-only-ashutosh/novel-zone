@@ -58,6 +58,7 @@ const SmallInfoCard = ({
               <Link
                 href={`/author/${author}`}
                 className="hover:text-primary dark:hover:text-primary"
+                prefetch={false}
               >
                 {author}
               </Link>
@@ -76,8 +77,8 @@ const SmallInfoCard = ({
                     status === "Completed"
                       ? "text-success"
                       : status === "Dropped"
-                      ? "text-danger"
-                      : "text-primary"
+                        ? "text-danger"
+                        : "text-primary"
                   }`}
                 >
                   <Link
@@ -86,6 +87,7 @@ const SmallInfoCard = ({
                         ? "/filter/completed"
                         : "/filter/ongoing"
                     }
+                    prefetch={false}
                   >
                     {status.toUpperCase()}
                   </Link>

@@ -1,11 +1,29 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import "server-only";
-import type { Chapter, IncomingBook } from "@/types";
+import type {
+  Chapter,
+  IncomingBook,
+  IncomingHistory,
+  IncomingSettings,
+  IncomingUser,
+} from "@/types";
 import prisma from "./client";
 import { correctString, titleToUrl } from "./functions";
 import { ALL_GENRE } from "./genre";
 import { PrismaClient } from "@prisma/client";
 import { cache } from "react";
+
+export async function getBookTitles() {
+  return await prisma.book
+    .findMany({
+      orderBy: { views: "desc" },
+      take: 50,
+      select: { title: true },
+    })
+    .then((data) => {
+      return data.map((b) => b.title);
+    });
+}
 
 export const fetchMostPopular = async () => {
   return await prisma.book.findMany({
@@ -79,10 +97,10 @@ export const fetchChapter = async (book_name: string, chapter: string) => {
             select: { url: true },
           });
           const [prevChapter, nextChapter] = await Promise.all([prev, next]);
-
+          const decoder = new TextDecoder();
           return {
             ...chapter,
-            content: String.fromCharCode(...chapter.content),
+            content: decoder.decode(chapter.content),
             prevChapter: prevChapter ? prevChapter.url : null,
             nextChapter: nextChapter ? nextChapter.url : null,
           };
@@ -441,7 +459,7 @@ export async function newRating(stars: number, title: string) {
   }
 }
 
-export async function fetchChaptersList(book: string) {
+export const fetchChaptersList = cache(async (book: string) => {
   const chData = await prisma.book.findFirst({
     where: { bookUrl: book },
     select: {
@@ -454,7 +472,7 @@ export async function fetchChaptersList(book: string) {
   if (chData) {
     return chData.chapter;
   }
-}
+});
 
 export async function addView(url: string) {
   await prisma.book.updateMany({
@@ -869,7 +887,7 @@ export const fetchRandomCategories = cache(async () => {
     });
 });
 
-export const fetchRandomGenres = cache(() => {
+export const fetchRandomGenres = cache(async () => {
   const randomIndex: number[] = [];
   while (randomIndex.length < 5) {
     const random = Math.floor(Math.random() * ALL_GENRE.length);
@@ -963,4 +981,30 @@ export async function fetchMatchingBooks(name: string) {
 
 export async function deleteChapters() {
   await prisma.chapter.deleteMany({ where: { title: "None" } });
+}
+
+export async function newUser(user: IncomingUser) {
+  const data = await prisma.user.upsert({
+    where: { id: user.id },
+    create: { ...user },
+    update: { ...user },
+    select: { settings: true },
+  });
+  return data.settings;
+}
+
+export async function changeSettings(settings: IncomingSettings) {
+  return await prisma.setting.upsert({
+    where: { userId: settings.userId },
+    create: { ...settings },
+    update: { ...settings },
+  });
+}
+
+export async function upsertHistory(history: IncomingHistory) {
+  return await prisma.history.upsert({
+    where: { uBC: history.userId + history.bookUrl },
+    create: { ...history, uBC: history.userId + history.bookUrl },
+    update: { ...history },
+  });
 }

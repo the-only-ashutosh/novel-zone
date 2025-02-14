@@ -1,4 +1,3 @@
-import ChangeChapters from "@/components/Elements/Chapter/ChangeChapters";
 import ChapterContent from "@/components/Elements/Chapter/ChapterContent";
 import { addChapterView, fetchChapter } from "@/service/dataoperation";
 import Link from "next/link";
@@ -10,6 +9,7 @@ import { correctString } from "@/service/functions";
 import { notFound } from "next/navigation";
 import Script from "next/script";
 import { Typography } from "@mui/material";
+import SelectChapterList from "@/components/Elements/Chapter/SelectChapterList";
 
 type SearchParams = Promise<{ [key: string]: string }>;
 
@@ -41,7 +41,7 @@ const ChapterPage = async ({
       : [""];
 
   return (
-    <div className="flex justify-center flex-col items-center px-[2.5%] py-[2%] dark:bg-[#121212]">
+    <div className="flex justify-center flex-col items-center px-[5%] sm:px-[2%] md:px-[3.5%] py-[2%] dark:bg-[#121212]">
       {chapterData && chapterData !== "Invalid Chapter" ? (
         <>
           {chapterData.nextChapter && (
@@ -64,12 +64,12 @@ const ChapterPage = async ({
               {chapterData.addAt.toDateString()}
             </Typography>
           </div>
-          <ChangeChapters
+          <SelectChapterList
             book_name={book_name}
-            prevUrl={chapterData.prevChapter!}
-            nextUrl={chapterData.nextChapter!}
-            currentCh={Number(chapterData.number)}
+            current={Number(chapterData.number)}
             device={viewport}
+            nextUrl={chapterData.nextChapter!}
+            prevUrl={chapterData.prevChapter!}
           />
           <ChapterContent
             content={content}
@@ -77,12 +77,12 @@ const ChapterPage = async ({
             fStyle={fontStyle !== undefined ? String(fontStyle) : "Rubik"}
             fSize={fontSize !== undefined ? String(fontSize) : "18"}
           />
-          <ChangeChapters
+          <SelectChapterList
             book_name={book_name}
-            prevUrl={chapterData.prevChapter!}
-            nextUrl={chapterData.nextChapter!}
-            currentCh={Number(chapterData.number)}
+            current={Number(chapterData.number)}
             device={viewport}
+            nextUrl={chapterData.nextChapter!}
+            prevUrl={chapterData.prevChapter!}
           />
           {viewport === "desktop" && (
             <div className="border-1 border-dotted py-1 px-[6px] rounded-md mt-4 border-primary dark:border-white">
@@ -122,10 +122,12 @@ export async function generateMetadata({
 
   if (chapterData && chapterData !== "Invalid Chapter") {
     return {
-      title: `${chapterData.title} | ${chapterData.book.title}`,
-      applicationName: chapterData.title,
+      title: `${chapterData.title.trim().substring(0, 50)}`,
+      applicationName: chapterData.title.trim().substring(0, 69),
       referrer: "origin-when-cross-origin",
-      description: chapterData.content.replaceAll("[hereisbreak]", " "),
+      description: chapterData.content
+        .replaceAll("[hereisbreak]", " ")
+        .substring(0, 155),
       keywords: [
         "Novel",
         "Novel Zone",

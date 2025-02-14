@@ -5,6 +5,11 @@ export type IconSvgProps = SVGProps<SVGSVGElement> & {
   size?: number;
 };
 
+export const HOST =
+  process.env.NODE_ENV === "production"
+    ? process.env.HOST
+    : "http://localhost:3000";
+
 export type IncomingBook = {
   bookUrl: string;
   title: string;
@@ -76,4 +81,40 @@ export type Chapter = {
   url: string;
   content: string[];
   title: string;
+};
+
+export type IncomingUser = {
+  name: string;
+  image: string;
+  id: string;
+  email: string;
+};
+
+export type IncomingSettings = {
+  userId: string;
+  theme: string;
+  font: string;
+  size: string;
+  lineHeight: string;
+  indent: boolean;
+  customFont: string | null;
+};
+
+export type IncomingHistory = {
+  userId: string;
+  bookUrl: string;
+  url: string;
+  title: string;
+};
+
+export type Profile = {
+  firstName: string;
+  lastName: string;
+  userName: string;
+  email: string;
+  age: Date | null | undefined;
+  gender: "M" | "F" | "O" | null;
+  bio: string;
+  userId: string;
+  id: string;
 };

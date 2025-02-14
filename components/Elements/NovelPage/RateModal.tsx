@@ -1,11 +1,6 @@
 "use client";
 import React from "react";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  Button,
-} from "@heroui/react";
+import { Popover, PopoverTrigger, PopoverContent, Button } from "@heroui/react";
 import Rating from "@mui/material/Rating";
 import Box from "@mui/material/Box";
 import StarIcon from "@mui/icons-material/Star";
@@ -105,7 +100,10 @@ const RateModal = ({ bkTitle }: { bkTitle: string }) => {
                     setSubmitting(true);
                     const axios = (await import("axios")).default;
                     await axios
-                      .post("/api/addRating", { stars: value, title: bkTitle })
+                      .post("/api/data/addRating", {
+                        stars: value,
+                        title: bkTitle,
+                      })
                       .then((response) => {
                         if (response.data.message === "Success") {
                           setSubmitting(false);

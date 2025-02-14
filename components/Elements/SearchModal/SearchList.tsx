@@ -28,7 +28,7 @@ const SearchList = ({
     async function d(s: string) {
       const axios = (await import("axios")).default;
       await axios
-        .post(`/api/search`, { search: s })
+        .post(`/api/data/search`, { search: s })
         .then((res) => {
           setData(res.data);
         })

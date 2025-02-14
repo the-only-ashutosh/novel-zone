@@ -6,6 +6,7 @@ import { bookData } from "@/components/Elements/InfoCard/InfoList";
 import { booksData } from "@/components/Elements/InfoBanner/InfoBannerList";
 import InfoBannerListWithSuspense from "@/components/Elements/InfoBanner/InfoBannerListWithSuspense";
 import Script from "next/script";
+import { getBookTitles } from "@/service/dataoperation";
 
 export const experimental_ppr = true;
 
@@ -57,7 +58,11 @@ export default function Home() {
   );
 }
 
-export const metadata: Metadata = {
-  title: "Home | Read novels for free",
-  authors: [{ name: "Ashutosh" }],
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: "Home | Read novels for free",
+    authors: [{ name: "Ashutosh" }],
+    keywords: [...(await getBookTitles())],
+    robots: { index: true, follow: true },
+  };
+}

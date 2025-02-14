@@ -56,6 +56,7 @@ const InfoCard = ({
               <Link
                 href={`/author/${author}`}
                 className="hover:text-primary dark:hover:text-primary"
+                prefetch={false}
               >
                 {author}
               </Link>
@@ -75,8 +76,8 @@ const InfoCard = ({
                     status === "Completed"
                       ? "text-success"
                       : status === "Dropped"
-                      ? "text-danger"
-                      : "text-primary"
+                        ? "text-danger"
+                        : "text-primary"
                   }`}
                 >
                   <Link
@@ -85,6 +86,7 @@ const InfoCard = ({
                         ? "/filter/completed"
                         : "/filter/ongoing"
                     }
+                    prefetch={false}
                   >
                     {status.toUpperCase()}
                   </Link>
@@ -99,7 +101,6 @@ const InfoCard = ({
                 value={ratings}
                 size="small"
                 name={`${title} Rating`}
-                //style={{ color: "#ffffff" }}
               />
               &nbsp;
               <span className="rate-info">{`(${ratings.toFixed(1)})`}</span>

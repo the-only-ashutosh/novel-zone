@@ -42,7 +42,7 @@ const InfoBanner = ({
             fetchPriority="low"
           />
           <div className="flex flex-col items-start ml-8 sm:ml-4 md:ml-6 justify-between margin-y max-w-full">
-            <span className="h-6 line-clamp-1 w-[95%]">{book}</span>
+            <h2 className="h-6 line-clamp-1 w-[95%]">{book}</h2>
 
             <div className="flex justify-between text-sm colrow">
               <span className="flex items-center">

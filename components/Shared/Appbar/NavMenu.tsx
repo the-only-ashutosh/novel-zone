@@ -24,7 +24,7 @@ const NavMenu = ({
 }) => {
   const router = useRouter();
   return (
-    <NavbarMenu>
+    <NavbarMenu className="flex lg:hidden xl:hidden">
       <Dropdown backdrop="blur" classNames={{ base: "right-1.5" }} offset={-50}>
         <NavbarItem>
           <DropdownTrigger>

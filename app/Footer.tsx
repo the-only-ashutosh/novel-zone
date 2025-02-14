@@ -38,6 +38,7 @@ const Footer = async () => {
                       href={`/filter/genre/${genre.route}`}
                       className="text-sm hover:text-primary transition duration-300"
                       aria-label={`Browse ${genre.name}`}
+                      prefetch={false}
                     >
                       {genre.name}
                     </Link>
@@ -56,6 +57,7 @@ const Footer = async () => {
                       href={`/filter/categories/${category.route}`}
                       className="text-sm hover:text-primary transition duration-300"
                       aria-label={`Browse ${category.name}`}
+                      prefetch={false}
                     >
                       {category.name}
                     </Link>
@@ -70,13 +72,14 @@ const Footer = async () => {
               <ul className="space-y-2">
                 {popularNovels.map((novel, index) => (
                   <li key={index + novel.id}>
-                    <a
+                    <Link
                       href={`/book/${novel.bookUrl}`}
                       className="text-sm hover:text-primary transition duration-300"
                       aria-label={`Read ${novel.title}`}
+                      prefetch={false}
                     >
                       {novel.title}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -87,36 +90,40 @@ const Footer = async () => {
               <h2 className="text-lg font-semibold">Contact Us</h2>
               <div className="flex items-center space-x-2">
                 <FaEnvelope className="text-gray-400" />
-                <a
+                <Link
                   href="mailto:support@novelzone.fun"
                   className="text-sm  hover:text-primary transition duration-300"
                   aria-label="Email us"
+                  prefetch={false}
                 >
                   support@novelzone.fun
-                </a>
+                </Link>
               </div>
               <div className="flex space-x-4">
-                <a
+                <Link
                   href="#facebook"
                   className="text-gray-400 hover:text-primary transition duration-300"
                   aria-label="Follow us on Facebook"
+                  prefetch={false}
                 >
                   <FaFacebook size={24} />
-                </a>
-                <a
+                </Link>
+                <Link
                   href="#twitter"
                   className="text-gray-400 hover:text-primary transition duration-300"
                   aria-label="Follow us on Twitter"
+                  prefetch={false}
                 >
                   <FaTwitter size={24} />
-                </a>
-                <a
+                </Link>
+                <Link
                   href="#instagram"
                   className="text-gray-400 hover:text-primary transition duration-300"
                   aria-label="Follow us on Instagram"
+                  prefetch={false}
                 >
                   <FaInstagram size={24} />
-                </a>
+                </Link>
               </div>
               {aboutUs}
             </div>

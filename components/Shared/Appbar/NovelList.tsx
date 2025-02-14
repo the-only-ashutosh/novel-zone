@@ -12,7 +12,18 @@ const NovelList = ({ loc }: { loc: string }) => {
         base: "max-w-full",
       }}
       itemClasses={{
-        base: "gap-4",
+        base: [
+          "gap-4",
+          "rounded-md",
+          "text-default-500",
+          "transition-opacity",
+          "data-[hover=true]:text-foreground",
+          "data-[hover=true]:bg-default-100",
+          "dark:data-[hover=true]:bg-default-50",
+          "data-[selectable=true]:focus:bg-default-50",
+          "data-[pressed=true]:opacity-70",
+          "data-[focus-visible=true]:ring-default-500",
+        ],
       }}
     >
       <DropdownItem
@@ -20,6 +31,7 @@ const NovelList = ({ loc }: { loc: string }) => {
         onPress={() => {
           router.push("/filter/allnovels");
         }}
+        textValue="allnovels"
       >
         <Link
           aria-current={loc === "/filter/allnovels" || "page"}
@@ -34,6 +46,7 @@ const NovelList = ({ loc }: { loc: string }) => {
         onPress={() => {
           router.push("/filter/hotnovels");
         }}
+        textValue="hotnovels"
       >
         <Link
           aria-current={loc === "/filter/hotnovels" || "page"}
@@ -48,6 +61,7 @@ const NovelList = ({ loc }: { loc: string }) => {
         onPress={() => {
           router.push("/filter/newupdates");
         }}
+        textValue="newupdates"
       >
         <Link
           aria-current={loc === "/filter/newupdates" || "page"}
@@ -62,6 +76,7 @@ const NovelList = ({ loc }: { loc: string }) => {
         onPress={() => {
           router.push("/filter/completed");
         }}
+        textValue="completed"
       >
         <Link
           aria-current={loc === "/filter/completed" || "page"}
@@ -76,6 +91,7 @@ const NovelList = ({ loc }: { loc: string }) => {
         onPress={() => {
           router.push("/filter/mostpopular");
         }}
+        textValue="mostpopular"
       >
         <Link
           aria-current={loc === "/filter/mostpopular" || "page"}
