@@ -982,29 +982,3 @@ export async function fetchMatchingBooks(name: string) {
 export async function deleteChapters() {
   await prisma.chapter.deleteMany({ where: { title: "None" } });
 }
-
-export async function newUser(user: IncomingUser) {
-  const data = await prisma.user.upsert({
-    where: { id: user.id },
-    create: { ...user },
-    update: { ...user },
-    select: { settings: true },
-  });
-  return data.settings;
-}
-
-export async function changeSettings(settings: IncomingSettings) {
-  return await prisma.setting.upsert({
-    where: { userId: settings.userId },
-    create: { ...settings },
-    update: { ...settings },
-  });
-}
-
-export async function upsertHistory(history: IncomingHistory) {
-  return await prisma.history.upsert({
-    where: { uBC: history.userId + history.bookUrl },
-    create: { ...history, uBC: history.userId + history.bookUrl },
-    update: { ...history },
-  });
-}
