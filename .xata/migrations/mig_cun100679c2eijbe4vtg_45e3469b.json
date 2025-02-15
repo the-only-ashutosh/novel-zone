@@ -1,0 +1,242 @@
+{
+  "id": "mig_cun100679c2eijbe4vtg",
+  "parentID": "mig_cumv94u79c2eijbe4v9g",
+  "checksum": "1:45e3469b4da069e870183e52e29aa01215fca6e608de26c5c668dd0bfda0b064",
+  "operations": [
+    {
+      "removeColumn": {
+        "column": "userId",
+        "table": "users"
+      }
+    },
+    {
+      "addTable": {
+        "table": "historys"
+      }
+    },
+    {
+      "addTable": {
+        "table": "settings"
+      }
+    },
+    {
+      "addTable": {
+        "table": "userrelationhistory"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "userId",
+          "type": "string",
+          "unique": true
+        },
+        "table": "users"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "userName",
+          "type": "string",
+          "unique": true
+        },
+        "table": "users"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "gender",
+          "type": "text"
+        },
+        "table": "users"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "history",
+          "type": "multiple"
+        },
+        "table": "users"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "userId",
+          "type": "link",
+          "link": {
+            "table": "users"
+          }
+        },
+        "table": "historys"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "bookId",
+          "type": "int"
+        },
+        "table": "historys"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "uBC",
+          "type": "string",
+          "unique": true
+        },
+        "table": "historys"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "url",
+          "type": "text"
+        },
+        "table": "historys"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "title",
+          "type": "text"
+        },
+        "table": "historys"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "readAt",
+          "type": "datetime",
+          "defaultValue": "now"
+        },
+        "table": "historys"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "userId",
+          "type": "link",
+          "link": {
+            "table": "users"
+          }
+        },
+        "table": "settings"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "theme",
+          "type": "text"
+        },
+        "table": "settings"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "fontSize",
+          "type": "int"
+        },
+        "table": "settings"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "fontStyle",
+          "type": "text"
+        },
+        "table": "settings"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "lineHeight",
+          "type": "float"
+        },
+        "table": "settings"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "indent",
+          "type": "bool"
+        },
+        "table": "settings"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "customFont",
+          "type": "text"
+        },
+        "table": "settings"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "makePublic",
+          "type": "bool"
+        },
+        "table": "settings"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "upVotes",
+          "type": "int"
+        },
+        "table": "settings"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "downVotes",
+          "type": "int"
+        },
+        "table": "settings"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "user",
+          "type": "link",
+          "link": {
+            "table": "users"
+          }
+        },
+        "table": "userrelationhistory"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "history",
+          "type": "link",
+          "link": {
+            "table": "historys"
+          }
+        },
+        "table": "userrelationhistory"
+      }
+    }
+  ]
+}

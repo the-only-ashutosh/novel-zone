@@ -1,0 +1,100 @@
+{
+  "id": "mig_cun3dfa8illiggkvlub0",
+  "parentID": "mig_cun1bfu79c2eijbe507g",
+  "checksum": "1:eacd5856e6166e1fa3d5e2dfe0930e5e86801b95ed3864e58abe470defa1f353",
+  "operations": [
+    {
+      "removeColumn": {
+        "column": "bookId",
+        "table": "historys"
+      }
+    },
+    {
+      "removeColumn": {
+        "column": "uBC",
+        "table": "historys"
+      }
+    },
+    {
+      "removeColumn": {
+        "column": "url",
+        "table": "historys"
+      }
+    },
+    {
+      "removeColumn": {
+        "column": "image",
+        "table": "users"
+      }
+    },
+    {
+      "removeColumn": {
+        "column": "history",
+        "table": "users"
+      }
+    },
+    {
+      "removeTable": {
+        "table": "userrelationhistory"
+      }
+    },
+    {
+      "renameTable": {
+        "newName": "history",
+        "oldName": "historys"
+      }
+    },
+    {
+      "renameColumn": {
+        "newName": "bookTitle",
+        "oldName": "title",
+        "table": "history"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "bookUrl",
+          "type": "text"
+        },
+        "table": "history"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "chapNumber",
+          "type": "int"
+        },
+        "table": "history"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "chapUrl",
+          "type": "text"
+        },
+        "table": "history"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "chapTitle",
+          "type": "text"
+        },
+        "table": "history"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "avatar",
+          "type": "text"
+        },
+        "table": "users"
+      }
+    }
+  ]
+}

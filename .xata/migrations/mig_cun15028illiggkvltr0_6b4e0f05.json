@@ -1,0 +1,13 @@
+{
+  "id": "mig_cun15028illiggkvltr0",
+  "parentID": "mig_cun100679c2eijbe4vtg",
+  "checksum": "1:6b4e0f05b075527a098d170468aafbeee2b665acf85e63b445519d66705f43f5",
+  "operations": [
+    {
+      "removeColumn": {
+        "column": "history",
+        "table": "users"
+      }
+    }
+  ]
+}

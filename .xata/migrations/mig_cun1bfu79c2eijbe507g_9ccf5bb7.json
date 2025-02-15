@@ -1,0 +1,25 @@
+{
+  "id": "mig_cun1bfu79c2eijbe507g",
+  "parentID": "mig_cun1a5u79c2eijbe505g",
+  "checksum": "1:9ccf5bb7a8935fdb8229ae18fadf613a2031c2d52410d890d5b3e032f664e946",
+  "operations": [
+    {
+      "removeColumn": {
+        "column": "history",
+        "table": "users"
+      }
+    },
+    {
+      "addColumn": {
+        "column": {
+          "name": "history",
+          "type": "link",
+          "link": {
+            "table": "userrelationhistory"
+          }
+        },
+        "table": "users"
+      }
+    }
+  ]
+}

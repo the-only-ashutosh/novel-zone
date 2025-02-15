@@ -1,0 +1,6 @@
+{
+  "databaseURL": "https://Vidyut-Mahadevan-s-workspace-bav7l7.ap-southeast-2.xata.sh/db/novel-zone-users",
+  "codegen": {
+    "output": "xata.ts"
+  }
+}

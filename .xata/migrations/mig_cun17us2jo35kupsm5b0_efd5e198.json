@@ -1,0 +1,19 @@
+{
+  "id": "mig_cun17us2jo35kupsm5b0",
+  "parentID": "mig_cun15028illiggkvltr0",
+  "checksum": "1:efd5e198da0359a1a87da04f9519d0906a2358df9d0023bddd8bf081efe9d996",
+  "operations": [
+    {
+      "addColumn": {
+        "column": {
+          "name": "history",
+          "type": "link",
+          "link": {
+            "table": "userrelationhistory"
+          }
+        },
+        "table": "users"
+      }
+    }
+  ]
+}
