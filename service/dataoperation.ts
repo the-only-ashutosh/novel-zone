@@ -12,6 +12,7 @@ import { correctString, titleToUrl } from "./functions";
 import { ALL_GENRE } from "./genre";
 import { PrismaClient } from "@prisma/client";
 import { cache } from "react";
+import { Decimal } from "@prisma/client/runtime/library";
 
 export async function getBookTitles() {
   return await prisma.book
@@ -488,10 +489,11 @@ export async function addChapterView(chapter: string, book: string) {
   });
 }
 
-export async function addAuthor(name: string) {
+export async function addAuthor(name: string, route: string) {
+  //name.replaceAll(" ", "-")
   const author = await prisma.author.upsert({
-    create: { name, route: name.replaceAll(" ", "-") },
-    update: { name, route: name.replaceAll(" ", "-") },
+    create: { name, route: route },
+    update: { name, route: route },
     where: { name },
   });
 
@@ -522,29 +524,31 @@ export async function addBook(book: IncomingBook) {
       create: { name: e, route: e.toLowerCase().replaceAll(" ", "-") },
     };
   });
-
+  console.log(book.bookUrl);
   const createdBook = await prisma.book.upsert({
+    where: { urlShrink: book.bookUrl.replaceAll("-", "") },
     create: {
       bookUrl: book.bookUrl,
       genre: { connectOrCreate: [...genres] },
       imageUrl: book.imageUrl,
       isHot: book.isHot,
+      urlShrink: book.bookUrl.replaceAll("-", ""),
       status: book.status,
       title: book.title,
       totalStars: book.totalStars,
       userrated: book.userrated,
       views: book.views,
       aspectRatio: book.aspectRatio,
-      authorId: book.authId,
       description: desc,
       category: {
         connectOrCreate: [...categories],
       },
-      ratings: book.totalStars / book.userrated,
+      author: { connect: { id: book.authId } },
+      ratings:
+        book.userrated > 0 ? new Decimal(book.totalStars / book.userrated) : 0,
       source: book.source,
     },
-    update: { isHot: book.isHot },
-    where: { bookUrl: book.bookUrl },
+    update: { isHot: book.isHot, source: book.source },
     select: { id: true, source: true },
   });
 
@@ -981,4 +985,28 @@ export async function fetchMatchingBooks(name: string) {
 
 export async function deleteChapters() {
   await prisma.chapter.deleteMany({ where: { title: "None" } });
+}
+
+export async function fetchChapterUrl(start: number = 1) {
+  return await prisma.book
+    .findMany({
+      orderBy: { id: "asc" },
+      skip: (start - 1) * 10,
+      take: 10,
+      select: { bookUrl: true },
+    })
+    .then((data) => {
+      return data.map((single) => {
+        return `https://novelzone.fun/book/${single.bookUrl}`;
+      });
+    });
+}
+
+export async function getTotalChapter(book: string) {
+  return await prisma.book
+    .findFirst({
+      where: { bookUrl: book },
+      select: { _count: { select: { chapter: true } } },
+    })
+    .then((data) => data!._count.chapter);
 }

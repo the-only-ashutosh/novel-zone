@@ -18,6 +18,7 @@ model book {
   id          Int        @id @default(autoincrement())
   title       String     @unique()
   bookUrl     String     @unique()
+  urlShrink   String     @unique()
   imageUrl    String
   updatedAt   DateTime   @default(now())
   totalStars  Int

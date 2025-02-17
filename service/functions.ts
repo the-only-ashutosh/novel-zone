@@ -53,13 +53,20 @@ export const correctString = (value: string): string => {
     .replaceAll(" ¦", "…")
     .replaceAll(String.raw`Nôv(el)B\\jnn`, "")
     .replaceAll(`n/ô/vel/b//in dot c//om`, "")
+    .replaceAll(`n/ô/vel/b//jn dot c//om`, "")
     .replaceAll(`n/o/vel/b//in dot c//om`, "")
     .replaceAll("Ã©", "e")
     .replaceAll("Nôv(el)B\\jnn", "")
-    .replaceAll(`n/o/vel/b//in dot c//om`, "")
+    .replaceAll(`n/o/vel/b//jn dot c//om`, "")
     .replaceAll(`KÃ¶prÃ¼lÃ¼`, "")
     .replaceAll(`n/Ã´/vel/b//jn dot c//om`, "")
+    .replaceAll(`n/Ã´/vel/b//in dot c//om`, "")
     .replaceAll("pÎ±ndÎ±,noÎ½É1,ÑoÐ .", "")
+    .replaceAll("соп#т@ҽո?†-ѕө$սг+ҫƹ-", "")
+    .replaceAll("¢σп†@ҽп†--н?օ&ѕ$ҭе&ɗ%-*оп#-*", "")
+    .replaceAll("MVLeMpYr", "novelzone")
+    .replaceAll("NovelBin", "novelzone")
+    .replaceAll("мѵʟ", "novelzone")
     .replaceAll("@@novelbin@@", "");
   return content
     .split("[hereisbreak]")
@@ -67,7 +74,9 @@ export const correctString = (value: string): string => {
       if (
         line.endsWith("empire") ||
         line.endsWith("My Virtual Library Empire") ||
-        line.endsWith("m v|le|mp|yr")
+        line.endsWith("m v|le|mp|yr") ||
+        line.endsWith("NovelBin.net")
+        //Freewebnovel
       ) {
         return (
           line
@@ -76,6 +85,10 @@ export const correctString = (value: string): string => {
             .join("")
             .replace(
               /(eripme\s|eripmE\s|môC\.niBlevoN\s)((?:.|\n)+?)(eunitnoC\s|dniF\s|ecneirepxE\s|erolpxE\s|yojnE\s|revocsiD\s|daeR\s|ruoY\s|yatS\s|ylnO\s)/g,
+              ""
+            )
+            .replace(
+              /(ten\.)((?:.|\n)+?)(eunitnoC\s|dniF\s|ecneirepxE\s|erolpxE\s|yojnE\s|revocsiD\s|daeR\s|ruoY\s|yatS\s|ylnO\s)/g,
               ""
             )
             //Continue reading on NovelBin.Côm
