@@ -17,6 +17,7 @@ const InfoCard = ({
   totalChapters,
   aspectRatio,
   priority,
+  htag,
 }: {
   imgUrl: string | null;
   title: string | null;
@@ -27,6 +28,7 @@ const InfoCard = ({
   totalChapters: number | null;
   aspectRatio: number;
   priority: boolean;
+  htag: boolean;
 }) => {
   const badgePos = {
     Ongoing: " top-[8px] right-[31.5px]",
@@ -103,7 +105,11 @@ const InfoCard = ({
             content={title}
             placement="top"
           >
-            <h2 className="line-clamp-1">{title}</h2>
+            {htag ? (
+              <h1 className="line-clamp-1">{title}</h1>
+            ) : (
+              <h2 className="line-clamp-1">{title}</h2>
+            )}
           </Tooltip>
           <div className="flex flex-row justify-between w-full">
             <span>Chapters</span>

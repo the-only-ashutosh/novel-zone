@@ -21,10 +21,11 @@ const DetailList = async ({
   const page = await params;
   const books = await func(page?.page ?? 1);
   if (books === "Invalid Page") notFound();
+  const random = Math.floor(Math.random() * books.data.length);
   return (
     <div className="flex flex-col justify-center items-center w-full">
       <div className="grid updatedlistgrid gap-4 justify-center w-full">
-        {books.data.map((book) => {
+        {books.data.map((book, i) => {
           return (
             <DetailCard
               aspectRatio={Number(book.aspectRatio)}
@@ -36,6 +37,7 @@ const DetailList = async ({
               title={book.title}
               key={book.title}
               ratings={(book.totalStars / book.userrated).toFixed(1)}
+              htag={random === i}
             />
           );
         })}

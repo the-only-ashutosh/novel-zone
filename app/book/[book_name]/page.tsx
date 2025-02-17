@@ -137,7 +137,7 @@ const BookPage = async ({
               main={`Genre ${like.random}`}
               sub={`Books you might like`}
             >
-              <InfoList data={like.data} cls="w-full" />
+              <InfoList data={like.data} cls="w-full" r={false} />
             </GradBanner>
           )}
           <Script
@@ -175,7 +175,8 @@ export async function generateMetadata({
       description: new TextDecoder()
         .decode(book.description)
         .replaceAll("[hereisbreak]", " ")
-        .substring(0, 155),
+        .substring(0, 50)
+        .trim(),
       keywords: [
         "Novel",
         "Novel Zone",

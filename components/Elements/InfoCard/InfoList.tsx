@@ -18,7 +18,16 @@ export type bookData = {
   };
 };
 
-const InfoList = ({ data, cls }: { data: Array<bookData>; cls: string }) => {
+const InfoList = ({
+  data,
+  cls,
+  r,
+}: {
+  data: Array<bookData>;
+  cls: string;
+  r: boolean;
+}) => {
+  const random = r ? Math.floor(Math.random() * 12) : -1;
   return (
     <Grid className={`grid justify-center gap-4 maingrid ${cls}`}>
       {data.map((book, i) => {
@@ -34,6 +43,7 @@ const InfoList = ({ data, cls }: { data: Array<bookData>; cls: string }) => {
             totalChapters={book._count.chapter}
             aspectRatio={Number(book.aspectRatio)}
             priority={i < 2}
+            htag={random === i}
           />
         );
       })}

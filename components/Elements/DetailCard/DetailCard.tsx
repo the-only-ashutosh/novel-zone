@@ -17,6 +17,7 @@ const DetailCard = ({
   time,
   status,
   ratings,
+  htag,
 }: {
   aspectRatio: number;
   title: string;
@@ -26,6 +27,7 @@ const DetailCard = ({
   time: Date;
   status: string;
   ratings: string;
+  htag: boolean;
 }) => {
   return (
     <Link
@@ -74,12 +76,21 @@ const DetailCard = ({
               loading="eager"
             />
             <div className="flex flex-col ml-4 sm:ml-3 mt-4 sm:pr-1">
-              <p
-                className="text-lg sm:text-medium font-semibold mt-2 sm:line-clamp-2 line-clamp-3 h-11"
-                style={{ lineHeight: "1.25rem" }}
-              >
-                {title}
-              </p>
+              {htag ? (
+                <h1
+                  className="text-lg sm:text-medium font-semibold mt-2 sm:line-clamp-2 line-clamp-3 h-11"
+                  style={{ lineHeight: "1.25rem" }}
+                >
+                  {title}
+                </h1>
+              ) : (
+                <h2
+                  className="text-lg sm:text-medium font-semibold mt-2 sm:line-clamp-2 line-clamp-3 h-11"
+                  style={{ lineHeight: "1.25rem" }}
+                >
+                  {title}
+                </h2>
+              )}
               <div className="flex flex-col mt-3 sm:text-sm">
                 <span className="flex items-center text-black dark:text-white">
                   <HistoryEduRoundedIcon className="text-md" />
