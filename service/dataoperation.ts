@@ -526,7 +526,9 @@ export async function addBook(book: IncomingBook) {
   });
   console.log(book.bookUrl);
   const createdBook = await prisma.book.upsert({
-    where: { urlShrink: book.bookUrl.replaceAll("-", "") },
+    where: {
+      title: book.title,
+    },
     create: {
       bookUrl: book.bookUrl,
       genre: { connectOrCreate: [...genres] },
