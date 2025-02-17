@@ -1003,10 +1003,14 @@ export async function fetchChapterUrl(start: number = 1) {
 }
 
 export async function getTotalChapter(book: string) {
-  return await prisma.book
-    .findFirst({
-      where: { bookUrl: book },
-      select: { _count: { select: { chapter: true } } },
-    })
-    .then((data) => data!._count.chapter);
+  try {
+    return await prisma.book
+      .findFirst({
+        where: { bookUrl: book },
+        select: { _count: { select: { chapter: true } } },
+      })
+      .then((data) => data!._count.chapter);
+  } catch (error) {
+    return 0;
+  }
 }
