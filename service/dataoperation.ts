@@ -1,12 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import "server-only";
-import type {
-  Chapter,
-  IncomingBook,
-  IncomingHistory,
-  IncomingSettings,
-  IncomingUser,
-} from "@/types";
+import type { Chapter, IncomingBook } from "@/types";
 import prisma from "./client";
 import { correctString, titleToUrl } from "./functions";
 import { ALL_GENRE } from "./genre";
@@ -45,8 +39,7 @@ export const fetchMostPopular = async () => {
 };
 
 export async function fetchRecentUpdates() {
-  const pri = new PrismaClient();
-  const data = await pri.recents.findMany({
+  const data = await prisma.recents.findMany({
     orderBy: { addAt: "desc" },
     take: 30,
     select: {
@@ -63,7 +56,6 @@ export async function fetchRecentUpdates() {
       },
     },
   });
-  await pri.$disconnect();
   return data;
 }
 
@@ -291,10 +283,9 @@ export async function fetchHotBook(page: number = 1) {
 }
 
 export async function fetchRecentUpdatesPage(page: number = 1) {
-  const pri = new PrismaClient();
   try {
-    const p = await pri.recents.count();
-    const data = await pri.recents.findMany({
+    const p = await prisma.recents.count();
+    const data = await prisma.recents.findMany({
       orderBy: { addAt: "desc" },
       skip: (page - 1) * 20,
       take: 20,
@@ -314,13 +305,10 @@ export async function fetchRecentUpdatesPage(page: number = 1) {
       },
     });
     if (data.length === 0) {
-      await pri.$disconnect();
       return "Invalid Page";
     }
-    await pri.$disconnect();
     return { data, pages: Math.ceil(p / 20) };
   } catch (err) {
-    await pri.$disconnect();
     return "Invalid Page";
   }
 }
@@ -476,15 +464,19 @@ export const fetchChaptersList = cache(async (book: string) => {
 });
 
 export async function addView(url: string) {
-  await prisma.book.updateMany({
+  await prisma.book.update({
     where: { bookUrl: url },
     data: { views: { increment: 1 } },
   });
 }
 
 export async function addChapterView(chapter: string, book: string) {
-  await prisma.chapter.updateMany({
-    where: { book: { bookUrl: { contains: book } }, url: chapter },
+  const chapId = (await prisma.chapter.findFirst({
+    where: { book: { bookUrl: book }, url: chapter },
+    select: { id: true },
+  }))!.id;
+  await prisma.chapter.update({
+    where: { id: chapId },
     data: { views: { increment: 1 } },
   });
 }
@@ -525,36 +517,47 @@ export async function addBook(book: IncomingBook) {
     };
   });
   console.log(book.bookUrl);
-  const createdBook = await prisma.book.upsert({
-    where: {
-      title: book.title,
-    },
-    create: {
-      bookUrl: book.bookUrl,
-      genre: { connectOrCreate: [...genres] },
-      imageUrl: book.imageUrl,
-      isHot: book.isHot,
-      urlShrink: book.bookUrl.replaceAll("-", ""),
-      status: book.status,
-      title: book.title,
-      totalStars: book.totalStars,
-      userrated: book.userrated,
-      views: book.views,
-      aspectRatio: book.aspectRatio,
-      description: desc,
-      category: {
-        connectOrCreate: [...categories],
+  try {
+    const createdBook = await prisma.book.upsert({
+      where: {
+        title: book.title,
       },
-      author: { connect: { id: book.authId } },
-      ratings:
-        book.userrated > 0 ? new Decimal(book.totalStars / book.userrated) : 0,
-      source: book.source,
-    },
-    update: { isHot: book.isHot, source: book.source },
-    select: { id: true, source: true },
-  });
+      create: {
+        bookUrl: book.bookUrl,
+        genre: { connectOrCreate: [...genres] },
+        imageUrl: book.imageUrl,
+        isHot: book.isHot,
+        urlShrink: book.bookUrl.replaceAll("-", ""),
+        status: book.status,
+        title: book.title,
+        totalStars: book.totalStars,
+        userrated: book.userrated,
+        views: book.views,
+        aspectRatio: book.aspectRatio,
+        description: desc,
+        category: {
+          connectOrCreate: [...categories],
+        },
+        author: { connect: { id: book.authId } },
+        ratings:
+          book.userrated > 0
+            ? new Decimal(book.totalStars / book.userrated)
+            : 0,
+        source: book.source,
+      },
+      update: { isHot: book.isHot, source: book.source },
+      select: { id: true, source: true },
+    });
 
-  return createdBook;
+    return createdBook;
+  } catch (err) {
+    return await prisma.book
+      .findFirst({
+        where: { urlShrink: book.bookUrl.replaceAll("-", "") },
+        select: { id: true, source: true },
+      })
+      .catch((r) => null);
+  }
 }
 
 export async function checkChapter(
@@ -575,71 +578,6 @@ export async function checkChapter(
     }
   }
   return final;
-}
-
-export async function addSingleChapter(ch: Chapter) {
-  const pri = new PrismaClient();
-  const encoder = new TextEncoder();
-  const newUrl =
-    ch.url.split("-").length > 2 ? ch.url : titleToUrl(ch.title.trim());
-  const id = (
-    await pri.chapter.create({
-      data: {
-        ...ch,
-        content: encoder.encode(
-          correctString(ch.content.join("[hereisbreak]"))
-        ),
-        url: newUrl,
-      },
-      select: { id: true },
-    })
-  ).id;
-  await pri.recents.upsert({
-    where: { bookId: ch.bookId },
-    create: {
-      title: ch.title,
-      url: ch.url,
-      bookId: ch.bookId,
-    },
-    update: { title: ch.title, url: ch.url },
-  });
-  await pri.$disconnect();
-  return { id };
-}
-
-export async function addChapters(chapters: Chapter[]) {
-  const count = (s: string) => (s.match(/\b\w+\b/g) || []).length;
-  const pri = new PrismaClient();
-  const encoder = new TextEncoder();
-  for (const chapter of chapters) {
-    const newUrl =
-      chapter.url.split("-").length > 2
-        ? chapter.url
-        : titleToUrl(chapter.title.trim());
-    await pri.chapter.create({
-      data: {
-        ...chapter,
-        content: encoder.encode(
-          correctString(chapter.content.join("[hereisbreak]"))
-        ),
-        url: newUrl,
-      },
-      select: { id: true },
-    });
-
-    if (chapters.indexOf(chapter) === chapters.length - 1) {
-      await pri.recents.upsert({
-        where: { bookId: chapter.bookId },
-        create: {
-          title: chapter.title,
-          url: chapter.url,
-          bookId: chapter.bookId,
-        },
-        update: { title: chapter.title, url: chapter.url },
-      });
-    }
-  }
-  await pri.$disconnect();
 }
 
 export async function deleteBook(url: string) {

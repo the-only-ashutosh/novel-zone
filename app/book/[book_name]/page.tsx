@@ -60,7 +60,11 @@ const BookPage = async ({
               tags={bookDetail.category}
               aspectRatio={Number(bookDetail.aspectRatio)}
               views={bookDetail.views}
-              ratings={Number(bookDetail.Ratings)}
+              ratings={
+                isNaN(Number(bookDetail.Ratings))
+                  ? 0
+                  : Number(bookDetail.Ratings)
+              }
               chOne={
                 bookDetail.chapter.length > 0
                   ? `/book/${bookDetail.bookUrl}/${
@@ -79,7 +83,11 @@ const BookPage = async ({
               imgUrl={bookDetail.imageUrl}
               views={bookDetail.views}
               tags={bookDetail.category}
-              ratings={Number(bookDetail.Ratings)}
+              ratings={
+                isNaN(Number(bookDetail.Ratings))
+                  ? 0
+                  : Number(bookDetail.Ratings)
+              }
               aspectRatio={Number(bookDetail.aspectRatio)}
               chOne={
                 bookDetail.chapter.length > 0

@@ -40,12 +40,14 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizeCss: true,
     ppr: "incremental",
+    useLightningcss: true,
     optimizePackageImports: [
       "@heroui/react",
       "@emotion/react",
       "@emotion/styled",
     ],
   },
+  crossOrigin: "anonymous",
 };
 
 const withBA = withBundleAnalyzer({
