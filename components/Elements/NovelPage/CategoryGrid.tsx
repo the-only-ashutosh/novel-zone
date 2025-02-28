@@ -1,6 +1,7 @@
 import React, { ReactElement } from "react";
 import Grid from "@mui/material/Grid2";
-import Link from "next/link";
+import { ProgressBarLink } from "@/components/Shared/Progressbar/progress-bar";
+import { Chip, ScrollShadow } from "@heroui/react";
 
 const CategoryGrid = ({
   category,
@@ -11,8 +12,17 @@ const CategoryGrid = ({
   for (let i = -1; i < category.length; i++) {
     if (i == -1) {
       categorylist.push(
-        <Grid key={i}>
-          <h2 className="w-fit">Categories:&nbsp;</h2>
+        <Grid key={i} sx={{ width: "fit-content" }}>
+          <Chip
+            variant="bordered"
+            color="primary"
+            className="mx-[2px] my-1"
+            radius="sm"
+          >
+            <h2 className="w-fit text-lg font-medium bg-clip-text text-transparent bg-gradient-to-b from-[#5EA2EF] to-[#0072F5]">
+              Categories:&nbsp;
+            </h2>
+          </Chip>
         </Grid>
       );
     } else {
@@ -23,19 +33,31 @@ const CategoryGrid = ({
           sx={{ width: "fit-content" }}
           className="hover:text-primary dark:hover:text-primary"
         >
-          <Link
+          <ProgressBarLink
             href={`/filter/categories/${category[i].route.toLowerCase()}`}
             prefetch={false}
           >
-            <h4>
-              {`${category[i].name}${i < category.length - 1 ? "," : ""}`}&nbsp;
-            </h4>
-          </Link>
+            <Chip
+              variant="solid"
+              radius="sm"
+              color="primary"
+              className="text-white hover:scale-95 mx-[3px] my-1"
+            >
+              <h4>
+                {`${category[i].name}`}
+                &nbsp;
+              </h4>
+            </Chip>
+          </ProgressBarLink>
         </Grid>
       );
     }
   }
-  return <Grid container>{categorylist}</Grid>;
+  return (
+    <ScrollShadow className="h-[192px] mt-10 mx-1 w-[90vw]" size={10}>
+      <Grid container>{categorylist}</Grid>
+    </ScrollShadow>
+  );
 };
 
 export default CategoryGrid;

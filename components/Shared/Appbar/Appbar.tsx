@@ -23,6 +23,7 @@ const BigScreenSettings = dynamic(() => import("./BigScreenSettings"), {
   ssr: true,
 });
 import NavMenu from "./NavMenu";
+import { ProgressBarLink } from "../Progressbar/progress-bar";
 
 export default function Appbar({
   ava,
@@ -46,12 +47,18 @@ export default function Appbar({
 
       <NavbarContent className="gap-4 sm:hidden md:hidden" justify="center">
         <NavbarBrand>
-          <Link href="/" color="foreground">
-            <Logo />
-            <p className="font-bold bg-clip-text text-transparent bg-gradient-to-b from-[#5EA2EF] to-[#0072F5]">
-              NOVEL ZONE
-            </p>
-          </Link>
+          <ProgressBarLink
+            href="/"
+            color="foreground"
+            className="flex flex-row items-center"
+          >
+            <>
+              <Logo />
+              <p className="font-bold bg-clip-text text-transparent bg-gradient-to-b from-[#5EA2EF] to-[#0072F5]">
+                NOVEL ZONE
+              </p>
+            </>
+          </ProgressBarLink>
         </NavbarBrand>
         <NavbarItem value="Novel List">
           <Dropdown

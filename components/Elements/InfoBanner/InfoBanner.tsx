@@ -2,9 +2,10 @@ import React from "react";
 import { Card, CardBody } from "@heroui/react";
 import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
 import HistoryEduRoundedIcon from "@mui/icons-material/HistoryEduRounded";
-import Link from "next/link";
+// import Link from "next/link";
 import Image from "next/image";
 import { getTimeDiff } from "@/service/functions";
+import { ProgressBarLink } from "@/components/Shared/Progressbar/progress-bar";
 
 const InfoBanner = ({
   img,
@@ -23,7 +24,11 @@ const InfoBanner = ({
 }>) => {
   return (
     <Card className="border-none bg-background/60 dark:bg-default-100/50 rounded-sm transition-transform duration-300 hover:transform hover:scale-95">
-      <Link href={`/book/${bookUrl}`} color="foreground" prefetch={false}>
+      <ProgressBarLink
+        href={`/book/${bookUrl}`}
+        color="foreground"
+        prefetch={false}
+      >
         <CardBody className="flex flex-row rounded-sm h-full p-0">
           <Image
             src={img}
@@ -59,8 +64,28 @@ const InfoBanner = ({
             </div>
           </div>
         </CardBody>
-      </Link>
+      </ProgressBarLink>
     </Card>
+  );
+};
+
+const RecentInfo = ({
+  img,
+  book,
+  bookUrl,
+  number,
+  time,
+  aspectRatio,
+}: Readonly<{
+  img: string;
+  book: string;
+  bookUrl: string;
+  number: number;
+  time: Date;
+  aspectRatio: number;
+}>) => {
+  return (
+    <Card className="border-none bg-background/60 dark:bg-default-100/50 rounded-sm transition-transform duration-300 hover:transform hover:scale-95"></Card>
   );
 };
 

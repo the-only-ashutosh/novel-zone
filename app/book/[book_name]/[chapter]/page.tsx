@@ -58,7 +58,9 @@ const ChapterPage = async ({
           )}
           <div className="flex flex-col justify-center items-center mb-6">
             <Link href={`/book/${chapterData.book.bookUrl}`}>
-              <h1 className="font-bold text-2xl">{chapterData.book.title}</h1>
+              <h1 className="font-bold text-2xl px-6 pt-6 pb-2">
+                {chapterData.book.title}
+              </h1>
             </Link>
             <Typography variant="subtitle1" className="text-gray-700">
               {chapterData.addAt.toDateString()}

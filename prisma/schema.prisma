@@ -9,38 +9,44 @@ datasource db {
 
 model author {
   id    Int    @id @default(autoincrement())
-  name  String @unique()
+  name  String @unique
   route String
   book  book[]
 }
 
 model book {
   id          Int        @id @default(autoincrement())
-  title       String     @unique()
-  bookUrl     String     @unique()
-  urlShrink   String     @unique()
+  title       String     @unique
+  bookUrl     String     @unique
   imageUrl    String
   updatedAt   DateTime   @default(now())
   totalStars  Int
   isHot       Boolean
   userrated   Int
-  aspectRatio Decimal    @default(0.0)
+  aspectRatio Decimal    @default(0.000000000000000000000000000000)
   ratings     Decimal
   views       Int
-  source      String     @default("novelbin")
   status      String
   description Bytes
   authorId    Int
+  source      String
+  urlShrink   String     @unique
+  daily       Int        @default(0)
+  monthly     Int        @default(0)
+  update      DateTime   @default(now())
+  weekly      Int        @default(0)
   author      author     @relation(fields: [authorId], references: [id])
   chapter     chapter[]
+  recents     recents?
   category    category[] @relation("booktocategory")
   genre       genre[]    @relation("booktogenre")
-  recents     recents?
+
+  @@index([authorId], map: "book_authorId_fkey")
 }
 
 model category {
   id    Int    @id @default(autoincrement())
-  name  String @unique()
+  name  String @unique
   route String
   book  book[] @relation("booktocategory")
 }
@@ -55,7 +61,9 @@ model chapter {
   number  Int
   bookId  Int
   addAt   DateTime @default(now())
-  book    book     @relation(fields: [bookId], references: [id],onDelete: Cascade, onUpdate: Cascade)
+  book    book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  @@index([bookId], map: "chapter_bookId_fkey")
 }
 
 model genre {
@@ -69,7 +77,13 @@ model recents {
   id     Int      @id @default(autoincrement())
   bookId Int      @unique
   addAt  DateTime @updatedAt
-  book   book     @relation(fields: [bookId], references: [id],onDelete: Cascade, onUpdate: Cascade)
   url    String
   title  String
+  book   book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+}
+
+model currentC {
+  id   Int @unique @default(autoincrement())
+  cNo  Int
+  page Int
 }

@@ -1,6 +1,6 @@
 import React, { ReactElement } from "react";
 import Grid from "@mui/material/Grid2";
-import Link from "next/link";
+import { ProgressBarLink } from "@/components/Shared/Progressbar/progress-bar";
 
 const GenreGrid = ({
   genres,
@@ -24,12 +24,12 @@ const GenreGrid = ({
           className="hover:text-primary dark:hover:text-primary"
         >
           <h3>
-            <Link
+            <ProgressBarLink
               href={`/filter/genre/${genres[i].route.toLowerCase()}`}
               prefetch={false}
             >
               {`${genres[i].name}${i < genres.length - 1 ? "," : ""}`}&nbsp;
-            </Link>
+            </ProgressBarLink>
           </h3>
         </Grid>
       );

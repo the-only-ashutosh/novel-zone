@@ -87,7 +87,7 @@ export default function SearchModal({
       >
         Search...
       </Button>
-      <div className="hidden lg:flex">
+      <div className="flex xl:hidden">
         <Button
           className="data-[hover=true]:bg-transparent bg-transparent h-10"
           disableRipple

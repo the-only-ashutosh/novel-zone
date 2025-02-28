@@ -662,3 +662,141 @@ export function LineMdSunnyFilledLoopToMoonFilledAltLoopTransition(
     </svg>
   );
 }
+
+export function ColorBookmark(props: Readonly<SVGProps<SVGSVGElement>>) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={20}
+      height={20}
+      viewBox="0 0 20 20"
+      {...props}
+    >
+      <g fill="none">
+        <path
+          fill="url(#fluentColorBookmark200)"
+          d="M4 4.5A2.5 2.5 0 0 1 6.5 2h7A2.5 2.5 0 0 1 16 4.5v13a.5.5 0 0 1-.794.404L10 14.118l-5.206 3.786A.5.5 0 0 1 4 17.5z"
+        ></path>
+        <defs>
+          <linearGradient
+            id="fluentColorBookmark200"
+            x1={4}
+            x2={12.653}
+            y1={3.357}
+            y2={14.354}
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop stopColor="#5EA2EF"></stop>
+            <stop offset={1} stopColor="#0072F5"></stop>
+          </linearGradient>
+        </defs>
+      </g>
+    </svg>
+  );
+}
+
+export function ColorStar(props: Readonly<SVGProps<SVGSVGElement>>) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={16}
+      height={16}
+      viewBox="0 0 16 16"
+      {...props}
+    >
+      <g fill="none">
+        <path
+          fill="url(#fluentColorStar160)"
+          d="M7.194 2.102a.9.9 0 0 1 1.614 0l1.521 3.082l3.401.494a.9.9 0 0 1 .5 1.535l-2.462 2.4l.581 3.387a.9.9 0 0 1-1.306.948L8.001 12.35l-3.042 1.6A.9.9 0 0 1 3.653 13l.58-3.387l-2.46-2.399a.9.9 0 0 1 .499-1.535l3.4-.494z"
+        ></path>
+        <defs>
+          <linearGradient
+            id="fluentColorStar160"
+            x1={14.5}
+            x2={1.125}
+            y1={14.332}
+            y2={1.72}
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop stopColor="#ff6f47"></stop>
+            <stop offset={1} stopColor="#ffcd0f"></stop>
+          </linearGradient>
+        </defs>
+      </g>
+    </svg>
+  );
+}
+
+export function ColorHeart(props: Readonly<SVGProps<SVGSVGElement>>) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={24}
+      height={24}
+      viewBox="0 0 16 16"
+      {...props}
+    >
+      <g fill="none">
+        <path
+          fill="url(#fluentColorHeart160)"
+          d="M7.541 3.948a3.25 3.25 0 0 0-4.595-.012a3.25 3.25 0 0 0 .012 4.595l4.707 4.708a.5.5 0 0 0 .707 0l4.683-4.68a3.25 3.25 0 0 0-.012-4.594a3.25 3.25 0 0 0-4.601-.012l-.447.448z"
+        ></path>
+        <defs>
+          <linearGradient
+            id="fluentColorHeart160"
+            x1={-0.625}
+            x2={5.702}
+            y1={0.02}
+            y2={13.424}
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop stopColor="#f97dbd"></stop>
+            <stop offset={1} stopColor="#d7257d"></stop>
+          </linearGradient>
+        </defs>
+      </g>
+    </svg>
+  );
+}
+export function LineHeart(props: Readonly<SVGProps<SVGSVGElement>>) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={24}
+      height={24}
+      viewBox="0 0 24 24"
+      {...props}
+    >
+      <defs>
+        <linearGradient
+          id="fluentColorHeart160"
+          x1={-0.625}
+          x2={5.702}
+          y1={0.02}
+          y2={13.424}
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#f97dbd"></stop>
+          <stop offset={1} stopColor="#d7257d"></stop>
+        </linearGradient>
+      </defs>
+      <path
+        fill="none"
+        stroke="url(#fluentColorHeart160)"
+        strokeDasharray={32}
+        strokeDashoffset={32}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M12 8c0 0 0 0 -0.76 -1c-0.88 -1.16 -2.18 -2 -3.74 -2c-2.49 0 -4.5 2.01 -4.5 4.5c0 0.93 0.28 1.79 0.76 2.5c0.81 1.21 8.24 9 8.24 9M12 8c0 0 0 0 0.76 -1c0.88 -1.16 2.18 -2 3.74 -2c2.49 0 4.5 2.01 4.5 4.5c0 0.93 -0.28 1.79 -0.76 2.5c-0.81 1.21 -8.24 9 -8.24 9"
+      >
+        <animate
+          fill="freeze"
+          attributeName="stroke-dashoffset"
+          dur="0.7s"
+          values="32;0"
+        ></animate>
+      </path>
+    </svg>
+  );
+}

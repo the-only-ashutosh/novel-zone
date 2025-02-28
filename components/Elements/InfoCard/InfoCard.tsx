@@ -1,11 +1,11 @@
 "use server";
 import React from "react";
 import { Tooltip, Badge } from "@heroui/react";
-import Link from "next/link";
 import Image from "next/image";
 import Grid from "@mui/material/Grid2";
 import StarRateIcon from "@mui/icons-material/StarRate";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import { ProgressBarLink } from "@/components/Shared/Progressbar/progress-bar";
 
 const InfoCard = ({
   imgUrl,
@@ -53,7 +53,7 @@ const InfoCard = ({
       className="justify-center flex items-center transition-transform duration-300 hover:transform hover:scale-95"
       size={{ xs: 6, sm: 4, md: 3, lg: 2 }}
     >
-      <Link
+      <ProgressBarLink
         href={`/book/${bookUrl}`}
         className="flex flex-col items-center"
         color="foreground"
@@ -140,7 +140,7 @@ const InfoCard = ({
             </span>
           </div>
         </div>
-      </Link>
+      </ProgressBarLink>
     </Grid>
   );
 };

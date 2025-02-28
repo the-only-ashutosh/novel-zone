@@ -7,6 +7,7 @@ import Footer from "./Footer";
 import "@/service/fonts";
 import { auth } from "@/auth";
 import dynamic from "next/dynamic";
+import { ProgressBar } from "@/components/Shared/Progressbar/progress-bar";
 const MyAvatar = dynamic(
   () => import("@/components/Shared/Appbar/Avatar/MyAvatar"),
   { ssr: true }
@@ -41,23 +42,25 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`antialiased`}>
         <Providers>
-          <Appbar
-            ava={
-              <MyAvatar
-                session={
-                  session
-                    ? {
-                        name: session.user!.name!,
-                        image: session.user!.image!,
-                        email: session.user!.email!,
-                      }
-                    : null
-                }
-              />
-            }
-          />
-          {children}
-          <Footer />
+          <ProgressBar className="fixed top-0 h-[2px] bg-primary z-50 rounded-r-lg">
+            <Appbar
+              ava={
+                <MyAvatar
+                  session={
+                    session
+                      ? {
+                          name: session.user!.name!,
+                          image: session.user!.image!,
+                          email: session.user!.email!,
+                        }
+                      : null
+                  }
+                />
+              }
+            />
+            {children}
+            <Footer />
+          </ProgressBar>
         </Providers>
       </body>
     </html>

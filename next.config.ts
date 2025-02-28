@@ -40,7 +40,6 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizeCss: true,
     ppr: "incremental",
-    useLightningcss: true,
     optimizePackageImports: [
       "@heroui/react",
       "@emotion/react",

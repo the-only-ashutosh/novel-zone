@@ -12,6 +12,7 @@ export type SingleChapter = {
   title: string;
   number: number;
   addAt: Date;
+  likes: number;
 };
 
 const ChListSkele = (

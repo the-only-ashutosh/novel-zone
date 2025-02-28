@@ -6,6 +6,7 @@ import Box from "@mui/material/Box";
 import StarIcon from "@mui/icons-material/Star";
 import Snackbar, { SnackbarCloseReason } from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import { ColorStar } from "@/components/icons";
 
 const RateModal = ({ bkTitle }: { bkTitle: string }) => {
   const [value, setValue] = React.useState<number | null>(2);
@@ -49,8 +50,13 @@ const RateModal = ({ bkTitle }: { bkTitle: string }) => {
         onOpenChange={setModalOpen}
       >
         <PopoverTrigger>
-          <Button color="danger" radius="sm" className="text-medium">
-            Rate
+          <Button
+            isIconOnly
+            variant="light"
+            className="data-[hover=true]:bg-transparent"
+            disableRipple
+          >
+            <ColorStar width={24} height={24} />
           </Button>
         </PopoverTrigger>
 

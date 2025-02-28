@@ -16,7 +16,7 @@ const ChapterContent = ({
   return (
     <div
       id="content-page"
-      className={`my-10 ${getVar(fStyle)} mx-[5%]`}
+      className={`my-10 ${getVar(fStyle)} mx-[5%] w-[80vw]`}
       style={{ fontSize: `${fSize}px`, lineHeight: "160%" }}
     >
       <h2 className="mb-[12px] font-bold text-2xl dark:text-[#F5F5F5]">
@@ -26,7 +26,7 @@ const ChapterContent = ({
         return (
           <p
             key={`paraatindex${i}${para.slice(0, 10)}`}
-            className="mb-[10px] font-medium dark:text-[#f5f5f5ba]"
+            className="mb-[10px] font-medium dark:text-[#f5f5f5ba] w-full"
           >
             {para}
           </p>

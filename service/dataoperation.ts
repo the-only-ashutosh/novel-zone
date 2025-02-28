@@ -1,12 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import "server-only";
-import type { Chapter, IncomingBook } from "@/types";
-import prisma from "./client";
-import { correctString, titleToUrl } from "./functions";
+import { prisma } from "./client";
 import { ALL_GENRE } from "./genre";
 import { PrismaClient } from "@prisma/client";
 import { cache } from "react";
-import { Decimal } from "@prisma/client/runtime/library";
 
 export async function getBookTitles() {
   return await prisma.book
@@ -319,6 +316,7 @@ export async function fetchchapters(book: number, page: number = 1) {
     url: string;
     title: string;
     addAt: Date;
+    likes: number;
   }> = [];
   if (page > 1) {
     const cursor = (
@@ -335,7 +333,13 @@ export async function fetchchapters(book: number, page: number = 1) {
       skip: 1,
       take: 100,
       cursor: { id: cursor },
-      select: { url: true, title: true, number: true, addAt: true },
+      select: {
+        url: true,
+        title: true,
+        number: true,
+        addAt: true,
+        likes: true,
+      },
     });
 
     return chapterData;
@@ -344,7 +348,13 @@ export async function fetchchapters(book: number, page: number = 1) {
       where: { bookId: book },
       orderBy: { number: "asc" },
       take: 100,
-      select: { url: true, title: true, number: true, addAt: true },
+      select: {
+        url: true,
+        title: true,
+        number: true,
+        addAt: true,
+        likes: true,
+      },
     });
 
     return chapterData;
@@ -365,7 +375,7 @@ export async function fetchBookDetails(name: string) {
         aspectRatio: true,
         updatedAt: true,
         views: true,
-        Ratings: true,
+        ratings: true,
         description: true,
         category: { select: { name: true, route: true } },
         _count: { select: { chapter: true } },
@@ -412,7 +422,7 @@ export async function fetchBookDetails(name: string) {
           aspectRatio: true,
           updatedAt: true,
           views: true,
-          Ratings: true,
+          ratings: true,
           description: true,
           category: { select: { name: true, route: true } },
           _count: { select: { chapter: true } },
@@ -472,112 +482,13 @@ export async function addView(url: string) {
 
 export async function addChapterView(chapter: string, book: string) {
   const chapId = (await prisma.chapter.findFirst({
-    where: { book: { bookUrl: book }, url: chapter },
+    where: { book: { bookUrl: { contains: book } }, url: chapter },
     select: { id: true },
   }))!.id;
   await prisma.chapter.update({
     where: { id: chapId },
     data: { views: { increment: 1 } },
   });
-}
-
-export async function addAuthor(name: string, route: string) {
-  //name.replaceAll(" ", "-")
-  const author = await prisma.author.upsert({
-    create: { name, route: route },
-    update: { name, route: route },
-    where: { name },
-  });
-
-  return author.id;
-}
-
-export async function addBook(book: IncomingBook) {
-  const categories = book.categories.map((category) => {
-    return {
-      where: { name: category },
-      create: {
-        name: category,
-        route: category.toLowerCase().replaceAll(" ", "-"),
-      },
-    };
-  });
-  const encoder = new TextEncoder();
-  const desc = encoder.encode(
-    correctString(
-      book.description.length > 1
-        ? book.description.join("[hereisbreak]")
-        : book.description[0]
-    )
-  );
-  const genres = book.genre.map((e) => {
-    return {
-      where: { name: e },
-      create: { name: e, route: e.toLowerCase().replaceAll(" ", "-") },
-    };
-  });
-  console.log(book.bookUrl);
-  try {
-    const createdBook = await prisma.book.upsert({
-      where: {
-        title: book.title,
-      },
-      create: {
-        bookUrl: book.bookUrl,
-        genre: { connectOrCreate: [...genres] },
-        imageUrl: book.imageUrl,
-        isHot: book.isHot,
-        urlShrink: book.bookUrl.replaceAll("-", ""),
-        status: book.status,
-        title: book.title,
-        totalStars: book.totalStars,
-        userrated: book.userrated,
-        views: book.views,
-        aspectRatio: book.aspectRatio,
-        description: desc,
-        category: {
-          connectOrCreate: [...categories],
-        },
-        author: { connect: { id: book.authId } },
-        ratings:
-          book.userrated > 0
-            ? new Decimal(book.totalStars / book.userrated)
-            : 0,
-        source: book.source,
-      },
-      update: { isHot: book.isHot, source: book.source },
-      select: { id: true, source: true },
-    });
-
-    return createdBook;
-  } catch (err) {
-    return await prisma.book
-      .findFirst({
-        where: { urlShrink: book.bookUrl.replaceAll("-", "") },
-        select: { id: true, source: true },
-      })
-      .catch((r) => null);
-  }
-}
-
-export async function checkChapter(
-  book: string,
-  chap: Array<{ ch: string; num: number; bookId: number }>
-) {
-  const final: Array<{ ch: string; num: number }> = [];
-  for (const element of chap) {
-    const status = await prisma.chapter.findFirst({
-      where: {
-        book: { bookUrl: book },
-        number: element.num,
-      },
-      select: { id: true },
-    });
-    if (status === null) {
-      final.push(element);
-    }
-  }
-  return final;
 }
 
 export async function deleteBook(url: string) {
@@ -953,4 +864,19 @@ export async function getTotalChapter(book: string) {
   } catch (error) {
     return 0;
   }
+}
+
+export async function chapterLiked(book: string, num: number) {
+  const id = (await prisma.chapter.findFirst({
+    where: { book: { bookUrl: book }, number: num },
+    select: { id: true },
+  }))!.id;
+  return await prisma.chapter
+    .update({
+      where: { id },
+      data: { likes: { increment: 1 } },
+      select: { id: true },
+    })
+    .then((data) => "Success")
+    .catch((err) => "Failed");
 }

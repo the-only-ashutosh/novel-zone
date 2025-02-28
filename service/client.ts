@@ -1,16 +1,19 @@
 import { PrismaClient } from "@prisma/client";
+const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 
-const prisma = new PrismaClient({ log: ["info"] }).$extends({
-  result: {
-    book: {
-      Ratings: {
-        needs: { userrated: true, totalStars: true },
-        compute(book) {
-          return book.totalStars / book.userrated;
+export const prisma =
+  globalForPrisma.prisma ||
+  new PrismaClient({ log: ["info"] }).$extends({
+    result: {
+      book: {
+        Ratings: {
+          needs: { userrated: true, totalStars: true },
+          compute(book) {
+            return book.totalStars / book.userrated;
+          },
         },
       },
     },
-  },
-});
+  });
 
-export default prisma;
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;

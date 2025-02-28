@@ -7,7 +7,6 @@ import {
 } from "@/service/dataoperation";
 import AutoStoriesRoundedIcon from "@mui/icons-material/AutoStoriesRounded";
 import { Typography } from "@mui/material";
-import Link from "next/link";
 import type { Metadata } from "next";
 import { getTimeDiff } from "@/service/functions";
 import { notFound } from "next/navigation";
@@ -15,6 +14,8 @@ import GradBanner from "@/components/Shared/GradBanner";
 import InfoList from "@/components/Elements/InfoCard/InfoList";
 import Script from "next/script";
 import DescCard from "@/components/Elements/NovelPage/DescCard";
+import CategoryGrid from "@/components/Elements/NovelPage/CategoryGrid";
+import { ProgressBarLink } from "@/components/Shared/Progressbar/progress-bar";
 const ChaptersCard = dynamic(
   () => import("@/components/Elements/NovelPage/ChaptersCard")
 );
@@ -57,13 +58,12 @@ const BookPage = async ({
               status={bookDetail.status}
               title={bookDetail.title}
               url={bookDetail.imageUrl}
-              tags={bookDetail.category}
               aspectRatio={Number(bookDetail.aspectRatio)}
               views={bookDetail.views}
               ratings={
-                isNaN(Number(bookDetail.Ratings))
+                isNaN(Number(bookDetail.ratings))
                   ? 0
-                  : Number(bookDetail.Ratings)
+                  : Number(bookDetail.ratings)
               }
               chOne={
                 bookDetail.chapter.length > 0
@@ -82,11 +82,10 @@ const BookPage = async ({
               title={bookDetail.title}
               imgUrl={bookDetail.imageUrl}
               views={bookDetail.views}
-              tags={bookDetail.category}
               ratings={
-                isNaN(Number(bookDetail.Ratings))
+                isNaN(Number(bookDetail.ratings))
                   ? 0
-                  : Number(bookDetail.Ratings)
+                  : Number(bookDetail.ratings)
               }
               aspectRatio={Number(bookDetail.aspectRatio)}
               chOne={
@@ -98,13 +97,16 @@ const BookPage = async ({
               }
             />
           )}
+          {bookDetail.category.length > 0 && (
+            <CategoryGrid category={bookDetail.category} />
+          )}
           <div className="flex flex-row w-[90vw] colrow px-2 sm:px-1 border-t-1 border-b-1 border-dashed py-3 mt-4">
             <div className="flex font-bold text-medium">
               <AutoStoriesRoundedIcon />
               &nbsp; Latest Chapter
             </div>
             <div className="flex colrow justify-between w-[65%] lg:w-[73%] xl:w-[80%] sm:w-full smallmargin">
-              <Link
+              <ProgressBarLink
                 href={
                   bookDetail.chapter.length > 1
                     ? `/book/${bookDetail.bookUrl}/${
@@ -119,7 +121,7 @@ const BookPage = async ({
                     ? bookDetail.chapter.filter((x) => x.number !== 1)[0].title
                     : `Book is updating...`}
                 </Typography>
-              </Link>
+              </ProgressBarLink>
               <Typography>
                 {bookDetail.chapter.length > 1
                   ? getTimeDiff(
