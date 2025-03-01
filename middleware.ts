@@ -25,6 +25,11 @@ export default auth(async (req) => {
   }
   const { device } = userAgent(req);
   const newHeaders = new Headers(req.headers);
+  newHeaders.append(
+    "Access-Control-Allow-Origin",
+    "https://pagead2.googlesyndication.com"
+  );
+  newHeaders.append("Access-Control-Allow-Origin", "https://mc.yandex.ru");
   try {
     newHeaders.append("pathname", decodeURIComponent(url.pathname));
   } catch (err) {
