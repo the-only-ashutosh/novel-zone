@@ -30,6 +30,7 @@ export default auth(async (req) => {
     "https://pagead2.googlesyndication.com"
   );
   newHeaders.append("Access-Control-Allow-Origin", "https://mc.yandex.ru");
+  newHeaders.append("Access-Control-Allow-Origin", "https://yandex.ru");
   try {
     newHeaders.append("pathname", decodeURIComponent(url.pathname));
   } catch (err) {
