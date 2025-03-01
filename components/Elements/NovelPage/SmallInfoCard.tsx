@@ -41,8 +41,9 @@ const SmallInfoCard = ({
           backgroundPosition: "center",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
-          opacity: 0.7,
-          height: "100%",
+          opacity: 0.5,
+          zIndex: -1,
+          height: "792px",
         }}
       >
         <div className="bg-gradient-to-b from-transparent to-primary w-full h-full"></div>
@@ -59,7 +60,7 @@ const SmallInfoCard = ({
           }}
         />
       </Card>
-      <Card className="mx-[5%] w-[90vw] bg-opacity-70 dark:bg-opacity-80">
+      <Card className="mx-[5%] w-[90vw] bg-opacity-70 dark:bg-opacity-80 dark:bg-black">
         <div className="flex flex-col mx-3 my-5 p-0">
           <h1 className="text-lg font-semibold line-clamp-2">{title}</h1>
           <div className="mt-1 text-medium">

@@ -6,7 +6,6 @@ import { upsertUser } from "./service/useraction";
 
 export default auth(async (req) => {
   const url = req.nextUrl;
-
   if (req.auth) {
     await upsertUser(req.auth.user!);
   }

@@ -42,6 +42,8 @@ const ChapterPage = async ({
 
   return (
     <div className="flex justify-center flex-col items-center px-[5%] sm:px-[2%] md:px-[3.5%] py-[2%] dark:bg-[#121212]">
+      <Script id="">{`window.yaContextCb=window.yaContextCb||[]`}</Script>
+      <Script src="https://yandex.ru/ads/system/context.js" async />
       {chapterData && chapterData !== "Invalid Chapter" ? (
         <>
           {chapterData.nextChapter && (

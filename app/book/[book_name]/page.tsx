@@ -100,7 +100,7 @@ const BookPage = async ({
           {bookDetail.category.length > 0 && (
             <CategoryGrid category={bookDetail.category} />
           )}
-          <div className="flex flex-row w-[90vw] colrow px-2 sm:px-1 border-t-1 border-b-1 border-dashed py-3 mt-4">
+          <div className="flex flex-row w-[90vw] colrow px-2 sm:px-1 border-t-1 border-b-1 border-dashed py-3 mt-8">
             <div className="flex font-bold text-medium">
               <AutoStoriesRoundedIcon />
               &nbsp; Latest Chapter

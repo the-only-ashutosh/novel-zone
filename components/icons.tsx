@@ -793,7 +793,7 @@ export function LineHeart(props: Readonly<SVGProps<SVGSVGElement>>) {
         <animate
           fill="freeze"
           attributeName="stroke-dashoffset"
-          dur="0.7s"
+          dur="2.1s"
           values="32;0"
         ></animate>
       </path>

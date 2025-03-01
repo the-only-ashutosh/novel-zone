@@ -54,7 +54,12 @@ const CategoryGrid = ({
     }
   }
   return (
-    <ScrollShadow className="h-[192px] mt-10 mx-1 w-[90vw]" size={10}>
+    <ScrollShadow
+      className={`mt-10 mx-1 w-[90vw] ${
+        category.length > 16 ? "h-[192px] " : "h-[76px]"
+      }`}
+      size={10}
+    >
       <Grid container>{categorylist}</Grid>
     </ScrollShadow>
   );

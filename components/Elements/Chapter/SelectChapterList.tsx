@@ -76,7 +76,7 @@ const SelectChapterList = ({
         <ChangeButtons
           isDisabled={prevUrl === null}
           id="prevButton"
-          href={`/book/${book_name}/${prevUrl}`}
+          href={prevUrl ? `/book/${book_name}/${prevUrl}` : ""}
         >
           {device === "desktop" && (
             <>
@@ -149,7 +149,7 @@ const SelectChapterList = ({
         <ChangeButtons
           isDisabled={nextUrl === null}
           id="nextButton"
-          href={`/book/${book_name}/${nextUrl}`}
+          href={nextUrl ? `/book/${book_name}/${nextUrl}` : ""}
         >
           {device === "desktop" && (
             <>
