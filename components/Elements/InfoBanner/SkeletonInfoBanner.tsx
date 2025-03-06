@@ -5,25 +5,27 @@ const SkeletonInfoBanner = () => {
   return (
     <Card
       isBlurred
-      className="border-none bg-background/60 dark:bg-default-100/50 rounded-sm"
+      className="flex w-full banner bg-primary/10 rounded-sm shadow-md"
     >
       <CardBody className="flex flex-row rounded-sm h-full p-0">
-        <Skeleton className="rounded-l-sm rounded-r-none">
-          <div className="w-[80px] h-[104px]" />
+        <Skeleton className="rounded-l-sm min-w-fit">
+          <div className={`w-[138px] h-[184px]`} />
         </Skeleton>
-        <div className="flex flex-col items-start ml-8 justify-between margin-y">
-          <Skeleton className="rounded-lg mt-[2px] mb-[1px]">
-            <div className="h-[20px] w-[207px]" />
-          </Skeleton>
-          <Skeleton className="rounded-lg mt-[1px] mb-[2px] bannerskelebig">
-            <div className="h-[20px] w-[290px]" />
-          </Skeleton>
-          <div className="flex flex-col bannerskelesmall">
-            <Skeleton className="rounded-lg mt-[1px] mb-[1px]">
-              <div className="h-[20px] w-[159px]" />
+        <div className="flex flex-col ml-2 w-full py-2 justify-around rounded-r-sm">
+          <div>
+            <Skeleton className="rounded-sm w-[95%]">
+              <div className="h-7 w-full" />
             </Skeleton>
-            <Skeleton className="rounded-lg mt-[1px] mb-[2px]">
-              <div className="h-[20px] w-[159px]" />
+            <Skeleton className="rounded-sm w-[95%] mt-2">
+              <div className="h-7 w-full" />
+            </Skeleton>
+          </div>
+          <div className="flex flex-col py-1 w-[152px]">
+            <Skeleton className="rounded-sm mt-[1px] mb-1">
+              <div className="h-7 w-[144px]" />
+            </Skeleton>
+            <Skeleton className="rounded-sm mt-1">
+              <div className="h-7 w-[144px]" />
             </Skeleton>
           </div>
         </div>

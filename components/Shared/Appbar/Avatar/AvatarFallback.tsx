@@ -1,5 +1,6 @@
 "use client";
-import { Avatar, AvatarIcon } from "@heroui/react";
+import { Person } from "@/components/icons";
+import { Avatar } from "@heroui/react";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
@@ -16,7 +17,9 @@ const AvatarFallback = () => {
         icon: "text-black/80",
       }}
       size="sm"
-      icon={<AvatarIcon />}
+      icon={
+        <Person className="text-white dark:text-black" width={24} height={24} />
+      }
       as={"button"}
       onClick={() => {
         if (!pathn.startsWith("/auth/signin")) {

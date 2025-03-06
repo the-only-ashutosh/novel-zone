@@ -30,6 +30,10 @@ img {
 }
 
 @media screen and (min-width: 320px) and (max-width: 523px) {
+  .headings {
+    box-shadow: 4px 4px 4px #004493, -4px -4px 4px #74DFA2;
+  }
+
   .modeswitch {
     display: none;
   }
@@ -79,6 +83,10 @@ img {
 }
 
 @media screen and (min-width: 524px) and (max-width: 687px) {
+  .headings {
+    box-shadow: 4px 4px 4px #004493, -4px -4px 4px #74DFA2;
+  }
+
   .modeswitch {
     display: none;
   }
@@ -128,6 +136,10 @@ img {
 }
 
 @media screen and (min-width: 688px) and (max-width: 1019px) {
+  .headings {
+    box-shadow: 4px 4px 4px #004493, -4px -4px 4px #74DFA2;
+  }
+
   .modeswitch {
     display: flex;
   }
@@ -177,6 +189,10 @@ img {
 }
 
 @media screen and (min-width: 1020px) {
+  .headings {
+    box-shadow: 4px 4px 4px #74DFA2, -4px -4px 4px #004493;
+  }
+
   .modeswitch {
     display: flex;
   }
@@ -248,4 +264,15 @@ img {
 .refresh {
   animation-name: rotation;
   animation-duration: 5s;
+}
+
+.heading_main {
+  box-shadow: 4px 4px 4px #004493, -4px -4px 4px #74DFA2;
+}
+
+.banner {
+  box-shadow: 2px 2px 4px #176be1, -2px -2px 4px #0549f5b6;
+  cursor: pointer;
+  transition: box-shadow ease-in-out 0.3s, background-color ease-in-out 0.1s,
+    letter-spacing ease-in-out 0.1s, transform ease-in-out 0.1s;
 }

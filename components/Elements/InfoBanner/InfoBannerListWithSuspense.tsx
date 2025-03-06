@@ -1,11 +1,15 @@
-import { fetchRecentUpdates } from "@/service/dataoperation";
+import { newRecents } from "@/service/dataoperation";
 import React, { Suspense } from "react";
-import InfoBannerList, { booksData } from "./InfoBannerList";
+import NewInfoBannerList, { newBooksData } from "./InfoBannerList";
 import SkeletonInfoBannerList from "./SkeletonInfoBannerList";
 
-const InfoBannerListWithSuspense = ({ data }: { data?: Array<booksData> }) => {
+const InfoBannerListWithSuspense = ({
+  data,
+}: {
+  data?: Array<newBooksData>;
+}) => {
   if (data) {
-    return <InfoBannerList data={data} />;
+    return <NewInfoBannerList data={data} />;
   }
   return (
     <Suspense fallback={<SkeletonInfoBannerList />}>
@@ -15,8 +19,8 @@ const InfoBannerListWithSuspense = ({ data }: { data?: Array<booksData> }) => {
 };
 
 async function InfoBannerListLoader() {
-  const data = await fetchRecentUpdates();
-  return <InfoBannerList data={data} />;
+  const data = await newRecents();
+  return <NewInfoBannerList data={data} />;
 }
 
 export default InfoBannerListWithSuspense;

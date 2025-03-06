@@ -4,6 +4,8 @@ import { prisma } from "./client";
 import { ALL_GENRE } from "./genre";
 import { PrismaClient } from "@prisma/client";
 import { cache } from "react";
+import { viewsNumberToString } from "./functions";
+import { CommonData } from "@/types";
 
 export async function getBookTitles() {
   return await prisma.book
@@ -853,6 +855,39 @@ export async function fetchChapterUrl(start: number = 1) {
     });
 }
 
+export async function newRecents() {
+  return await prisma.recents
+    .findMany({
+      orderBy: { addAt: "desc" },
+      take: 30,
+      select: {
+        book: {
+          select: {
+            bookUrl: true,
+            imageUrl: true,
+            title: true,
+            chapter: {
+              orderBy: { number: "desc" },
+              take: 2,
+              select: { id: true, addAt: true, url: true, number: true },
+            },
+          },
+        },
+      },
+    })
+    .then((data) => {
+      return data.map((d) => {
+        return {
+          bookUrl: d.book.bookUrl,
+          imageUrl: d.book.imageUrl,
+          title: d.book.title,
+          last: d.book.chapter[0],
+          secondLast: d.book.chapter[1],
+        };
+      });
+    });
+}
+
 export async function getTotalChapter(book: string) {
   try {
     return await prisma.book
@@ -879,4 +914,43 @@ export async function chapterLiked(book: string, num: number) {
     })
     .then((data) => "Success")
     .catch((err) => "Failed");
+}
+
+export async function getRankingDetails() {
+  const weekly = await prisma.book
+    .findMany({
+      orderBy: { weekly: "desc" },
+      take: 20,
+      select: { imageUrl: true, title: true, bookUrl: true, weekly: true },
+    })
+    .then((data) => {
+      return data.map((d, _) => {
+        return { ...d, rank: _ + 1, views: viewsNumberToString(d.weekly) };
+      });
+    });
+
+  const daily = await prisma.book
+    .findMany({
+      orderBy: { daily: "desc" },
+      take: 20,
+      select: { imageUrl: true, title: true, bookUrl: true, daily: true },
+    })
+    .then((data) => {
+      return data.map((d, _) => {
+        return { ...d, rank: _ + 1, views: viewsNumberToString(d.daily) };
+      });
+    });
+
+  const monthly = await prisma.book
+    .findMany({
+      orderBy: { monthly: "desc" },
+      take: 20,
+      select: { imageUrl: true, title: true, bookUrl: true, monthly: true },
+    })
+    .then((data) => {
+      return data.map((d, _) => {
+        return { ...d, rank: _ + 1, views: viewsNumberToString(d.monthly) };
+      });
+    });
+  return { daily, weekly, monthly };
 }

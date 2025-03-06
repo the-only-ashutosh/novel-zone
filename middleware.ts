@@ -1,7 +1,7 @@
 import { NextResponse, userAgent } from "next/server";
 import { auth } from "./auth";
 import { cookies } from "next/headers";
-import { setCookie } from "cookies-next/server";
+import { getCookie, setCookie } from "cookies-next/server";
 import { upsertUser } from "./service/useraction";
 
 export default auth(async (req) => {
@@ -31,6 +31,7 @@ export default auth(async (req) => {
   );
   newHeaders.append("Access-Control-Allow-Origin", "https://mc.yandex.ru");
   newHeaders.append("Access-Control-Allow-Origin", "https://yandex.ru");
+  newHeaders.append("Access-Control-Allow-Origin", "https://an.yandex.ru");
   try {
     newHeaders.append("pathname", decodeURIComponent(url.pathname));
   } catch (err) {
@@ -41,6 +42,16 @@ export default auth(async (req) => {
   const viewport = device.type === "mobile" ? "mobile" : "desktop";
   newHeaders.append("viewport", viewport);
   url.searchParams.set("viewport", viewport);
+  if (
+    url.pathname.startsWith("/book/") &&
+    url.pathname.split("/").length === 4
+  ) {
+    // console.log(url.pathname,await getCookie("number", { cookies }));
+    url.searchParams.set(
+      "number",
+      String((await getCookie("number", { cookies }))!)
+    );
+  }
   return NextResponse.rewrite(url, { request: { headers: newHeaders } });
 });
 

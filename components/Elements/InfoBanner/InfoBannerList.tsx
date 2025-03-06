@@ -2,7 +2,8 @@
 import React from "react";
 import dynamic from "next/dynamic";
 import { Decimal } from "@prisma/client/runtime/library";
-const InfoBanner = dynamic(() => import("./InfoBanner"), { ssr: true });
+import { RecentsChapter } from "@/types";
+const RecentInfo = dynamic(() => import("./InfoBanner"), { ssr: true });
 
 export type booksData = {
   book: {
@@ -18,19 +19,26 @@ export type booksData = {
   addAt: Date;
 };
 
-const InfoBannerList = ({ data }: { data: Array<booksData> }) => {
+export type newBooksData = {
+  bookUrl: string;
+  imageUrl: string;
+  title: string;
+  last: RecentsChapter;
+  secondLast: RecentsChapter;
+};
+
+const NewInfoBannerList = async ({ data }: { data: Array<newBooksData> }) => {
   return (
-    <div className="grid updatedlistgrid gap-4 mt-8 mx-[5%] justify-center mb-10">
-      {data.map((chap, _) => {
+    <div className="grid xl:grid-cols-2 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-4 mt-6 mb-10 mx-1">
+      {data.map((book) => {
         return (
-          <InfoBanner
-            key={chap.addAt.toISOString() + _}
-            book={chap.book.title}
-            bookUrl={chap.book.bookUrl}
-            img={chap.book.imageUrl}
-            number={chap.book._count.chapter}
-            time={chap.addAt}
-            aspectRatio={Number(chap.book.aspectRatio)}
+          <RecentInfo
+            key={book.title}
+            book={book.title}
+            bookUrl={book.bookUrl}
+            img={book.imageUrl}
+            last={book.last}
+            secondLast={book.secondLast}
           />
         );
       })}
@@ -38,4 +46,4 @@ const InfoBannerList = ({ data }: { data: Array<booksData> }) => {
   );
 };
 
-export default InfoBannerList;
+export default NewInfoBannerList;

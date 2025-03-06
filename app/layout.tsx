@@ -8,6 +8,7 @@ import "@/service/fonts";
 import { auth } from "@/auth";
 import dynamic from "next/dynamic";
 import { ProgressBar } from "@/components/Shared/Progressbar/progress-bar";
+import Script from "next/script";
 const MyAvatar = dynamic(
   () => import("@/components/Shared/Appbar/Avatar/MyAvatar"),
   { ssr: true }
@@ -40,9 +41,24 @@ export default function RootLayout({
   const session = React.use(auth());
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1624293945329553"
+          crossOrigin="anonymous"
+          strategy="lazyOnload"
+        />
+        <Script id="">{`window.yaContextCb=window.yaContextCb||[]`}</Script>
+        <Script
+          src="https://yandex.ru/ads/system/context.js"
+          async
+          crossOrigin="anonymous"
+          strategy="lazyOnload"
+        />
+      </head>
       <body className={`antialiased`}>
         <Providers>
-          <ProgressBar className="fixed top-0 h-[2px] bg-primary z-50 rounded-r-lg">
+          <ProgressBar className="fixed top-0 h-1 bg-primary z-50 rounded-r-lg">
             <Appbar
               ava={
                 <MyAvatar

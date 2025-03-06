@@ -1,7 +1,7 @@
 import React from "react";
 import { DropdownItem, DropdownMenu } from "@heroui/react";
 import { ALL_GENRE } from "@/service/genre";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const GenreList = ({
   menuclose,
@@ -9,9 +9,16 @@ const GenreList = ({
   menuclose: null | ((state: boolean) => void);
 }) => {
   const router = useRouter();
+  const pathname = usePathname().split("/");
+  let route = "";
+  if (pathname.length > 3) {
+    route = pathname[3];
+  }
   return (
     <DropdownMenu
-      aria-label="ACME features"
+      aria-label="Genre"
+      selectedKeys={new Set([route])}
+      selectionMode="single"
       classNames={{
         base: "max-w-full",
         list: "grid grid-cols-3",
@@ -35,7 +42,7 @@ const GenreList = ({
         return (
           <DropdownItem
             key={e.route}
-            className="text-sm"
+            className="text-sm data-[selected=true]:bg-primary data-[selected=true]:text-white data-[hover=true]:bg-primary data-[hover=true]:text-white data-[focus=true]:bg-primary data-[focus=true]:text-white dark:data-[selected=true]:bg-primary dark:data-[selected=true]:text-white dark:data-[hover=true]:bg-primary dark:data-[hover=true]:text-white dark:data-[focus=true]:bg-primary dark:data-[focus=true]:text-white"
             value={e.name}
             onPress={() => {
               router.push(`/filter/genre/${e.route}`);

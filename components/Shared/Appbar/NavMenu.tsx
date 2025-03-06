@@ -25,7 +25,14 @@ const NavMenu = ({
   const router = useRouter();
   return (
     <NavbarMenu className="flex lg:hidden xl:hidden">
-      <Dropdown backdrop="blur" classNames={{ base: "right-1.5" }} offset={-50}>
+      <Dropdown
+        backdrop="blur"
+        classNames={{
+          base: "right-1.5 before:bg-default-200",
+          content: "p-0 border-small border-divider bg-background",
+        }}
+        offset={-50}
+      >
         <NavbarItem>
           <DropdownTrigger>
             <Button
@@ -41,6 +48,7 @@ const NavMenu = ({
               }
               radius="sm"
               variant="light"
+              color={loc.includes("/filter/genre") ? "primary" : "default"}
             >
               Genre
             </Button>

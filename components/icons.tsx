@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { IconSvgProps } from "@/types";
 import { SVGProps } from "react";
+import "./s.css";
 
 export const Logo: React.FC<IconSvgProps> = ({
   size = 36,
@@ -797,6 +798,232 @@ export function LineHeart(props: Readonly<SVGProps<SVGSVGElement>>) {
           values="32;0"
         ></animate>
       </path>
+    </svg>
+  );
+}
+
+export function Person(props: Readonly<SVGProps<SVGSVGElement>>) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={20}
+      height={20}
+      viewBox="0 0 20 20"
+      {...props}
+    >
+      <path
+        fill="currentColor"
+        d="M10 2a4 4 0 1 0 0 8a4 4 0 0 0 0-8m-4.991 9A2 2 0 0 0 3 13c0 1.691.833 2.966 2.135 3.797C6.417 17.614 8.145 18 10 18s3.583-.386 4.865-1.203C16.167 15.967 17 14.69 17 13a2 2 0 0 0-2-2z"
+      ></path>
+    </svg>
+  );
+}
+export function ColorNews(props: Readonly<SVGProps<SVGSVGElement>>) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={20}
+      height={20}
+      viewBox="0 0 20 20"
+      {...props}
+    >
+      <g fill="none">
+        <path
+          fill="url(#fluentColorNews206)"
+          d="M16 6a2 2 0 0 1 2 2v5.5a2.5 2.5 0 0 1-2 2.45l-.5.05V6z"
+        ></path>
+        <path
+          fill="url(#fluentColorNews200)"
+          d="M2 5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10.95q-.243.05-.5.05h-11A2.5 2.5 0 0 1 2 13.5z"
+        ></path>
+        <path
+          fill="url(#fluentColorNews201)"
+          d="M2 5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10.95q-.243.05-.5.05h-11A2.5 2.5 0 0 1 2 13.5z"
+        ></path>
+        <path
+          fill="url(#fluentColorNews202)"
+          d="M2 5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10.95q-.243.05-.5.05h-11A2.5 2.5 0 0 1 2 13.5z"
+        ></path>
+        <path
+          fill="url(#fluentColorNews203)"
+          d="M5.5 9a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5z"
+        ></path>
+        <path
+          fill="url(#fluentColorNews204)"
+          d="M10.5 9a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm-.5 3.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5"
+        ></path>
+        <path
+          fill="url(#fluentColorNews205)"
+          d="M5 6.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5"
+        ></path>
+        <defs>
+          <linearGradient
+            id="fluentColorNews200"
+            x1={6}
+            x2={16.578}
+            y1={1}
+            y2={15.055}
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop stopColor="#3bd5ff"></stop>
+            <stop offset={1} stopColor="#367af2"></stop>
+          </linearGradient>
+          <linearGradient
+            id="fluentColorNews201"
+            x1={10}
+            x2={10}
+            y1={13.5}
+            y2={16}
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop offset={0.181} stopColor="#2764e7" stopOpacity={0}></stop>
+            <stop offset={1} stopColor="#2764e7"></stop>
+          </linearGradient>
+          <linearGradient
+            id="fluentColorNews202"
+            x1={9.5}
+            x2={14.399}
+            y1={7}
+            y2={19.652}
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop stopColor="#dcf8ff" stopOpacity={0}></stop>
+            <stop offset={1} stopColor="#ff6ce8" stopOpacity={0.7}></stop>
+          </linearGradient>
+          <linearGradient
+            id="fluentColorNews203"
+            x1={5.382}
+            x2={7.382}
+            y1={8.804}
+            y2={12.809}
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop stopColor="#defcff"></stop>
+            <stop offset={1} stopColor="#9ff0f9"></stop>
+          </linearGradient>
+          <linearGradient
+            id="fluentColorNews204"
+            x1={10.262}
+            x2={11.133}
+            y1={9.07}
+            y2={13.28}
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop stopColor="#fdfdfd"></stop>
+            <stop offset={1} stopColor="#cceaff"></stop>
+          </linearGradient>
+          <linearGradient
+            id="fluentColorNews205"
+            x1={5.7}
+            x2={5.721}
+            y1={6.018}
+            y2={7.115}
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop stopColor="#fdfdfd"></stop>
+            <stop offset={1} stopColor="#cceaff"></stop>
+          </linearGradient>
+          <radialGradient
+            id="fluentColorNews206"
+            cx={0}
+            cy={0}
+            r={1}
+            gradientTransform="rotate(126.027 7.84 8.715)scale(6.80074 9.8598)"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop stopColor="#068beb"></stop>
+            <stop offset={0.617} stopColor="#0056cf"></stop>
+            <stop offset={0.974} stopColor="#0027a7"></stop>
+          </radialGradient>
+        </defs>
+      </g>
+    </svg>
+  );
+}
+
+export const Rank = ({
+  text,
+  props,
+}: {
+  text: string;
+  props: Readonly<SVGProps<SVGSVGElement>>;
+}) => {
+  return (
+    <div className="overflow-clip flex justify-end rounded-sm -z-50 absolute w-full">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 300 300"
+        width={96}
+        height={96}
+        shapeRendering="geometricPrecision"
+        textRendering="geometricPrecision"
+        style={{ backgroundColor: "transparent" }}
+        {...props}
+      >
+        <defs>
+          <linearGradient
+            x1="0.5"
+            y1="0"
+            x2="0.5"
+            y2="1"
+            spreadMethod="pad"
+            gradientUnits="objectBoundingBox"
+            gradientTransform="translate(0 0)"
+          >
+            <stop
+              id="eguEFm85kjZ6-fill-0"
+              offset="0%"
+              stopColor="rgba(255,255,255,0)"
+            />
+            <stop id="eguEFm85kjZ6-fill-1" offset="100%" stopColor="#010022" />
+          </linearGradient>
+        </defs>
+        <g id="eguEFm85kjZ2" transform="translate(49.999994 49.856806)">
+          <path
+            d="M93.68,5.155c3.679164-3.000422,8.960836-3.000422,12.64,0l7.933,6.47c2.496417,2.03559,5.820401,2.74431,8.93,1.904l9.856-2.664c4.576717-1.237178,9.39315.909399,11.533,5.14l4.657,9.21c1.449331,2.86597,4.186969,4.861443,7.359,5.364l10.129,1.605c4.667143.739444,8.179682,4.64486,8.422,9.364l.533,10.39c.164099,3.194856,1.846835,6.118362,4.527,7.865l8.666,5.649c3.946344,2.572893,5.561758,7.551185,3.878,11.951l-3.728,9.743c-1.141072,2.980782-.790714,6.327198.943,9.007l5.66,8.746c2.557488,3.95306,2.011091,9.15466-1.312,12.49l-7.33,7.359c-2.254297,2.262721-3.291818,5.46633-2.792,8.621l1.631,10.299c.736534,4.659367-1.882191,9.200046-6.284,10.896l-9.61,3.7c-2.991107,1.151721-5.248981,3.667287-6.072,6.765l-2.661,10.018c-1.21507,4.575325-5.471835,7.671799-10.199,7.419l-10.209-.546c-3.21262-.172164-6.311868,1.211855-8.328,3.719l-6.438,8.008c-2.974052,3.699077-8.138649,4.797927-12.361,2.63l-9.086-4.665c-2.866977-1.471062-6.267023-1.471062-9.134,0l-9.087,4.665c-4.222047,2.167782-9.386288,1.068919-12.36-2.63l-6.438-8.008c-2.016132-2.507145-5.11538-3.891164-8.328-3.719l-10.209.546c-4.727531.253287-8.984855-2.84329-10.2-7.419l-2.66-10.018c-.822871-3.097793-3.080797-5.613417-6.072-6.765l-9.61-3.7c-4.402599-1.695031-7.021728-6.236412-6.284-10.896l1.631-10.299c.499486-3.154644-.537988-6.358105-2.792-8.621l-7.33-7.359c-3.323091-3.33534-3.869488-8.53694-1.312-12.49l5.66-8.746c1.733714-2.679802,2.084072-6.026218.943-9.007L7.257,77.403c-1.683758-4.399815-.068344-9.378107,3.878-11.951l8.666-5.649c2.680165-1.746638,4.362901-4.670144,4.527-7.865l.533-10.39c.242318-4.71914,3.754857-8.624556,8.422-9.364l10.129-1.605c3.172031-.502557,5.909669-2.49803,7.359-5.364l4.657-9.21c2.13985-4.230601,6.956283-6.377178,11.533-5.14l9.856,2.664c3.109589.84065,6.43373.131897,8.93-1.904l7.933-6.47Z"
+            fill="#006fee"
+          />
+        </g>
+        <text
+          id="eguEFm85kjZ4"
+          style={{ isolation: "isolate" }}
+          dx="0"
+          dy="0"
+          fontFamily='"eguEFm85kjZ1:::Oswald"'
+          fontSize={text.length > 3 ? "48" : "64"}
+          fontWeight="900"
+          letterSpacing="2"
+          transform="translate(109.898445 168.350775)"
+          fill="#fff"
+          strokeWidth="0"
+          className="ft"
+        >
+          {text}
+          <tspan y="0" fontWeight="900" strokeWidth="0"></tspan>
+        </text>
+      </svg>
+    </div>
+  );
+};
+
+export function EyeIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={24}
+      height={24}
+      viewBox="0 0 64 64"
+      {...props}
+    >
+      <path
+        fill="#006fee"
+        d="M55.6 41.7c4-4.4 6.4-8.9 6.4-11.5C62 24.3 48.6 7 32 7S2 24.3 2 30.2s13.4 23.2 30 23.2c4.6 0 9-1.3 12.9-3.4l10.7 7z"
+      ></path>
+      <circle cx={32} cy={30.2} r={15} fill="#fff"></circle>
+      <path
+        fill="#006fee"
+        d="M32 21.2c-1 0-1.9.2-2.8.4c1.1.9 1.8 2.3 1.8 3.8c0 2.8-2.2 5-5 5c-1.1 0-2.1-.4-3-1v.7c0 5 4 9 9 9s9-4 9-9s-4-8.9-9-8.9"
+      ></path>
     </svg>
   );
 }

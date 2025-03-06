@@ -145,3 +145,24 @@ export function titleToUrl(title: string) {
   if (modified.endsWith("-")) return modified.slice(0, -1);
   return modified;
 }
+
+export function checkNew(time: Date) {
+  const num = time.getTime();
+  if (new Date().getTime() - num < 60 * 60 * 24 * 1000) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+export function viewsNumberToString(views: number) {
+  if (views < 1000) {
+    return `${views} Views`;
+  } else if (views > 999 && views < 10000) {
+    return `${(views / 1000).toFixed(2)}K Views`;
+  } else if (views > 9999 && views < 1000000) {
+    return `${(views / 1000).toFixed(1)}K Views`;
+  } else {
+    return `${(views / 1000000).toFixed(2)}M Views`;
+  }
+}

@@ -1,5 +1,6 @@
 "use client";
 
+import { setCookie } from "cookies-next/client";
 import {
   AnimatePresence,
   motion,
@@ -63,14 +64,14 @@ export function ProgressBarLink({
   color,
   prefetch,
   className,
-}: {
+}: Readonly<{
   href: string;
   children: ReactNode | ReactNode[];
   func?: () => void;
   color?: string;
   prefetch?: boolean;
   className?: string;
-}) {
+}>) {
   const progress = useProgressBar();
   const router = useRouter();
 
@@ -92,6 +93,44 @@ export function ProgressBarLink({
       }}
       prefetch={prefetch ?? true}
       className={className ?? ""}
+    >
+      {children}
+    </Link>
+  );
+}
+
+export function ChapterLink({
+  href,
+  children,
+  color,
+  className,
+  id,
+}: Readonly<{
+  href: string;
+  children: ReactNode | ReactNode[];
+  color?: string;
+  className?: string;
+  id: number;
+}>) {
+  const progress = useProgressBar();
+  const router = useRouter();
+
+  return (
+    <Link
+      href={href}
+      color={color ?? ""}
+      onClick={(e) => {
+        e.preventDefault();
+        progress.start();
+
+        startTransition(() => {
+          setCookie("number", String(id), { sameSite: "strict", maxAge: 30 });
+          router.push(href);
+          progress.done();
+        });
+      }}
+      className={className ?? ""}
+      prefetch={false}
     >
       {children}
     </Link>

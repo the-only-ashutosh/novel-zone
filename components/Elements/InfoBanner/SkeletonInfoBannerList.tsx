@@ -1,16 +1,12 @@
-import React, { ReactElement } from "react";
+import React from "react";
 import SkeletonInfoBanner from "./SkeletonInfoBanner";
-
-const Infos: Array<ReactElement> = [];
-
-for (let i = 0; i < 10; i++) {
-  Infos.push(<SkeletonInfoBanner key={"Infos" + i} />);
-}
 
 const SkeletonInfoBannerList = () => {
   return (
-    <div className="grid updatedlistgrid gap-4 mt-8 mx-[5%] justify-center mb-10">
-      {Infos}
+    <div className="grid xl:grid-cols-2 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 gap-4 mt-6 mb-10 mx-1">
+      {[...Array(20)].map((e, _) => (
+        <SkeletonInfoBanner key={"Infos" + _} />
+      ))}
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import React, { ReactElement } from "react";
 import Grid from "@mui/material/Grid2";
 import { ProgressBarLink } from "@/components/Shared/Progressbar/progress-bar";
-import { Chip, ScrollShadow } from "@heroui/react";
+import { Chip } from "@heroui/react";
 
 const CategoryGrid = ({
   category,
@@ -54,14 +54,9 @@ const CategoryGrid = ({
     }
   }
   return (
-    <ScrollShadow
-      className={`mt-10 mx-1 w-[90vw] ${
-        category.length > 16 ? "h-[192px] " : "h-[76px]"
-      }`}
-      size={10}
-    >
-      <Grid container>{categorylist}</Grid>
-    </ScrollShadow>
+    <Grid container className="mt-10 mx-1 w-[90vw]">
+      {categorylist}
+    </Grid>
   );
 };
 

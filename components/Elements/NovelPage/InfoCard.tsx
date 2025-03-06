@@ -1,11 +1,11 @@
 import { Button, Card, CardBody, Divider } from "@heroui/react";
-import Image from "next/image";
 import React from "react";
 import dynamic from "next/dynamic";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import GenreGrid from "./GenreGrid";
 import { ProgressBarLink } from "@/components/Shared/Progressbar/progress-bar";
 import { ColorBookmark } from "@/components/icons";
+import CoverImage from "./CoverImage";
 const RateModal = dynamic(() => import("./RateModal"));
 
 const InfoCard = ({
@@ -33,7 +33,7 @@ const InfoCard = ({
   ratings: number;
 }) => {
   return (
-    <div className="flex flex-row sm:flex-col md:flex-col gap-y-2 items-center mx-[5%] max-h-fit">
+    <div className="flex flex-row sm:flex-col md:flex-col gap-y-2 items-center mx-[5%] max-h-fit w-[90%]">
       <div
         className="absolute top-16 bottom-0 left-0 right-0"
         style={{
@@ -43,22 +43,12 @@ const InfoCard = ({
           backgroundRepeat: "no-repeat",
           opacity: 0.5,
           zIndex: -1,
-          maxHeight: "356px",
+          maxHeight: "424px",
         }}
       >
         <div className="bg-gradient-to-b from-transparent to-primary w-full h-full"></div>
       </div>
-      <Image
-        priority
-        src={url}
-        alt={title}
-        width={280}
-        height={Math.ceil(280 / aspectRatio)}
-        style={{
-          objectFit: "cover",
-        }}
-        className="mb-6 rounded-lg"
-      />
+      <CoverImage src={url} title={title} width={280} />
       <Card className="mb-6 w-[95vw] dark:bg-black opacity-80 lg:ml-6 xl:ml-6 md:mt-6 sm:mt-6">
         <CardBody className="flex colrow p-0 bg-transparent">
           <div className="flex flex-row sm:flex-col md:flex-col w-full justify-between">
@@ -101,6 +91,7 @@ const InfoCard = ({
                     </span>
                   }
                 </h3>
+                <h3>Chapters:&nbsp;{"1111"}</h3>
                 <h3 className="mt-1 flex items-center">
                   Views:&nbsp;{views}&nbsp;
                   <VisibilityIcon color="error" />

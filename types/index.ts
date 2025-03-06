@@ -118,3 +118,23 @@ export type Profile = {
   userId: string;
   id: string;
 };
+
+export type RecentsChapter = {
+  id: number;
+  number: number;
+  addAt: Date;
+  url: string;
+};
+
+export type RankingData = {
+  imageUrl: string;
+  bookUrl: string;
+  title: string;
+  views: string;
+  rank: number;
+};
+export type CommonData = {
+  daily: RankingData[];
+  weekly: RankingData[];
+  monthly: RankingData[];
+};
