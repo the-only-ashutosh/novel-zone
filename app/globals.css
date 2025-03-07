@@ -276,3 +276,8 @@ img {
   transition: box-shadow ease-in-out 0.3s, background-color ease-in-out 0.1s,
     letter-spacing ease-in-out 0.1s, transform ease-in-out 0.1s;
 }
+
+.vertical-writing {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+}

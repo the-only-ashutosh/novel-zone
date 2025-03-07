@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardBody, Chip } from "@heroui/react";
 import Image from "next/image";
-import { checkNew } from "@/service/functions";
+import { checkNew, getRecentTime } from "@/service/functions";
 import {
   ChapterLink,
   ProgressBarLink,
@@ -105,6 +105,9 @@ const RecentInfo = ({
               )}
             </div>
           </div>
+        </div>
+        <div className="vertical-writing flex justify-center rounded-r-sm bg-primary px-[2px] text-sm">
+          {getRecentTime(last.addAt)}
         </div>
       </CardBody>
     </Card>

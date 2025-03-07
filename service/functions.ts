@@ -1,25 +1,51 @@
 export const getTimeDiff = (ftime: Date) => {
   if (!ftime) return "none";
   const timeDiff = Math.abs((Date.now() - new Date(ftime).getTime()) / 1000);
-  if (timeDiff < 60) {
-    return timeDiff > 1
-      ? `${Math.round(timeDiff)} seconds`
-      : `${Math.round(timeDiff)} second`;
-  } else if (timeDiff >= 60 && timeDiff < 3600) {
-    const minutes = Math.floor(timeDiff / 60);
-    return minutes > 1 ? `${minutes} minutes` : `${minutes} minute`;
-  } else if (timeDiff >= 3600 && timeDiff < 3600 * 24) {
-    const hours = Math.floor(timeDiff / 3600);
-    return hours > 1 ? `${hours} hours` : `${hours} hour`;
-  } else if (timeDiff >= 24 * 3600 && timeDiff < 3600 * 24 * 30) {
-    const days = Math.floor(timeDiff / (24 * 3600));
-    return days > 1 ? `${days} days` : `${days} day`;
-  } else if (timeDiff >= 3600 * 24 * 30 && timeDiff < 3600 * 24 * 30 * 12) {
-    const months = Math.floor(timeDiff / (3600 * 24 * 30));
-    return months > 1 ? `${months} months` : `${months} month`;
-  } else if (timeDiff >= 3600 * 24 * 30 * 12) {
-    const years = Math.floor(timeDiff / (3600 * 24 * 30 * 12));
-    return years > 1 ? `${years} years` : `${years} year`;
+  const timeUnits = [
+    { unit: "second", value: 60 },
+    { unit: "minute", value: 60 },
+    { unit: "hour", value: 24 },
+    { unit: "day", value: 30 },
+    { unit: "month", value: 12 },
+    { unit: "year", value: Infinity },
+  ];
+
+  let unitIndex = 0;
+  let diff = timeDiff;
+
+  while (
+    diff >= timeUnits[unitIndex].value &&
+    unitIndex < timeUnits.length - 1
+  ) {
+    diff /= timeUnits[unitIndex].value;
+    unitIndex++;
+  }
+
+  const roundedDiff = Math.floor(diff);
+  const unit = timeUnits[unitIndex].unit;
+  return roundedDiff > 1 ? `${roundedDiff} ${unit}s` : `${roundedDiff} ${unit}`;
+};
+
+export const getRecentTime = (ftime: Date) => {
+  const s = getTimeDiff(ftime);
+  if (s.includes("second")) {
+    return "JUST NOW";
+  } else if (s.includes("minute")) {
+    return Number(s.split(" ")[0]) < 10
+      ? `${s.split(" ")[0]} MIN AGO`
+      : `${s.split(" ")[0]} MINS AGO`;
+  } else if (s.includes("hour")) {
+    return Number(s.split(" ")[0]) < 10
+      ? `${s.split(" ")[0]} HR AGO`
+      : `${s.split(" ")[0]} HRS AGO`;
+  } else if (s.includes("day")) {
+    return Number(s.split(" ")[0]) < 10
+      ? `${s.split(" ")[0]} DAY AGO`
+      : `${s.split(" ")[0]} DAYS AGO`;
+  } else if (s.includes("month")) {
+    return Number(s.split(" ")[0]) < 10
+      ? `${s.split(" ")[0]} MTH AGO`
+      : `${s.split(" ")[0]} MTHS AGO`;
   }
 };
 
