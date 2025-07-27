@@ -80,7 +80,7 @@ const InfoCard = ({
             src={imgUrl!}
             width={Math.ceil(210 * aspectRatio)}
             height={210}
-            loading="lazy"
+            loading={priority ? "eager" : "lazy"}
             style={{
               borderRadius: "0.375rem",
               height: "210px",

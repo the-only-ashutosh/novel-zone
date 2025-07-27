@@ -5,6 +5,52 @@ import { setCookie } from "cookies-next/server";
 import { upsertUser } from "./service/useraction";
 
 export default auth(async (req) => {
+  const cfConnectingIP = req.headers.get("cf-connecting-ip");
+  if (!cfConnectingIP) {
+    const html = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Access Denied</title>
+        <style>
+          body {
+            font-family: sans-serif;
+            background: #111;
+            color: #f8f8f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+          }
+            a{
+            color:cornflowerblue;
+            text-decoration: none;
+            }
+          .box {
+            max-width: 600px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="box">
+          <h1>🚫 Access Denied</h1>
+          <p>This site is cannot be accessed from this origin.<br>
+          Please access it via the <a href="https://novelzone.fun">OFFICIAL DOMAIN</a>.</p>
+        </div>
+      </body>
+      </html>
+    `;
+
+    return new NextResponse(html, {
+      status: 200,
+      headers: {
+        "Content-Type": "text/html",
+      },
+    });
+  }
   const url = req.nextUrl;
   const { device, ua } = userAgent(req);
   if (
@@ -14,7 +60,7 @@ export default auth(async (req) => {
     ua.includes("semrush") ||
     ua.includes("Chrome/101.0.4951.67")
   ) {
-    return NextResponse.json({ message: "Host is down" }, { status: 403 });
+    return NextResponse.json({ message: "Host is down" }, { status: 200 });
   }
 
   if (req.auth) {

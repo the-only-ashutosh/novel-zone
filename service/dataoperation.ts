@@ -7,7 +7,7 @@ import { decodePythonBytesString, viewsNumberToString } from "./functions";
 import { Storage } from "@google-cloud/storage";
 import { BookData, ChapterData } from "@/types";
 const storage = new Storage();
-const bucket = storage.bucket("nvzn-content");
+const bucket = storage.bucket("nvzn-cont");
 
 export async function getBookTitles() {
   return await prisma.book
