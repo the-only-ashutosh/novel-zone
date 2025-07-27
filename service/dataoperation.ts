@@ -3,9 +3,11 @@ import "server-only";
 import { prisma } from "./client";
 import { ALL_GENRE } from "./genre";
 import { PrismaClient } from "@prisma/client";
-import { cache } from "react";
-import { viewsNumberToString } from "./functions";
-import { CommonData } from "@/types";
+import { decodePythonBytesString, viewsNumberToString } from "./functions";
+import { Storage } from "@google-cloud/storage";
+import { BookData, ChapterData } from "@/types";
+const storage = new Storage();
+const bucket = storage.bucket("nvzn-content");
 
 export async function getBookTitles() {
   return await prisma.book
@@ -20,21 +22,25 @@ export async function getBookTitles() {
 }
 
 export const fetchMostPopular = async () => {
-  return await prisma.book.findMany({
-    orderBy: [{ views: "desc" }, { ratings: "desc" }],
-    take: 12,
-    select: {
-      bookUrl: true,
-      imageUrl: true,
-      title: true,
-      ratings: true,
-      views: true,
-      status: true,
-      id: true,
-      aspectRatio: true,
-      _count: { select: { chapter: true } },
-    },
-  });
+  try {
+    return await prisma.book.findMany({
+      orderBy: [{ views: "desc" }, { ratings: "desc" }],
+      take: 12,
+      select: {
+        bookUrl: true,
+        imageUrl: true,
+        title: true,
+        ratings: true,
+        views: true,
+        status: true,
+        id: true,
+        aspectRatio: true,
+        _count: { select: { chapter: true } },
+      },
+    });
+  } catch (error) {
+    return "Error";
+  }
 };
 
 export async function fetchRecentUpdates() {
@@ -58,53 +64,66 @@ export async function fetchRecentUpdates() {
   return data;
 }
 
-export const fetchChapter = async (book_name: string, chapter: string) => {
+export async function fetchChapter(
+  book_name: string,
+  chapter: string,
+  number?: number
+): Promise<ChapterData> {
   try {
     return await prisma.chapter
       .findFirst({
-        where: { book: { bookUrl: book_name }, url: { contains: chapter } },
+        where: number
+          ? { book: { bookUrl: book_name }, url: { contains: chapter }, number }
+          : { book: { bookUrl: book_name }, url: { contains: chapter } },
         select: {
-          content: true,
           title: true,
           likes: true,
           addAt: true,
           number: true,
           book: { select: { title: true, bookUrl: true } },
+          bookId: true,
         },
       })
       .then(async (chapter) => {
         if (chapter) {
-          const prev = prisma.chapter.findFirst({
+          const q = await prisma.chapter.findMany({
             where: {
-              number: chapter.number - 1,
-              book: { bookUrl: book_name },
+              bookId: chapter.bookId,
+              OR: [
+                { number: chapter.number - 1 },
+                { number: chapter.number + 1 },
+              ],
             },
-            select: { url: true },
+            select: { url: true, number: true },
           });
-          const next = prisma.chapter.findFirst({
-            where: {
-              number: chapter.number + 1,
-              book: { bookUrl: book_name },
-            },
-            select: { url: true },
-          });
-          const [prevChapter, nextChapter] = await Promise.all([prev, next]);
-          const decoder = new TextDecoder();
+          let prevChapter = null;
+          let nextChapter = null;
+          for (const c of q) {
+            if (c.number === chapter.number - 1) {
+              prevChapter = c;
+            }
+            if (c.number === chapter.number + 1) {
+              nextChapter = c;
+            }
+          }
+          const filename = `${chapter.bookId}/${chapter.number}.txt`;
+          const file = await bucket.file(filename).download();
+          const content = new TextDecoder().decode(file[0]);
           return {
             ...chapter,
-            content: decoder.decode(chapter.content),
-            prevChapter: prevChapter ? prevChapter.url : null,
-            nextChapter: nextChapter ? nextChapter.url : null,
+            content: decodePythonBytesString(content),
+            prevChapter,
+            nextChapter,
           };
         }
       });
   } catch (error) {
+    console.log(error);
     return "Invalid Chapter";
   }
-};
+}
 
 export async function searchBook(toSearch: string) {
-  console.log(toSearch);
   const bookData = await prisma.book.findMany({
     where: {
       title: {
@@ -290,8 +309,6 @@ export async function fetchRecentUpdatesPage(page: number = 1) {
       take: 20,
       select: {
         addAt: true,
-        title: true,
-        url: true,
         book: {
           select: {
             title: true,
@@ -299,6 +316,11 @@ export async function fetchRecentUpdatesPage(page: number = 1) {
             aspectRatio: true,
             bookUrl: true,
             author: { select: { name: true } },
+            chapter: {
+              orderBy: { addAt: "desc" },
+              take: 1,
+              select: { title: true, url: true, number: true },
+            },
           },
         },
       },
@@ -312,7 +334,11 @@ export async function fetchRecentUpdatesPage(page: number = 1) {
   }
 }
 
-export async function fetchchapters(book: number, page: number = 1) {
+export async function fetchchapters(
+  book?: number,
+  book_name?: string,
+  page: number = 1
+) {
   let chapterData: Array<{
     number: number;
     url: string;
@@ -347,7 +373,7 @@ export async function fetchchapters(book: number, page: number = 1) {
     return chapterData;
   } else {
     chapterData = await prisma.chapter.findMany({
-      where: { bookId: book },
+      where: { url: book_name },
       orderBy: { number: "asc" },
       take: 100,
       select: {
@@ -363,81 +389,55 @@ export async function fetchchapters(book: number, page: number = 1) {
   }
 }
 
-export async function fetchBookDetails(name: string) {
-  try {
-    const book = await prisma.book.findFirst({
-      where: { bookUrl: name },
-      select: {
-        id: true,
-        author: true,
-        status: true,
-        title: true,
-        genre: { select: { name: true, route: true } },
-        imageUrl: true,
-        aspectRatio: true,
-        updatedAt: true,
-        views: true,
-        ratings: true,
-        description: true,
-        category: { select: { name: true, route: true } },
-        _count: { select: { chapter: true } },
-        chapter: {
-          where: {
-            OR: [
-              {
-                number: (await prisma.chapter.findFirst({
-                  where: { book: { bookUrl: name } },
-                  orderBy: { number: "asc" },
-                  select: { number: true },
-                }))!.number,
-              },
-              {
-                number: (await prisma.chapter.findFirst({
-                  where: { book: { bookUrl: name } },
-                  orderBy: { number: "desc" },
-                  select: { number: true },
-                }))!.number,
-              },
-            ],
-          },
-          select: { url: true, title: true, addAt: true, number: true },
-        },
-        bookUrl: true,
+export async function fetchBookDetails(name: string): Promise<BookData> {
+  const b = prisma.book.findMany({
+    where: { bookUrl: { contains: name } },
+    select: {
+      id: true,
+      author: true,
+      status: true,
+      title: true,
+      genre: { select: { name: true, route: true } },
+      imageUrl: true,
+      aspectRatio: true,
+      updatedAt: true,
+      views: true,
+      ratings: true,
+      description: true,
+      category: { select: { name: true, route: true } },
+      bookUrl: true,
+      chapter: {
+        orderBy: { number: "desc" },
+        take: 1,
+        select: { url: true, title: true, number: true, addAt: true },
       },
-    });
-    if (!book) {
-      return "Invalid Book";
-    }
-
-    return book;
-  } catch (err: unknown) {
-    if (err instanceof TypeError) {
-      const book = await prisma.book.findFirst({
-        where: { bookUrl: name },
-        select: {
-          id: true,
-          author: true,
-          status: true,
-          title: true,
-          genre: { select: { name: true, route: true } },
-          imageUrl: true,
-          aspectRatio: true,
-          updatedAt: true,
-          views: true,
-          ratings: true,
-          description: true,
-          category: { select: { name: true, route: true } },
-          _count: { select: { chapter: true } },
-          bookUrl: true,
-          chapter: {},
-        },
-      });
-
-      return book;
-    }
-
+    },
+  });
+  const f = prisma.chapter.findMany({
+    where: { book: { bookUrl: { contains: name } } },
+    orderBy: { number: "asc" },
+    take: 1,
+    select: { url: true, title: true, number: true, addAt: true },
+  });
+  const [books, ft] = await Promise.all([b, f]);
+  if (books.length === 0) {
     return "Invalid Book";
   }
+  const book = books[0];
+  if (ft.length === 0) {
+    return {
+      ...book,
+      last: null,
+      first: null,
+      description: new TextDecoder().decode(book.description),
+    };
+  }
+  return {
+    ...book,
+    first: ft[0],
+    last: book.chapter[0],
+    description: new TextDecoder().decode(book.description),
+  };
 }
 
 export async function newRating(stars: number, title: string) {
@@ -460,7 +460,7 @@ export async function newRating(stars: number, title: string) {
   }
 }
 
-export const fetchChaptersList = cache(async (book: string) => {
+export async function fetchChaptersList(book: string) {
   const chData = await prisma.book.findFirst({
     where: { bookUrl: book },
     select: {
@@ -473,7 +473,7 @@ export const fetchChaptersList = cache(async (book: string) => {
   if (chData) {
     return chData.chapter;
   }
-});
+}
 
 export async function addView(url: string) {
   await prisma.book.update({
@@ -483,14 +483,24 @@ export async function addView(url: string) {
 }
 
 export async function addChapterView(chapter: string, book: string) {
-  const chapId = (await prisma.chapter.findFirst({
-    where: { book: { bookUrl: { contains: book } }, url: chapter },
-    select: { id: true },
-  }))!.id;
-  await prisma.chapter.update({
-    where: { id: chapId },
-    data: { views: { increment: 1 } },
-  });
+  try {
+    const chapId = (await prisma.chapter.findFirst({
+      where: { book: { bookUrl: book }, url: chapter },
+      select: { id: true },
+    }))!.id;
+    const a = prisma.chapter.update({
+      where: { id: chapId },
+      data: { views: { increment: 1 } },
+    });
+    const i = { increment: 1 };
+    const b = prisma.book.update({
+      where: { bookUrl: book },
+      data: { daily: i, weekly: i, monthly: i, views: i },
+    });
+    await Promise.all([a, b]);
+  } catch (error) {
+    //...
+  }
 }
 
 export async function deleteBook(url: string) {
@@ -709,7 +719,7 @@ export async function fetchBookOg(book: string) {
     });
 }
 
-export const fetchRandomBooks = cache(async () => {
+export async function fetchRandomBooks() {
   const count = await prisma.book.count();
   const randomIndex: number[] = [];
   for (let i = 0; i < 5; i++) {
@@ -723,9 +733,9 @@ export const fetchRandomBooks = cache(async () => {
     .then(async (books) => {
       return books;
     });
-});
+}
 
-export const fetchRandomCategories = cache(async () => {
+export async function fetchRandomCategories() {
   const count = await prisma.category.count();
   const randomIndex: number[] = [];
   while (randomIndex.length < 5) {
@@ -742,9 +752,9 @@ export const fetchRandomCategories = cache(async () => {
     .then(async (categories) => {
       return categories;
     });
-});
+}
 
-export const fetchRandomGenres = cache(async () => {
+export async function fetchRandomGenres() {
   const randomIndex: number[] = [];
   while (randomIndex.length < 5) {
     const random = Math.floor(Math.random() * ALL_GENRE.length);
@@ -753,7 +763,7 @@ export const fetchRandomGenres = cache(async () => {
     }
   }
   return ALL_GENRE.filter((x, i) => randomIndex.includes(i));
-});
+}
 
 export async function fetchRandomAuthors() {
   const count = await prisma.author.count();
@@ -856,36 +866,42 @@ export async function fetchChapterUrl(start: number = 1) {
 }
 
 export async function newRecents() {
-  return await prisma.recents
-    .findMany({
-      orderBy: { addAt: "desc" },
-      take: 30,
-      select: {
-        book: {
-          select: {
-            bookUrl: true,
-            imageUrl: true,
-            title: true,
-            chapter: {
-              orderBy: { number: "desc" },
-              take: 2,
-              select: { id: true, addAt: true, url: true, number: true },
+  try {
+    return await prisma.recents
+      .findMany({
+        orderBy: { addAt: "desc" },
+        take: 30,
+        select: {
+          book: {
+            select: {
+              bookUrl: true,
+              imageUrl: true,
+              title: true,
+              chapter: {
+                orderBy: { number: "desc" },
+                take: 2,
+                select: { addAt: true, url: true, number: true },
+              },
             },
           },
+          addAt: true,
         },
-      },
-    })
-    .then((data) => {
-      return data.map((d) => {
-        return {
-          bookUrl: d.book.bookUrl,
-          imageUrl: d.book.imageUrl,
-          title: d.book.title,
-          last: d.book.chapter[0],
-          secondLast: d.book.chapter[1],
-        };
+      })
+      .then((data) => {
+        return data.map((d) => {
+          return {
+            bookUrl: d.book.bookUrl,
+            imageUrl: d.book.imageUrl,
+            title: d.book.title,
+            last: d.book.chapter[0],
+            secondLast: d.book.chapter[1],
+            updatedAt: d.addAt,
+          };
+        });
       });
-    });
+  } catch (error) {
+    return "Error";
+  }
 }
 
 export async function getTotalChapter(book: string) {
@@ -917,40 +933,103 @@ export async function chapterLiked(book: string, num: number) {
 }
 
 export async function getRankingDetails() {
-  const weekly = await prisma.book
-    .findMany({
-      orderBy: { weekly: "desc" },
-      take: 20,
-      select: { imageUrl: true, title: true, bookUrl: true, weekly: true },
-    })
-    .then((data) => {
-      return data.map((d, _) => {
-        return { ...d, rank: _ + 1, views: viewsNumberToString(d.weekly) };
+  try {
+    const w = prisma.book
+      .findMany({
+        orderBy: { weekly: "desc" },
+        take: 20,
+        select: { imageUrl: true, title: true, bookUrl: true, weekly: true },
+      })
+      .then((data) => {
+        return data.map((d, _) => {
+          return {
+            rank: _ + 1,
+            views: viewsNumberToString(d.weekly),
+            title: d.title,
+            bookUrl: d.bookUrl,
+            imageUrl: d.imageUrl,
+          };
+        });
       });
-    });
 
-  const daily = await prisma.book
-    .findMany({
-      orderBy: { daily: "desc" },
-      take: 20,
-      select: { imageUrl: true, title: true, bookUrl: true, daily: true },
-    })
-    .then((data) => {
-      return data.map((d, _) => {
-        return { ...d, rank: _ + 1, views: viewsNumberToString(d.daily) };
+    const d = prisma.book
+      .findMany({
+        orderBy: { daily: "desc" },
+        take: 20,
+        select: { imageUrl: true, title: true, bookUrl: true, daily: true },
+      })
+      .then((data) => {
+        return data.map((d, _) => {
+          return {
+            rank: _ + 1,
+            views: viewsNumberToString(d.daily),
+            title: d.title,
+            bookUrl: d.bookUrl,
+            imageUrl: d.imageUrl,
+          };
+        });
       });
-    });
 
-  const monthly = await prisma.book
-    .findMany({
-      orderBy: { monthly: "desc" },
-      take: 20,
-      select: { imageUrl: true, title: true, bookUrl: true, monthly: true },
-    })
-    .then((data) => {
-      return data.map((d, _) => {
-        return { ...d, rank: _ + 1, views: viewsNumberToString(d.monthly) };
+    const m = prisma.book
+      .findMany({
+        orderBy: { monthly: "desc" },
+        take: 20,
+        select: { imageUrl: true, title: true, bookUrl: true, monthly: true },
+      })
+      .then((data) => {
+        return data.map((d, _) => {
+          return {
+            rank: _ + 1,
+            views: viewsNumberToString(d.monthly),
+            title: d.title,
+            bookUrl: d.bookUrl,
+            imageUrl: d.imageUrl,
+          };
+        });
       });
-    });
-  return { daily, weekly, monthly };
+    const [daily, weekly, monthly] = await Promise.all([d, w, m]);
+    return { daily, weekly, monthly };
+  } catch (error) {
+    return "Error";
+  }
+}
+
+export async function fetchViewedBooksData(bookIds: number[]) {
+  const candidateBooks = await prisma.book.findMany({
+    where: {
+      id: { notIn: bookIds },
+    },
+    include: {
+      genre: true,
+      category: true,
+    },
+  });
+  const books = await prisma.book.findMany({
+    where: { id: { notIn: bookIds } },
+    include: { genre: true, category: true },
+  });
+  const genres = new Set<string>();
+  const categories = new Set<string>();
+
+  books.forEach((book) => {
+    book.genre.forEach((g) => genres.add(g.name));
+    book.category.forEach((c) => categories.add(c.name));
+  });
+
+  const bookOptions = candidateBooks
+    .map((book) => {
+      const genres = book.genre.map((g) => g.name).join(", ");
+      const categories = book.category.map((c) => c.name).join(", ");
+      return `Title: ${book.title}\nGenres: ${genres}\nCategories: ${categories}\n`;
+    })
+    .join("\n");
+  return `
+A user likes books with genres: ${Array.from(genres).join(", ")}, 
+and categories: ${Array.from(categories).join(", ")}.
+
+From the list below, recommend 12 books the user might like. 
+Give a 1-line reason for each. Only choose from this list:
+
+${bookOptions}
+`;
 }

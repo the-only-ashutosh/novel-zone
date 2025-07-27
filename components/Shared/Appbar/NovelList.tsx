@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
 import { DropdownItem, DropdownMenu } from "@heroui/react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { ProgressBarLink } from "../Progressbar/progress-bar";
 
 const NovelList = ({ loc }: { loc: string }) => {
   const router = useRouter();
@@ -33,13 +33,13 @@ const NovelList = ({ loc }: { loc: string }) => {
         }}
         textValue="allnovels"
       >
-        <Link
+        <ProgressBarLink
           aria-current={loc === "/filter/allnovels" || "page"}
           color={loc === "/filter/allnovels" ? "primary" : "foreground"}
           href="/filter/allnovels"
         >
           All Novels
-        </Link>
+        </ProgressBarLink>
       </DropdownItem>
       <DropdownItem
         key={"hotnovels"}
@@ -48,13 +48,13 @@ const NovelList = ({ loc }: { loc: string }) => {
         }}
         textValue="hotnovels"
       >
-        <Link
+        <ProgressBarLink
           aria-current={loc === "/filter/hotnovels" || "page"}
           color={loc === "/filter/hotnovels" ? "primary" : "foreground"}
           href="/filter/hotnovels"
         >
           Hot Novels
-        </Link>
+        </ProgressBarLink>
       </DropdownItem>
       <DropdownItem
         key={"newupdates"}
@@ -63,13 +63,13 @@ const NovelList = ({ loc }: { loc: string }) => {
         }}
         textValue="newupdates"
       >
-        <Link
+        <ProgressBarLink
           aria-current={loc === "/filter/newupdates" || "page"}
           color={loc === "/filter/newupdates" ? "primary" : "foreground"}
           href="/filter/newupdates"
         >
           New Updates
-        </Link>
+        </ProgressBarLink>
       </DropdownItem>
       <DropdownItem
         key={"completed"}
@@ -78,13 +78,13 @@ const NovelList = ({ loc }: { loc: string }) => {
         }}
         textValue="completed"
       >
-        <Link
+        <ProgressBarLink
           aria-current={loc === "/filter/completed" || "page"}
           color={loc === "/filter/completed" ? "primary" : "foreground"}
           href="/filter/completed"
         >
           Completed
-        </Link>
+        </ProgressBarLink>
       </DropdownItem>
       <DropdownItem
         key={"mostpopular"}
@@ -93,13 +93,13 @@ const NovelList = ({ loc }: { loc: string }) => {
         }}
         textValue="mostpopular"
       >
-        <Link
+        <ProgressBarLink
           aria-current={loc === "/filter/mostpopular" || "page"}
           color={loc === "/filter/mostpopular" ? "primary" : "foreground"}
           href="/filter/mostpopular"
         >
           Most Popular
-        </Link>
+        </ProgressBarLink>
       </DropdownItem>
     </DropdownMenu>
   );

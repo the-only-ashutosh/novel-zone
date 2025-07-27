@@ -1,6 +1,6 @@
 import React from "react";
-import { Skeleton } from "@heroui/skeleton";
-import Grid from "@mui/material/Grid2";
+import { Skeleton } from "@heroui/react";
+import Grid from "@mui/material/Grid";
 
 export const InfoSkele = () => {
   return (
@@ -12,13 +12,13 @@ export const InfoSkele = () => {
         <div className="w-[160px] h-[210px]" />
       </Skeleton>
       <div className="flex flex-col w-[160px] text-sm px-[2px]">
-        <Skeleton className="rounded-md mb-[1px] mt-[4px]">
+        <Skeleton className="rounded-md mb-px mt-[4px]">
           <div className="h-[18px] w-[156px]" />
         </Skeleton>
-        <Skeleton className="rounded-md my-[1px]">
+        <Skeleton className="rounded-md my-px">
           <div className="h-[18px] w-[156px]" />
         </Skeleton>
-        <Skeleton className="rounded-md mt-[1px]">
+        <Skeleton className="rounded-md mt-px">
           <div className="h-[18px] w-[156px]" />
         </Skeleton>
       </div>

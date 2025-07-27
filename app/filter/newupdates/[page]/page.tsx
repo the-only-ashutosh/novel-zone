@@ -5,8 +5,10 @@ import GradBanner from "@/components/Shared/GradBanner";
 import NewUpdatesList from "@/components/Elements/NewUpdates/NewUpdatesList";
 import NewUpdatesSkeleton from "@/components/Elements/NewUpdates/NewUpdatesSkeleton";
 import { newUpdates } from "@/types";
+import { KEYWORDS } from "@/types/consts";
 
 export const experimental_ppr = true;
+
 const NewUpdatesPage = ({ params }: { params: Promise<{ page: number }> }) => {
   return (
     <div className="flex items-center">
@@ -28,18 +30,19 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { page } = await params;
   const book: newUpdates = await fetchRecentUpdatesPage(page);
-  const books =
-    book !== "Invalid Page"
-      ? book.data.map((bk) => {
-          return bk.title;
-        })
-      : ["Recent Updates", "New Updates"];
-  const images =
-    book !== "Invalid Page"
-      ? book.data.map((bk) => {
-          return bk.book.imageUrl;
-        })
-      : [];
+  if (book === "Invalid Page") {
+    return {
+      title: "Newly Updated Novels",
+      keywords: [...KEYWORDS],
+    };
+  }
+  const books = book.data.map((bk) => {
+    return bk.book.title;
+  });
+  const images = book.data.map((bk) => {
+    return bk.book.imageUrl;
+  });
+
   return {
     title: "Newly Updated Novels",
     keywords: [

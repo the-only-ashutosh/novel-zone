@@ -4,8 +4,17 @@ import { FaList } from "react-icons/fa";
 import KeyboardArrowRightRoundedIcon from "@mui/icons-material/KeyboardArrowRightRounded";
 import Backdrop from "@mui/material/Backdrop";
 import { Button, Input, Listbox, ListboxItem, Spinner } from "@heroui/react";
-import React, { ReactElement, useEffect, useState } from "react";
-import ChangeButtons from "./ChangeButtons";
+import React, {
+  ReactElement,
+  useEffect,
+  useState,
+  startTransition,
+} from "react";
+import {
+  ChapterLink,
+  ChaptersButton,
+  useProgressBar,
+} from "@/components/Shared/Progressbar/progress-bar";
 import { useRouter } from "next/navigation";
 
 type Chapter = {
@@ -17,14 +26,14 @@ type Chapter = {
 const SelectChapterList = ({
   book_name,
   current,
-  prevUrl,
-  nextUrl,
+  prev,
+  next,
   device,
 }: {
   book_name: string;
   current: number;
-  prevUrl: string;
-  nextUrl: string;
+  prev: { url: string; number: number } | null;
+  next: { url: string; number: number } | null;
   device: string;
 }) => {
   const [dataset, setDataset] = useState<Array<Chapter>>([]);
@@ -35,6 +44,7 @@ const SelectChapterList = ({
   const [value, setValue] = React.useState(new Set([""]));
   const [inputFocus, setInputFocus] = useState(false);
   const [dataFetching, setDataFetching] = useState(false);
+  const progress = useProgressBar();
   const router = useRouter();
   useEffect(() => {
     const li = document.getElementById(String(selected));
@@ -46,22 +56,23 @@ const SelectChapterList = ({
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent): void => {
       if (localStorage.getItem("search") !== "true") {
-        if (event.key === "z" && prevUrl) {
+        if ((event.key === "z" || event.key === "ArrowLeft") && prev) {
           event.preventDefault();
-
-          document.getElementById("prevButton")!.click();
+          progress.start();
+          const newLink = `/book/${book_name}/${prev.url}?num=${prev.number}`;
+          startTransition(() => {
+            router.push(newLink);
+            progress.done();
+          });
         }
-        if (event.key === "n" && nextUrl) {
+        if ((event.key === "n" || event.key === "ArrowRight") && next) {
           event.preventDefault();
-          document.getElementById("nextButton")!.click();
-        }
-        if (event.key === "ArrowLeft" && prevUrl) {
-          event.preventDefault();
-          document.getElementById("prevButton")!.click();
-        }
-        if (event.key === "ArrowRight" && nextUrl) {
-          event.preventDefault();
-          document.getElementById("nextButton")!.click();
+          progress.start();
+          const newLink = `/book/${book_name}/${next.url}?num=${next.number}`;
+          startTransition(() => {
+            router.push(newLink);
+            progress.done();
+          });
         }
       }
     };
@@ -69,25 +80,20 @@ const SelectChapterList = ({
 
     return () => window.removeEventListener("keydown", handleKeyDown);
   });
-
   return (
     <div className="flex flex-col">
       <div className="flex flex-row">
-        <ChangeButtons
-          isDisabled={prevUrl === null}
-          id="prevButton"
-          href={prevUrl ? `/book/${book_name}/${prevUrl}` : ""}
+        <ChaptersButton
+          className="text-small rounded-sm mx-2 font-medium px-2 gap-0"
+          href={
+            prev
+              ? `/book/${book_name}/${prev.url}?num=${prev.number}`
+              : undefined
+          }
         >
-          {device === "desktop" && (
-            <>
-              <KeyboardArrowLeftRoundedIcon className="pt-[3.5px]" />
-              Prev Chapter
-            </>
-          )}
-          {device === "mobile" && (
-            <KeyboardArrowLeftRoundedIcon className="pt-[3.5px]" />
-          )}
-        </ChangeButtons>
+          <KeyboardArrowLeftRoundedIcon className="mt-1" />
+          {device !== "mobile" ? "Prev Chapter" : null}
+        </ChaptersButton>
         {dataset.length === 0 ? (
           <Button
             isIconOnly
@@ -146,21 +152,17 @@ const SelectChapterList = ({
             <p className="truncate h-5">{value.values().toArray()[0]}</p>
           </Button>
         )}
-        <ChangeButtons
-          isDisabled={nextUrl === null}
-          id="nextButton"
-          href={nextUrl ? `/book/${book_name}/${nextUrl}` : ""}
+        <ChaptersButton
+          className="text-small rounded-sm mx-2 font-medium px-2 gap-0"
+          href={
+            next
+              ? `/book/${book_name}/${next.url}?num=${next.number}`
+              : undefined
+          }
         >
-          {device === "desktop" && (
-            <>
-              Next Chapter
-              <KeyboardArrowRightRoundedIcon className="pt-[3.5px]" />
-            </>
-          )}
-          {device === "mobile" && (
-            <KeyboardArrowRightRoundedIcon className="pt-[3.5px]" />
-          )}
-        </ChangeButtons>
+          {device !== "mobile" ? "Next Chapter" : null}
+          <KeyboardArrowRightRoundedIcon className="mt-1" />
+        </ChaptersButton>
       </div>
       <Backdrop
         sx={(theme) => ({ zIndex: theme.zIndex.drawer + 1 })}
@@ -222,20 +224,27 @@ const SelectChapterList = ({
               .map((item) => (
                 <ListboxItem
                   key={String(item.title)}
-                  value={item.title}
                   id={String(item.number)}
+                  textValue={item.title}
                   classNames={{
                     base: `data-[hover=true]:bg-primary rounded-sm data-[hover=true]:text-white h-8 ${
                       selected === item.number ? "bg-primary text-white" : ""
                     } data-[selectable=true]:focus:bg-primary data-[selectable=true]:focus:text-white`,
                   }}
-                  onPress={() => {
-                    setSelected(item.number);
-                    setValue(new Set([item.title]));
-                    router.push(`/book/${book_name}/${item.url}`);
-                  }}
+                  // selectedIcon={(i)=>{i.icon}}
                 >
-                  {item.title}
+                  <ChapterLink
+                    href={`/book/${book_name}/${item.url}?num=${item.number}`}
+                    color="foreground"
+                    func={() => {
+                      setSelected(item.number);
+                      setValue(new Set([item.title]));
+                      setOpen(false);
+                    }}
+                    className="line-clamp-1"
+                  >
+                    {item.title}
+                  </ChapterLink>
                 </ListboxItem>
               ))}
           </Listbox>

@@ -48,6 +48,10 @@ const RateModal = ({ bkTitle }: { bkTitle: string }) => {
         shadow="md"
         isOpen={modalOpen}
         onOpenChange={setModalOpen}
+        classNames={{
+          base: "before:bg-default-200", // change arrow background
+          content: "px-2.5 py-1 border-small border-divider bg-background",
+        }}
       >
         <PopoverTrigger>
           <Button
@@ -60,7 +64,7 @@ const RateModal = ({ bkTitle }: { bkTitle: string }) => {
           </Button>
         </PopoverTrigger>
 
-        <PopoverContent className="w-[240px]">
+        <PopoverContent className="w-[240px] bg-white dark:bg-black">
           {(titleProps) => (
             <div className="px-1 py-2 w-full">
               <p

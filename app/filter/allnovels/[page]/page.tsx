@@ -4,6 +4,7 @@ import { Metadata } from "next/types";
 import React, { Suspense } from "react";
 import DetailList from "@/components/Elements/DetailCard/DetailList";
 import DetailsListSkeleton from "@/components/Elements/DetailCard/DetailsListSkeleton";
+import CosmicChroniclesCard from "@/components/UI/cosmic-chronicles";
 
 export const experimental_ppr = true;
 
@@ -19,6 +20,7 @@ const AllNovelsPage = ({ params }: { params: Promise<{ page: number }> }) => {
           />
         </Suspense>
       </GradBanner>
+      <CosmicChroniclesCard />
     </div>
   );
 };

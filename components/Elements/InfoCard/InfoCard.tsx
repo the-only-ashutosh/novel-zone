@@ -2,7 +2,7 @@
 import React from "react";
 import { Tooltip, Badge } from "@heroui/react";
 import Image from "next/image";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import StarRateIcon from "@mui/icons-material/StarRate";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { ProgressBarLink } from "@/components/Shared/Progressbar/progress-bar";
@@ -80,7 +80,7 @@ const InfoCard = ({
             src={imgUrl!}
             width={Math.ceil(210 * aspectRatio)}
             height={210}
-            loading="eager"
+            loading="lazy"
             style={{
               borderRadius: "0.375rem",
               height: "210px",

@@ -13,6 +13,7 @@ const SearchList = ({
   closeModal: () => void;
   viewport: string;
 }) => {
+  const [debounced, setDebounced] = React.useState<string | null>("");
   const [data, setData] = React.useState<
     | Array<{
         id: number;
@@ -36,18 +37,25 @@ const SearchList = ({
           setError(true);
         });
     }
-    if (toSearch!.length === 0) {
+    if (debounced!.length === 0) {
       setData(null);
       setError(false);
-    } else if (toSearch!.length > 2) {
+    } else if (debounced!.length > 2) {
       setError(false);
       setData(null);
-      d(toSearch!);
+      d(debounced!);
     }
-  }, [toSearch]);
+  }, [debounced]);
 
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebounced(toSearch);
+    }, 1500);
+
+    return () => clearTimeout(handler);
+  }, [toSearch]);
   return (
-    <div className="bg-none rounded-none absolute flex-grow overflow-y-auto w-full m-0 p-0 top-[56px]">
+    <div className="bg-none rounded-none absolute grow overflow-y-auto w-full m-0 p-0 top-[56px]">
       {error && (
         <Collapse>
           <Searchlistitem

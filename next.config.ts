@@ -1,12 +1,15 @@
 import type { NextConfig } from "next";
-import withBundleAnalyzer from "@next/bundle-analyzer";
 
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "img.novelzone.fun",
+        hostname: "mc.yandex.ru",
+      },
+      {
+        protocol: "https",
+        hostname: "image.novelzone.fun",
         pathname: "/nz/**",
       },
       {
@@ -25,6 +28,11 @@ const nextConfig: NextConfig = {
   },
   compiler: {
     // removeConsole: true,
+  },
+  logging: {
+    fetches: {
+      fullUrl: true,
+    },
   },
   async redirects() {
     return [
@@ -49,8 +57,4 @@ const nextConfig: NextConfig = {
   crossOrigin: "anonymous",
 };
 
-const withBA = withBundleAnalyzer({
-  enabled: process.env.ANALYZE === "true",
-});
-
-export default withBA(nextConfig);
+export default nextConfig;

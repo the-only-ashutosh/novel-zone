@@ -1,20 +1,22 @@
 "use client"
 import React, {  useEffect } from 'react'
 
+const ids = ["R-A-14241249-3","R-A-14241249-6"]
+
 const MiddleAd = (props) => {
     useEffect(()=>{
         setTimeout(()=>{
           window.yaContextCb.push(() => {
             Ya.Context.AdvManager.render({
-            "blockId": "R-A-14241249-2",
-            "renderTo": "yandex_rtb_R-A-14241249-2"
+            "blockId": ids[Math.floor(Math.random() * 2)],
+            "renderTo": "ad-2"
             })
           })
-        },2500)
-    })
+        },1000)
+    },[])
   return (
     <>
-    <div id="yandex_rtb_R-A-14241249-2"/>
+    <div id="ad-2"/>
     {props.para}
     </>
   )

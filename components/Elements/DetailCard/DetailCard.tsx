@@ -1,12 +1,12 @@
 "use server";
 import React from "react";
 import { Card, CardBody, Chip, Badge } from "@heroui/react";
-import Link from "next/link";
 import Image from "next/image";
 import HistoryEduRoundedIcon from "@mui/icons-material/HistoryEduRounded";
 import UpdateRoundedIcon from "@mui/icons-material/UpdateRounded";
 import Rating from "@mui/material/Rating";
 import { getTimeDiff } from "@/service/functions";
+import { ProgressBarLink } from "@/components/Shared/Progressbar/progress-bar";
 
 const DetailCard = ({
   aspectRatio,
@@ -30,7 +30,7 @@ const DetailCard = ({
   htag: boolean;
 }) => {
   return (
-    <Link
+    <ProgressBarLink
       href={`/book/${bookUrl}`}
       color="foreground"
       className="transition-transform duration-700 hover:transform hover:scale-[.99]"
@@ -73,7 +73,7 @@ const DetailCard = ({
                 borderBottomRightRadius: "0px",
                 borderTopRightRadius: "0px",
               }}
-              loading="eager"
+              loading="lazy"
             />
             <div className="flex flex-col ml-4 sm:ml-3 mt-4 sm:pr-1">
               {htag ? (
@@ -124,7 +124,7 @@ const DetailCard = ({
           </CardBody>
         </Card>
       </Badge>
-    </Link>
+    </ProgressBarLink>
   );
 };
 

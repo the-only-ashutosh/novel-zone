@@ -15,7 +15,7 @@ const ButtonGrp = () => {
   const [selected, setSelected] = useState(usePathname().split("/")[2]);
   const [hover, setHover] = useState(0);
   const iconClasses =
-    "text-xl text-default-500 pointer-events-none flex-shrink-0 w-6 h-6";
+    "text-xl text-default-500 pointer-events-none shrink-0 w-6 h-6";
   return (
     <ListboxWrapper>
       <Listbox

@@ -20,8 +20,8 @@ const NewUpdatesList = async ({
       {newUpdates.data.map((element, i) => {
         return (
           <NewUpdatesItem
-            chapTitle={element.title}
-            chapUrl={`/book/${element.book.bookUrl}/${element.url}`}
+            chapTitle={element.book.chapter[0].title}
+            chapUrl={`/book/${element.book.bookUrl}/${element.book.chapter[0].url}?num=${element.book.chapter[0].number}`}
             time={element.addAt}
             title={element.book.title}
             url={element.book.imageUrl}

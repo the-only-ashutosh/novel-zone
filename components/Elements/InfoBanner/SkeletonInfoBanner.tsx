@@ -21,7 +21,7 @@ const SkeletonInfoBanner = () => {
             </Skeleton>
           </div>
           <div className="flex flex-col py-1 w-[152px]">
-            <Skeleton className="rounded-sm mt-[1px] mb-1">
+            <Skeleton className="rounded-sm mt-px mb-1">
               <div className="h-7 w-[144px]" />
             </Skeleton>
             <Skeleton className="rounded-sm mt-1">

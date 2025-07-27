@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import {
   Dropdown,
@@ -9,7 +10,7 @@ import {
 } from "@heroui/react";
 import { getCookie, setCookie, hasCookie } from "cookies-next/client";
 import { ChevronDownIcon } from "../UI/ChevronDownIcon";
-import { getVar } from "@/service/fonts";
+import { useRouter } from "next/navigation";
 
 const FontMenu = () => {
   const [selectedKeys, setSelectedKeys] = React.useState<Selection>(
@@ -20,6 +21,7 @@ const FontMenu = () => {
   const [fValue, setFValue] = React.useState(
     hasCookie("fontStyle") ? getCookie("fontStyle")!.toString() : "Rubik"
   );
+  const router = useRouter();
 
   return (
     <Dropdown>
@@ -49,15 +51,8 @@ const FontMenu = () => {
         variant="flat"
         onSelectionChange={(keys) => {
           setSelectedKeys(new Set([keys.currentKey!]));
-          console.log(keys.valueOf(), keys.anchorKey!);
           setCookie("fontStyle", keys.currentKey!, { sameSite: "strict" });
-          if (document.getElementById("content-page") !== null) {
-            document.getElementById(
-              "content-page"
-            )!.className = `mx-[5%] sm:mx-[2%] md:mx-[3.5%] max-w-[-moz-available] my-6 ${getVar(
-              keys.currentKey!
-            )}`;
-          }
+          router.refresh();
           setFValue(keys.currentKey!);
         }}
       >

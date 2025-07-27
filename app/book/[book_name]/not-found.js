@@ -9,7 +9,7 @@ export default async function NotFound() {
 
   const pathname = headersList.get("pathname");
   return (
-    <div className="flex justify-center items-center w-[100vw] h-[100vh]">
+    <div className="flex justify-center items-center w-screen h-screen">
       <Card className="rounded-sm xl:w-[40vw] lg:w-[50vw] md:w-[65vw] sm:w-[90vw]">
         <CardBody className="flex flex-col p-6">
           <div className="text-2xl font-bold flex items-center justify-center mb-3">

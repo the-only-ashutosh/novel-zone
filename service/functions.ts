@@ -1,3 +1,5 @@
+import { MONTHS } from "@/types/consts";
+
 export const getTimeDiff = (ftime: Date) => {
   if (!ftime) return "none";
   const timeDiff = Math.abs((Date.now() - new Date(ftime).getTime()) / 1000);
@@ -27,7 +29,7 @@ export const getTimeDiff = (ftime: Date) => {
 };
 
 export const getRecentTime = (ftime: Date) => {
-  const s = getTimeDiff(ftime);
+  const s = getTimeDiff(new Date(ftime.getTime() + 19800));
   if (s.includes("second")) {
     return "JUST NOW";
   } else if (s.includes("minute")) {
@@ -81,6 +83,8 @@ export const correctString = (value: string): string => {
     .replaceAll(`n/ô/vel/b//in dot c//om`, "")
     .replaceAll(`n/ô/vel/b//jn dot c//om`, "")
     .replaceAll(`n/o/vel/b//in dot c//om`, "")
+    .replaceAll("Novёlƒire.n(e)t", "NovelZone.fun")
+    .replaceAll(`ηovёlFire .net`, "NovelZone.fun")
     .replaceAll("Ã©", "e")
     .replaceAll("Nôv(el)B\\jnn", "")
     .replaceAll(`n/o/vel/b//jn dot c//om`, "")
@@ -102,7 +106,6 @@ export const correctString = (value: string): string => {
         line.endsWith("My Virtual Library Empire") ||
         line.endsWith("m v|le|mp|yr") ||
         line.endsWith("NovelBin.net")
-        //Freewebnovel
       ) {
         return (
           line
@@ -126,6 +129,14 @@ export const correctString = (value: string): string => {
             .reverse()
             .join("")
         );
+      } else if (
+        line.includes("Source:") ||
+        line.endsWith(".co") ||
+        line.includes("𝕘") ||
+        line.includes("𝕟") ||
+        line.endsWith(".net")
+      ) {
+        return "";
       } else {
         return line;
       }
@@ -191,4 +202,36 @@ export function viewsNumberToString(views: number) {
   } else {
     return `${(views / 1000000).toFixed(2)}M Views`;
   }
+}
+
+export function dateFormat(time: Date) {
+  time = new Date(time);
+  const day = time.getDate();
+  const month = time.getMonth();
+  const year = time.getFullYear();
+
+  return `${MONTHS[month]}-${day}-${year}`;
+}
+
+export function decodePythonBytesString(str: string): string {
+  // Remove the b"" or b'' wrapper
+  const cleaned = str.replace(/^b['"]|['"]$/g, "");
+
+  return (
+    cleaned
+      // Hexadecimal: \xNN
+      .replace(/\\x([0-9A-Fa-f]{2})/g, (_, hex: string) =>
+        String.fromCharCode(parseInt(hex, 16))
+      )
+      // Unicode: \uNNNN
+      .replace(/\\u([0-9A-Fa-f]{4})/g, (_, hex: string) =>
+        String.fromCharCode(parseInt(hex, 16))
+      )
+      // Common escaped characters
+      .replace(/\\n/g, "\n")
+      .replace(/\\t/g, "\t")
+      .replace(/\\r/g, "\r")
+      .replace(/\\\\/g, "\\")
+      .replaceAll(`\\'`, "'")
+  );
 }

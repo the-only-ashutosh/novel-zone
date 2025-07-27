@@ -137,7 +137,7 @@ export default function SearchModal({
               <Input
                 isClearable
                 classNames={{
-                  base: "min-w-full sm:max-w-[10rem] h-[56px]",
+                  base: "min-w-full sm:max-w-40 h-[56px]",
                   mainWrapper: "h-full rounded-b-none border-b-sm",
                   input: "text-medium",
                   inputWrapper:

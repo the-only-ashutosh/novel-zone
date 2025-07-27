@@ -1,8 +1,9 @@
 import { fetchAllCategories } from "@/service/dataoperation";
 import React from "react";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import GradBanner from "@/components/Shared/GradBanner";
-import Link from "next/link";
+import { ProgressBarLink } from "@/components/Shared/Progressbar/progress-bar";
+export const dynamic = "force-dynamic";
 
 const CategoriesPage = async () => {
   const categories = await fetchAllCategories();
@@ -15,12 +16,13 @@ const CategoriesPage = async () => {
             size={{ xs: 12, sm: 5.7, md: 3.8, lg: 2.9 }}
             className="flex items-center justify-center"
           >
-            <Link
+            <ProgressBarLink
               href={`/filter/categories/${category.route}`}
               className="hover:dark:text-primary hover:text-primary dark:text-white w-full"
+              prefetch={false}
             >
               {category.name}
-            </Link>
+            </ProgressBarLink>
           </Grid>
         ))}
       </Grid>

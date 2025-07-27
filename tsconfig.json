@@ -28,7 +28,9 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "app/not-found.js",
-    "components/Elements/Chapter/TopAd.jsx"
+    "components/Elements/Chapter/TopAd.jsx",
+    "components/Elements/Chapter/MiddleAd.jsx",
+    "components/Elements/Chapter/EndAd.jsx"
   ],
   "exclude": ["node_modules"]
 }

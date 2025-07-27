@@ -1,4 +1,4 @@
-type GENRE = {
+export type GENRE = {
   name: string;
   route: string;
 };

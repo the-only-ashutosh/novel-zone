@@ -15,3 +15,11 @@ export const MONTHS: string[] = [
   "Nov",
   "Dec",
 ];
+
+export const KEYWORDS: string[] = [
+  "Novel",
+  "Novel Zone",
+  "Novelbin",
+  "lightnovel",
+  "webnovel",
+];

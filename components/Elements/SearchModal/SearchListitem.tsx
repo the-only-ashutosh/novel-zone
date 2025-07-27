@@ -1,7 +1,6 @@
 import React from "react";
 import { Spinner } from "@heroui/react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { ProgressBarLink } from "@/components/Shared/Progressbar/progress-bar";
 const SearchListitem = ({
   data,
   state,
@@ -13,7 +12,6 @@ const SearchListitem = ({
   clMd: () => void;
   viewport: string;
 }) => {
-  const router = useRouter();
   return (
     <div
       className={`flex items-center py-4 px-2 border-b bg-default-400/50 dark:bg-default-500/20`}
@@ -27,28 +25,24 @@ const SearchListitem = ({
         </div>
       )}
       {data && (
-        <Link
+        <ProgressBarLink
           href={`/book/${data.bookUrl}`}
-          onClick={(e) => {
-            e.preventDefault();
-            router.push(`/book/${data.bookUrl}`);
-            clMd();
-          }}
+          func={() => clMd()}
           className="flex flex-row justify-between min-w-full items-center"
         >
           <div className="flex flex-row dshg items-center">
             <div
-              className={`mr-1 text-zinc-900 dark:text-white/100 line-clamp-1 sm:text-sm min-w-[66%]`}
+              className={`mr-1 text-zinc-900 dark:text-white line-clamp-1 sm:text-sm min-w-[66%]`}
             >
               {data.title}
             </div>
           </div>
           {viewport !== "mobile" && (
             <div
-              className={`flex justify-end text-zinc-900 dark:text-white/100 sm:text-sm w-[34%]`}
+              className={`flex justify-end text-zinc-900 dark:text-white sm:text-sm w-[34%]`}
             >{`Chapters: ${data.chapters}`}</div>
           )}
-        </Link>
+        </ProgressBarLink>
       )}
       {state === "No Books" && (
         <div className="flex justify-center w-full">

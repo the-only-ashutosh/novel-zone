@@ -1,5 +1,5 @@
 import React, { ReactElement } from "react";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import { ProgressBarLink } from "@/components/Shared/Progressbar/progress-bar";
 import { Chip } from "@heroui/react";
 

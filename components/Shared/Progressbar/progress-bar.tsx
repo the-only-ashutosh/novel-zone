@@ -1,6 +1,6 @@
 "use client";
 
-import { setCookie } from "cookies-next/client";
+import { Button } from "@heroui/react";
 import {
   AnimatePresence,
   motion,
@@ -91,7 +91,7 @@ export function ProgressBarLink({
           progress.done();
         });
       }}
-      prefetch={prefetch ?? true}
+      prefetch={prefetch ?? false}
       className={className ?? ""}
     >
       {children}
@@ -104,13 +104,15 @@ export function ChapterLink({
   children,
   color,
   className,
+  func,
   id,
 }: Readonly<{
   href: string;
   children: ReactNode | ReactNode[];
   color?: string;
   className?: string;
-  id: number;
+  func?: () => void;
+  id?: string;
 }>) {
   const progress = useProgressBar();
   const router = useRouter();
@@ -121,19 +123,52 @@ export function ChapterLink({
       color={color ?? ""}
       onClick={(e) => {
         e.preventDefault();
+        if (func) func();
         progress.start();
 
         startTransition(() => {
-          setCookie("number", String(id), { sameSite: "strict", maxAge: 30 });
           router.push(href);
           progress.done();
         });
       }}
       className={className ?? ""}
       prefetch={false}
+      id={id ?? ""}
     >
       {children}
     </Link>
+  );
+}
+
+export function ChaptersButton({
+  children,
+  className,
+  href,
+}: Readonly<{
+  children: ReactNode | ReactNode[];
+  className?: string;
+  href?: string;
+}>) {
+  const progress = useProgressBar();
+  const router = useRouter();
+  return (
+    <Button
+      color="primary"
+      as="a"
+      className={className}
+      isDisabled={href === undefined}
+      href={href}
+      onPress={() => {
+        progress.start();
+
+        startTransition(() => {
+          router.push(href!);
+          progress.done();
+        });
+      }}
+    >
+      {children}
+    </Button>
   );
 }
 

@@ -17,13 +17,12 @@ const RankingCard = ({ data }: { data: RankingData }) => {
           text={`# ${rank}`}
           props={{ className: "relative -bottom-8 -right-8 anim" }}
         />
-        <div className="w-full z-10 flex flex-row rounded-sm overflow-clip">
+        <div className="w-full z-10 flex flex-row rounded-sm overflow-clip h-24">
           <Image
             src={imageUrl}
             width={96 * 0.75}
             height={96}
-            alt="Ranking"
-            priority
+            alt={title}
             style={{ objectFit: "cover" }}
           />
           <div className="flex flex-col mx-1 justify-around">

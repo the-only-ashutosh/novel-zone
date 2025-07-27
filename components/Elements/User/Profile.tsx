@@ -54,6 +54,7 @@ export function formatDate(date: Date) {
 const ProfileComp = ({ profile }: { profile: Profile }) => {
   const [userData, setUserData] = useState<Profile>(profile);
   const [editMode, setEditMode] = useState(true);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [ageError, setAgeError] = useState(false);
   const [formSubmit, setFormSubmit] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
@@ -191,7 +192,7 @@ const ProfileComp = ({ profile }: { profile: Profile }) => {
             }}
             readOnly
             startContent={
-              <MailIcon className="text-xl text-primary pointer-events-none flex-shrink-0" />
+              <MailIcon className="text-xl text-primary pointer-events-none shrink-0" />
             }
             endContent={
               <button
@@ -244,7 +245,7 @@ const ProfileComp = ({ profile }: { profile: Profile }) => {
             }}
             // placeholderValue={new CalendarDate(1995, 11, 6)}
             endContent={
-              <CalendarIcon className="text-2xl text-primary pointer-events-none flex-shrink-0" />
+              <CalendarIcon className="text-2xl text-primary pointer-events-none shrink-0" />
             }
           />
         </div>

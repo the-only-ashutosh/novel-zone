@@ -3,11 +3,13 @@ import React, { useState } from "react";
 import { Tabs, Tab } from "@heroui/react";
 import RankingGrid from "./RankingGrid";
 import { CommonData } from "@/types";
+import RankingSkeletonGrid from "./RankingSkeletonGrid";
 
 const RankingSection = ({ rankings }: { rankings: CommonData }) => {
   const [selected, setSelected] = useState<"daily" | "weekly" | "monthly">(
-    "weekly"
+    "daily"
   );
+  if (rankings === "Error") return <RankingSkeletonGrid />;
   return (
     <div className="w-full flex flex-col items-center">
       <Tabs

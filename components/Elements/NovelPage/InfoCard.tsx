@@ -3,23 +3,37 @@ import React from "react";
 import dynamic from "next/dynamic";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import GenreGrid from "./GenreGrid";
-import { ProgressBarLink } from "@/components/Shared/Progressbar/progress-bar";
+import {
+  ChapterLink,
+  ProgressBarLink,
+} from "@/components/Shared/Progressbar/progress-bar";
 import { ColorBookmark } from "@/components/icons";
 import CoverImage from "./CoverImage";
+import { dateFormat } from "@/service/functions";
 const RateModal = dynamic(() => import("./RateModal"));
+export type chM = {
+  number: number;
+  title: string;
+  addAt: Date;
+  url: string;
+} | null;
 
 const InfoCard = ({
   url,
+  bookUrl,
   title,
   genres,
   author,
   status,
-  aspectRatio,
-  chOne,
+  first,
+  last,
   views,
   ratings,
+  count,
+  updated,
 }: {
   url: string;
+  bookUrl: string;
   title: string;
   genres: {
     name: string;
@@ -27,10 +41,12 @@ const InfoCard = ({
   }[];
   author: string;
   status: string;
-  aspectRatio: number;
-  chOne: string;
+  first: chM;
+  last: chM;
   views: number;
   ratings: number;
+  count: number;
+  updated: Date;
 }) => {
   return (
     <div className="flex flex-row sm:flex-col md:flex-col gap-y-2 items-center mx-[5%] max-h-fit w-[90%]">
@@ -91,32 +107,46 @@ const InfoCard = ({
                     </span>
                   }
                 </h3>
-                <h3>Chapters:&nbsp;{"1111"}</h3>
+                <h3 className="mt-1 flex items-center">
+                  Chapters:&nbsp;{count}
+                </h3>
                 <h3 className="mt-1 flex items-center">
                   Views:&nbsp;{views}&nbsp;
                   <VisibilityIcon color="error" />
                 </h3>
               </div>
-              <div className="flex flex-row mt-auto w-1/2">
+              <div className="flex flex-row mt-auto w-full">
                 <Button
                   color="primary"
                   className="mr-1 text-medium w-1/2"
                   radius="sm"
-                  as="a"
-                  href={chOne}
-                  isDisabled={chOne === "disabled"}
+                  isDisabled={!first}
                 >
-                  Read First
+                  {first ? (
+                    <ChapterLink
+                      href={`/book/${bookUrl}/${first.url}?num=${first.number}`}
+                    >
+                      Read First
+                    </ChapterLink>
+                  ) : (
+                    "Read First"
+                  )}
                 </Button>
                 <Button
                   color="danger"
                   className="text-medium w-1/2"
                   radius="sm"
-                  as="a"
-                  href={chOne}
-                  isDisabled={chOne === "disabled"}
+                  isDisabled={!last}
                 >
-                  Read Last
+                  {last ? (
+                    <ChapterLink
+                      href={`/book/${bookUrl}/${last.url}?num=${last.number}`}
+                    >
+                      Read Last
+                    </ChapterLink>
+                  ) : (
+                    "Read Last"
+                  )}
                 </Button>
               </div>
             </div>
@@ -126,7 +156,10 @@ const InfoCard = ({
                   Published by :&nbsp;&nbsp;<strong>{"Novel Zone"}</strong>
                 </h3>
                 <h3 className="text-medium bg-clip-text text-transparent bg-gradient-to-b from-[#5EA2EF] to-[#0072F5] my-2">
-                  Published on :&nbsp;<strong>{"01 Feb 2025"}</strong>
+                  Published on :
+                  <strong>
+                    &nbsp;{dateFormat(new Date(first?.addAt ?? updated))}
+                  </strong>
                 </h3>
               </div>
               <div className="flex flex-row justify-around mt-1 mb-2">

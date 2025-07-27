@@ -1,9 +1,9 @@
 import React from "react";
 import { SingleChapter } from "./ChaptersCard";
 import { getTimeDiff } from "@/service/functions";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import { Card } from "@heroui/react";
-import { ProgressBarLink } from "@/components/Shared/Progressbar/progress-bar";
+import { ChapterLink } from "@/components/Shared/Progressbar/progress-bar";
 import Like from "./Like";
 
 const Chapters = ({
@@ -24,9 +24,9 @@ const Chapters = ({
             className="transition-transform duration-300 hover:transform hover:scale-95"
           >
             <Card className={`flex flex-row rounded-sm justify-between`}>
-              <ProgressBarLink
-                href={`${pathname}/${chapters.url}`}
-                prefetch={false}
+              <ChapterLink
+                href={`${pathname}/${chapters.url}?num=${chapters.number}`}
+                color="foreground"
                 className="flex flex-row pr-2"
               >
                 <div className="flex justify-center items-center min-w-20 border-small rounded-l-sm border-gray-800 dark:border-white">
@@ -36,7 +36,7 @@ const Chapters = ({
                   <p className="line-clamp-1">{chapters.title}</p>
                   <p>{getTimeDiff(chapters.addAt)}&nbsp;ago</p>
                 </div>
-              </ProgressBarLink>
+              </ChapterLink>
               <Like
                 book={pathname.split("/")[2]}
                 number={chapters.number}

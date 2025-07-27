@@ -6,6 +6,7 @@ import DetailList from "@/components/Elements/DetailCard/DetailList";
 import DetailsListSkeleton from "@/components/Elements/DetailCard/DetailsListSkeleton";
 
 export const experimental_ppr = true;
+
 const HotNovels = () => {
   return (
     <GradBanner main="Hot Novels" sub="New Books like by Readers">

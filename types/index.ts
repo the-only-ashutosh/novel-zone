@@ -1,3 +1,4 @@
+import { GENRE } from "@/service/genre";
 import { Decimal } from "@prisma/client/runtime/library";
 import { SVGProps } from "react";
 
@@ -61,14 +62,17 @@ export type newUpdates =
           author: {
             name: string;
           };
+          chapter: {
+            number: number;
+            title: string;
+            url: string;
+          }[];
           title: string;
           bookUrl: string;
           imageUrl: string;
           aspectRatio: Decimal;
         };
-        title: string;
         addAt: Date;
-        url: string;
       }[];
       pages: number;
     };
@@ -120,7 +124,6 @@ export type Profile = {
 };
 
 export type RecentsChapter = {
-  id: number;
   number: number;
   addAt: Date;
   url: string;
@@ -133,8 +136,148 @@ export type RankingData = {
   views: string;
   rank: number;
 };
-export type CommonData = {
-  daily: RankingData[];
-  weekly: RankingData[];
-  monthly: RankingData[];
+export type CommonData =
+  | {
+      daily: RankingData[];
+      weekly: RankingData[];
+      monthly: RankingData[];
+    }
+  | "Error";
+
+export type ChapterData =
+  | {
+      content: string;
+      prevChapter: {
+        number: number;
+        url: string;
+      } | null;
+      nextChapter: {
+        number: number;
+        url: string;
+      } | null;
+      number: number;
+      book: {
+        title: string;
+        bookUrl: string;
+      };
+      title: string;
+      addAt: Date;
+      likes: number;
+    }
+  | "Invalid Chapter"
+  | undefined;
+
+export type BookData =
+  | {
+      first: {
+        number: number;
+        title: string;
+        url: string;
+        addAt: Date;
+      } | null;
+      last: {
+        number: number;
+        title: string;
+        url: string;
+        addAt: Date;
+      } | null;
+      id: number;
+      status: string;
+      title: string;
+      imageUrl: string;
+      bookUrl: string;
+      aspectRatio: Decimal;
+      updatedAt: Date;
+      views: number;
+      author: {
+        id: number;
+        name: string;
+        route: string;
+      };
+      category: {
+        name: string;
+        route: string;
+      }[];
+      chapter: {
+        number: number;
+      }[];
+      genre: {
+        name: string;
+        route: string;
+      }[];
+      description: string;
+      ratings: Decimal;
+    }
+  | "Invalid Book";
+
+export type FooterData = {
+  randomCategories: {
+    name: string;
+    id: number;
+    route: string;
+  }[];
+  randomGenres: GENRE[];
+  randomBooks: {
+    title: string;
+    id: number;
+    bookUrl: string;
+  }[];
+};
+
+export type PopularData = {
+  title: string;
+  id: number;
+  bookUrl: string;
+  imageUrl: string;
+  aspectRatio: Decimal;
+  ratings: Decimal;
+  views: number;
+  status: string;
+  _count: {
+    chapter: number;
+  };
+};
+
+export type RecentsData = {
+  bookUrl: string;
+  imageUrl: string;
+  title: string;
+  last: {
+    number: number;
+    addAt: Date;
+    url: string;
+  };
+  secondLast: {
+    number: number;
+    addAt: Date;
+    url: string;
+  };
+  updatedAt: Date;
+};
+
+export type Ranking = {
+  daily: {
+    rank: number;
+    views: string;
+    title: string;
+    bookUrl: string;
+    imageUrl: string;
+    daily: number;
+  }[];
+  weekly: {
+    rank: number;
+    views: string;
+    title: string;
+    bookUrl: string;
+    imageUrl: string;
+    weekly: number;
+  }[];
+  monthly: {
+    rank: number;
+    views: string;
+    title: string;
+    bookUrl: string;
+    imageUrl: string;
+    monthly: number;
+  }[];
 };

@@ -1,10 +1,6 @@
-import React from "react";
+import React, { cache } from "react";
 import dynamic from "next/dynamic";
-import {
-  addView,
-  fetchBookDetails,
-  fetchMatchingBooks,
-} from "@/service/dataoperation";
+import { fetchBookDetails, fetchMatchingBooks } from "@/service/dataoperation";
 import AutoStoriesRoundedIcon from "@mui/icons-material/AutoStoriesRounded";
 import { Typography } from "@mui/material";
 import type { Metadata } from "next";
@@ -15,7 +11,9 @@ import InfoList from "@/components/Elements/InfoCard/InfoList";
 import Script from "next/script";
 import DescCard from "@/components/Elements/NovelPage/DescCard";
 import CategoryGrid from "@/components/Elements/NovelPage/CategoryGrid";
-import { ProgressBarLink } from "@/components/Shared/Progressbar/progress-bar";
+import { ChapterLink } from "@/components/Shared/Progressbar/progress-bar";
+import { TrackBook } from "@/utils/trackViewedbook";
+import CosmicChroniclesCard from "@/components/UI/cosmic-chronicles";
 const ChaptersCard = dynamic(
   () => import("@/components/Elements/NovelPage/ChaptersCard")
 );
@@ -30,6 +28,10 @@ const SmallInfoCard = dynamic(
 
 type SearchParams = Promise<{ [key: string]: string }>;
 
+const getBookData = cache((book: string) => {
+  return fetchBookDetails(book);
+});
+
 const BookPage = async ({
   params,
   searchParams,
@@ -37,133 +39,121 @@ const BookPage = async ({
   params: Promise<{ book_name: string }>;
   searchParams: SearchParams;
 }) => {
-  const { book_name } = await params;
+  let book_name = decodeURIComponent((await params).book_name);
+  if (book_name.endsWith("-novel")) {
+    book_name = book_name.substring(0, book_name.length - 6);
+  }
   const v = searchParams;
-  const b = fetchBookDetails(decodeURI(book_name));
-  const m = fetchMatchingBooks(decodeURI(book_name));
-  const [bookDetail, { viewport }, like] = await Promise.all([
-    b,
-    v,
-    m,
-    addView(decodeURI(book_name)),
-  ]);
+  const b = getBookData(book_name);
+  const m = fetchMatchingBooks(decodeURIComponent(book_name));
+  const [bookDetail, { viewport }, like] = await Promise.all([b, v, m]);
+  if (bookDetail === "Invalid Book") return notFound();
   return (
     <div className="flex items-center flex-col py-[2.5%]">
-      {bookDetail !== "Invalid Book" && bookDetail !== null ? (
-        <>
-          {viewport === "desktop" && (
-            <InfoCard
-              author={bookDetail.author.name}
-              genres={bookDetail.genre}
-              status={bookDetail.status}
-              title={bookDetail.title}
-              url={bookDetail.imageUrl}
-              aspectRatio={Number(bookDetail.aspectRatio)}
-              views={bookDetail.views}
-              ratings={
-                isNaN(Number(bookDetail.ratings))
-                  ? 0
-                  : Number(bookDetail.ratings)
-              }
-              chOne={
-                bookDetail.chapter.length > 0
-                  ? `/book/${bookDetail.bookUrl}/${
-                      bookDetail.chapter.filter((x) => x.number === 1)[0].url
-                    }`
-                  : "disabled"
-              }
-            />
-          )}
-          {viewport === "mobile" && (
-            <SmallInfoCard
-              author={bookDetail.author.name}
-              genres={bookDetail.genre}
-              status={bookDetail.status}
-              title={bookDetail.title}
-              imgUrl={bookDetail.imageUrl}
-              views={bookDetail.views}
-              ratings={
-                isNaN(Number(bookDetail.ratings))
-                  ? 0
-                  : Number(bookDetail.ratings)
-              }
-              aspectRatio={Number(bookDetail.aspectRatio)}
-              chOne={
-                bookDetail.chapter.length > 0
-                  ? `/book/${bookDetail.bookUrl}/${
-                      bookDetail.chapter.filter((x) => x.number === 1)[0].url
-                    }`
-                  : "disabled"
-              }
-            />
-          )}
-          {bookDetail.category.length > 0 && (
-            <CategoryGrid category={bookDetail.category} />
-          )}
-          <div className="flex flex-row w-[90vw] colrow px-2 sm:px-1 border-t-1 border-b-1 border-dashed py-3 mt-8">
-            <div className="flex font-bold text-medium">
-              <AutoStoriesRoundedIcon />
-              &nbsp; Latest Chapter
-            </div>
-            <div className="flex colrow justify-between w-[65%] lg:w-[73%] xl:w-[80%] sm:w-full smallmargin">
-              <ProgressBarLink
-                href={
-                  bookDetail.chapter.length > 1
-                    ? `/book/${bookDetail.bookUrl}/${
-                        bookDetail.chapter.filter((x) => x.number !== 1)[0].url
-                      }`
-                    : "#"
-                }
-                prefetch={false}
-              >
-                <Typography className="text-primary">
-                  {bookDetail.chapter.length > 1
-                    ? bookDetail.chapter.filter((x) => x.number !== 1)[0].title
-                    : `Book is updating...`}
-                </Typography>
-              </ProgressBarLink>
-              <Typography>
-                {bookDetail.chapter.length > 1
-                  ? getTimeDiff(
-                      bookDetail.chapter.filter((x) => x.number !== 1)[0].addAt
-                    )
-                  : `Some days`}
-                &nbsp;ago
-              </Typography>
-            </div>
-          </div>
-          <ChaptersCard
-            book={bookDetail.id}
-            chapters={bookDetail._count.chapter}
-            viewport={viewport}
-            descCard={
-              <DescCard
-                description={new TextDecoder().decode(bookDetail.description)}
-              />
-            }
-          />
-          {like !== "Invalid Book" && (
-            <GradBanner
-              main={`Genre ${like.random}`}
-              sub={`Books you might like`}
+      <CosmicChroniclesCard />
+      <TrackBook bookId={bookDetail.id} />
+      {viewport === "desktop" ? (
+        <InfoCard
+          author={bookDetail.author.name}
+          genres={bookDetail.genre}
+          status={bookDetail.status}
+          title={bookDetail.title}
+          url={bookDetail.imageUrl}
+          bookUrl={book_name}
+          views={bookDetail.views}
+          ratings={
+            isNaN(Number(bookDetail.ratings)) ? 0 : Number(bookDetail.ratings)
+          }
+          first={bookDetail.first}
+          last={bookDetail.last}
+          count={
+            bookDetail.chapter.length > 0 ? bookDetail.chapter[0].number : 0
+          }
+          updated={bookDetail.updatedAt}
+        />
+      ) : (
+        <SmallInfoCard
+          author={bookDetail.author.name}
+          genres={bookDetail.genre}
+          status={bookDetail.status}
+          title={bookDetail.title}
+          imgUrl={bookDetail.imageUrl}
+          bookUrl={book_name}
+          views={bookDetail.views}
+          ratings={
+            isNaN(Number(bookDetail.ratings)) ? 0 : Number(bookDetail.ratings)
+          }
+          first={bookDetail.first}
+          last={bookDetail.last}
+          count={
+            bookDetail.chapter.length > 0 ? bookDetail.chapter[0].number : 0
+          }
+        />
+      )}
+      {bookDetail.category.length > 0 && (
+        <CategoryGrid category={bookDetail.category} />
+      )}
+      <div className="flex flex-row w-[90vw] colrow px-2 sm:px-1 border-t-1 border-b-1 border-dashed py-3 mt-8">
+        <div className="flex font-bold text-medium">
+          <AutoStoriesRoundedIcon />
+          &nbsp; Latest Chapter
+        </div>
+        <div className="flex colrow justify-between w-[65%] lg:w-[73%] xl:w-[80%] sm:w-full smallmargin">
+          {bookDetail.last ? (
+            <ChapterLink
+              href={`/book/${book_name}/${bookDetail.last.url}?num=${bookDetail.last.number}`}
+              className="text-primary"
             >
-              <InfoList data={like.data} cls="w-full" r={false} />
-            </GradBanner>
+              {bookDetail.last.title}
+            </ChapterLink>
+          ) : (
+            <Typography className="text-primary">
+              Book is updating...
+            </Typography>
           )}
-          <Script
-            async
-            src="https://www.googletagmanager.com/gtag/js?id=G-TESRE0F8SW"
-          />
-          <Script id="tag-manager">{`window.dataLayer = window.dataLayer || [];
+          <Typography>
+            {bookDetail.last
+              ? getTimeDiff(new Date(bookDetail.last.addAt))
+              : `Some days`}
+            &nbsp;ago
+          </Typography>
+        </div>
+      </div>
+      <ChaptersCard
+        book={bookDetail.id}
+        chapters={
+          bookDetail.chapter.length > 0 ? bookDetail.chapter[0].number : 0
+        }
+        viewport={viewport}
+        descCard={<DescCard description={bookDetail.description} />}
+      />
+      {like !== "Invalid Book" && (
+        <GradBanner main={`Genre ${like.random}`} sub={`Books you might like`}>
+          <InfoList data={like.data} cls="w-full" r={false} />
+        </GradBanner>
+      )}
+      <Script
+        strategy="afterInteractive"
+        async
+        src="https://www.googletagmanager.com/gtag/js?id=G-TESRE0F8SW"
+      />
+      <Script
+        strategy="afterInteractive"
+        id="tag-manager"
+      >{`window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
         gtag('config', 'G-TESRE0F8SW');`}</Script>
-        </>
-      ) : (
-        <div className="w-ful h-full flex justify-center items-center">
-          {notFound()}
-        </div>
-      )}
+      <Script strategy="afterInteractive" id="YadTag" type="text/javascript">
+        {`(function(m,e,t,r,i,k,a){
+                m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+                m[i].l=1*new Date();
+                for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+                k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+            })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=103493404', 'ym');
+        
+            ym(103493404, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true});`}
+      </Script>
     </div>
   );
 };
@@ -176,41 +166,59 @@ export async function generateMetadata({
   params: Promise<{ book_name: string }>;
 }): Promise<Metadata> {
   const { book_name } = await params;
-  const book = await fetchBookDetails(book_name);
-
-  if (book !== "Invalid Book" && book !== null) {
+  const book = await getBookData(decodeURIComponent(book_name));
+  if (book === "Invalid Book") {
     return {
-      title: `${book.title.trim().substring(0, 55)}`,
+      title: "Books",
       referrer: "origin-when-cross-origin",
-      description: new TextDecoder()
-        .decode(book.description)
-        .replaceAll("[hereisbreak]", " ")
-        .substring(0, 50)
-        .trim(),
-      keywords: [
-        "Novel",
-        "Novel Zone",
-        "Novelbin",
-        "lightnovel",
-        "webnovel",
-        book.title,
-        ...book.genre.map((e) => e.name),
-        ...book.category.map((e) => e.name),
-      ],
-      twitter: {
-        card: "summary_large_image",
-        title: book.title,
-        description: new TextDecoder()
-          .decode(book.description)
-          .replaceAll("[hereisbreak]", " ")
-          .substring(0, 155),
-        images: book.imageUrl,
-      },
+      keywords: ["Novel", "Novel Zone", "Novelbin", "lightnovel", "webnovel"],
     };
   }
+
   return {
-    title: "Books",
+    title: {
+      template: `%s | ${book.title.trim().substring(0, 55)}`,
+      default: `${book.title.trim().substring(0, 55)}`,
+    },
     referrer: "origin-when-cross-origin",
-    keywords: ["Novel", "Novel Zone", "Novelbin", "lightnovel", "webnovel"],
+    description:
+      book.description
+        .replaceAll("[hereisbreak]", " ")
+        .substring(0, 155)
+        .trim() +
+      ` Read ${book.title} only on Novel Zone. By Author ${
+        book.author.name
+      } . ${book.title} has total of ${
+        book.last?.number
+      } chapters updated. The last chapter was uploaded on ${new Date(
+        book.last?.addAt ?? book.first?.addAt ?? book.updatedAt
+      ).toLocaleDateString()}`,
+    keywords: [
+      "Novel",
+      "Novel Zone",
+      "Novelbin",
+      "lightnovel",
+      "webnovel",
+      book.title,
+      ...book.genre.map((e) => e.name),
+      ...book.category.map((e) => e.name),
+    ],
+    twitter: {
+      card: "summary_large_image",
+      title: book.title,
+      description:
+        book.description
+          .replaceAll("[hereisbreak]", " ")
+          .substring(0, 70)
+          .trim() +
+        ` Read ${book.title} only on Novel Zone. By Author ${
+          book.author.name
+        } . ${book.title} has total of ${
+          book.last?.number
+        } chapters updated. The last chapter was uploaded on ${new Date(
+          book.last?.addAt ?? book.first?.addAt ?? book.updatedAt
+        ).toLocaleDateString()}`,
+      images: book.imageUrl,
+    },
   };
 }

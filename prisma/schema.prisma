@@ -33,7 +33,7 @@ model book {
   urlShrink   String     @unique
   daily       Int        @default(0)
   monthly     Int        @default(0)
-  update      DateTime   @default(now())
+  createdAt   DateTime   @default(now())
   weekly      Int        @default(0)
   author      author     @relation(fields: [authorId], references: [id])
   chapter     chapter[]
@@ -41,7 +41,6 @@ model book {
   category    category[] @relation("booktocategory")
   genre       genre[]    @relation("booktogenre")
 
-  @@index([authorId], map: "book_authorId_fkey")
 }
 
 model category {
@@ -53,7 +52,6 @@ model category {
 
 model chapter {
   id      Int      @id @default(autoincrement())
-  content Bytes
   url     String
   likes   Int
   views   Int
@@ -63,7 +61,6 @@ model chapter {
   addAt   DateTime @default(now())
   book    book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
 
-  @@index([bookId], map: "chapter_bookId_fkey")
 }
 
 model genre {
@@ -77,13 +74,6 @@ model recents {
   id     Int      @id @default(autoincrement())
   bookId Int      @unique
   addAt  DateTime @updatedAt
-  url    String
-  title  String
+  number Int
   book   book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
-}
-
-model currentC {
-  id   Int @unique @default(autoincrement())
-  cNo  Int
-  page Int
 }

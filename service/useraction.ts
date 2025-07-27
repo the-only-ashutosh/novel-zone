@@ -61,8 +61,5 @@ export async function updateUser(formData: FormData) {
 }
 
 export async function checkUserName(userName: string) {
-  return await xata.db.users
-    .filter({ userName })
-    .select(["xata_id"])
-    .getFirst();
+  return await xata.db.users.filter({ userName }).select(["id"]).getFirst();
 }

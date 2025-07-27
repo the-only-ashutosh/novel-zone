@@ -1,10 +1,6 @@
-import {
-  fetchRandomBooks,
-  fetchRandomCategories,
-  fetchRandomGenres,
-} from "@/service/dataoperation";
+import { ProgressBarLink } from "@/components/Shared/Progressbar/progress-bar";
+import { FooterData, HOST } from "@/types";
 import { Button } from "@heroui/react";
-import Link from "next/link";
 import React from "react";
 import { FaFacebook, FaTwitter, FaInstagram, FaEnvelope } from "react-icons/fa";
 
@@ -17,12 +13,18 @@ const aboutUs = (
   </Button>
 );
 
-const Footer = async () => {
-  const c = fetchRandomCategories();
+async function getFooterData(): Promise<FooterData> {
+  return fetch(`${HOST}/api/page/getFooter`, {
+    cache: "force-cache",
+    next: { revalidate: 3600 * 4 },
+  }).then(async (res) => {
+    const data: FooterData = await res.json();
+    return data;
+  });
+}
 
-  const p = fetchRandomBooks();
-  const g = fetchRandomGenres();
-  const [categories, popularNovels, genres] = await Promise.all([c, p, g]);
+const Footer = async () => {
+  const footerData = await getFooterData();
 
   return (
     <div className="">
@@ -32,16 +34,16 @@ const Footer = async () => {
             <div className="space-y-4">
               <h2 className="text-lg font-semibold">Genres</h2>
               <ul className="space-y-2">
-                {genres.map((genre) => (
+                {footerData.randomGenres.map((genre) => (
                   <li key={genre.name}>
-                    <Link
+                    <ProgressBarLink
                       href={`/filter/genre/${genre.route}`}
                       className="text-sm hover:text-primary transition duration-300"
                       aria-label={`Browse ${genre.name}`}
                       prefetch={false}
                     >
                       {genre.name}
-                    </Link>
+                    </ProgressBarLink>
                   </li>
                 ))}
               </ul>
@@ -51,16 +53,16 @@ const Footer = async () => {
             <div className="space-y-4">
               <h2 className="text-lg font-semibold">Categories</h2>
               <ul className="space-y-2">
-                {categories.map((category) => (
+                {footerData.randomCategories.map((category) => (
                   <li key={category.name}>
-                    <Link
+                    <ProgressBarLink
                       href={`/filter/categories/${category.route}`}
                       className="text-sm hover:text-primary transition duration-300"
                       aria-label={`Browse ${category.name}`}
                       prefetch={false}
                     >
                       {category.name}
-                    </Link>
+                    </ProgressBarLink>
                   </li>
                 ))}
               </ul>
@@ -70,16 +72,16 @@ const Footer = async () => {
             <div className="space-y-4">
               <h2 className="text-lg font-semibold">Popular Novels</h2>
               <ul className="space-y-2">
-                {popularNovels.map((novel, index) => (
+                {footerData.randomBooks.map((novel, index) => (
                   <li key={index + novel.id}>
-                    <Link
+                    <ProgressBarLink
                       href={`/book/${novel.bookUrl}`}
                       className="text-sm hover:text-primary transition duration-300"
                       aria-label={`Read ${novel.title}`}
                       prefetch={false}
                     >
                       {novel.title}
-                    </Link>
+                    </ProgressBarLink>
                   </li>
                 ))}
               </ul>
@@ -90,40 +92,40 @@ const Footer = async () => {
               <h2 className="text-lg font-semibold">Contact Us</h2>
               <div className="flex items-center space-x-2">
                 <FaEnvelope className="text-gray-400" />
-                <Link
+                <ProgressBarLink
                   href="mailto:support@novelzone.fun"
                   className="text-sm  hover:text-primary transition duration-300"
                   aria-label="Email us"
                   prefetch={false}
                 >
                   support@novelzone.fun
-                </Link>
+                </ProgressBarLink>
               </div>
               <div className="flex space-x-4">
-                <Link
+                <ProgressBarLink
                   href="#facebook"
                   className="text-gray-400 hover:text-primary transition duration-300"
                   aria-label="Follow us on Facebook"
                   prefetch={false}
                 >
                   <FaFacebook size={24} />
-                </Link>
-                <Link
+                </ProgressBarLink>
+                <ProgressBarLink
                   href="#twitter"
                   className="text-gray-400 hover:text-primary transition duration-300"
                   aria-label="Follow us on Twitter"
                   prefetch={false}
                 >
                   <FaTwitter size={24} />
-                </Link>
-                <Link
+                </ProgressBarLink>
+                <ProgressBarLink
                   href="#instagram"
                   className="text-gray-400 hover:text-primary transition duration-300"
                   aria-label="Follow us on Instagram"
                   prefetch={false}
                 >
                   <FaInstagram size={24} />
-                </Link>
+                </ProgressBarLink>
               </div>
               {aboutUs}
             </div>

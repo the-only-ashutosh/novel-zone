@@ -8,11 +8,11 @@ import {
   DropdownTrigger,
   Button,
 } from "@heroui/react";
-import Link from "next/link";
 import dynamic from "next/dynamic";
 import { ChevronDownIcon } from "@/components/UI/ChevronDownIcon";
 import { useRouter } from "next/navigation";
 import SettingsMenu from "../Settings";
+import { ProgressBarLink } from "../Progressbar/progress-bar";
 const GenreList = dynamic(() => import("./GenreList"), { ssr: true });
 
 const NavMenu = ({
@@ -62,7 +62,7 @@ const NavMenu = ({
           menuclose(false);
         }}
       >
-        <Link
+        <ProgressBarLink
           href="/filter/categories"
           aria-current={loc.startsWith("/filter/categories") || "page"}
           color={
@@ -70,7 +70,7 @@ const NavMenu = ({
           }
         >
           Categories
-        </Link>
+        </ProgressBarLink>
       </NavbarMenuItem>
       <NavbarMenuItem
         onClick={() => {
@@ -78,13 +78,13 @@ const NavMenu = ({
           menuclose(false);
         }}
       >
-        <Link
+        <ProgressBarLink
           aria-current={loc.startsWith("/filter/allnovels") || "page"}
           color={loc.startsWith("/filter/allnovels") ? "primary" : "foreground"}
           href="/filter/allnovels"
         >
           All Novels
-        </Link>
+        </ProgressBarLink>
       </NavbarMenuItem>
       <NavbarMenuItem
         onClick={() => {
@@ -92,13 +92,13 @@ const NavMenu = ({
           menuclose(false);
         }}
       >
-        <Link
+        <ProgressBarLink
           aria-current={loc.startsWith("/filter/hotnovels") || "page"}
           color={loc.startsWith("/filter/hotnovels") ? "primary" : "foreground"}
           href="/filter/hotnovels"
         >
           Hot Novels
-        </Link>
+        </ProgressBarLink>
       </NavbarMenuItem>
       <NavbarMenuItem
         onClick={() => {
@@ -106,7 +106,7 @@ const NavMenu = ({
           menuclose(false);
         }}
       >
-        <Link
+        <ProgressBarLink
           aria-current={loc.startsWith("/filter/newupdates") || "page"}
           color={
             loc.startsWith("/filter/newupdates") ? "primary" : "foreground"
@@ -114,7 +114,7 @@ const NavMenu = ({
           href="/filter/newupdates"
         >
           New Updates
-        </Link>
+        </ProgressBarLink>
       </NavbarMenuItem>
       <NavbarMenuItem
         onClick={() => {
@@ -122,13 +122,13 @@ const NavMenu = ({
           menuclose(false);
         }}
       >
-        <Link
+        <ProgressBarLink
           aria-current={loc.startsWith("/filter/completed") || "page"}
           color={loc.startsWith("/filter/completed") ? "primary" : "foreground"}
           href="/filter/completed"
         >
           Completed
-        </Link>
+        </ProgressBarLink>
       </NavbarMenuItem>
       <NavbarMenuItem
         onClick={() => {
@@ -136,7 +136,7 @@ const NavMenu = ({
           menuclose(false);
         }}
       >
-        <Link
+        <ProgressBarLink
           aria-current={loc.startsWith("/filter/mostpopular") || "page"}
           color={
             loc.startsWith("/filter/mostpopular") ? "primary" : "foreground"
@@ -144,7 +144,7 @@ const NavMenu = ({
           href="/filter/mostpopular"
         >
           Most Popular
-        </Link>
+        </ProgressBarLink>
       </NavbarMenuItem>
       <NavbarMenuItem className="flex justify-between items-center">
         <span>Settings</span>

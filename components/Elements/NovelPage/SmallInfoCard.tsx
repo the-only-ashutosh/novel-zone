@@ -4,22 +4,29 @@ import Image from "next/image";
 import dynamic from "next/dynamic";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import GenreGrid from "./GenreGrid";
-import { ProgressBarLink } from "@/components/Shared/Progressbar/progress-bar";
+import {
+  ChapterLink,
+  ProgressBarLink,
+} from "@/components/Shared/Progressbar/progress-bar";
 import { ColorBookmark } from "@/components/icons";
+import { chM } from "./InfoCard";
 const RateModal = dynamic(() => import("./RateModal"));
 
 const SmallInfoCard = ({
   imgUrl,
+  bookUrl,
   title,
   genres,
   author,
   status,
-  aspectRatio,
-  chOne,
   views,
+  first,
+  last,
   ratings,
+  count,
 }: {
   imgUrl: string;
+  bookUrl: string;
   title: string;
   genres: {
     name: string;
@@ -27,10 +34,11 @@ const SmallInfoCard = ({
   }[];
   author: string;
   status: string;
-  aspectRatio: number;
-  chOne: string;
   views: number;
+  first: chM;
+  last: chM;
   ratings: number;
+  count: number;
 }) => {
   return (
     <div className={`flex flex-col gap-y-2 items-center rounded-sm`}>
@@ -54,7 +62,7 @@ const SmallInfoCard = ({
           src={imgUrl}
           alt={title}
           width={280}
-          height={Math.ceil(280 / aspectRatio)}
+          height={Math.ceil(280 / 0.75)}
           style={{
             objectFit: "cover",
           }}
@@ -100,6 +108,7 @@ const SmallInfoCard = ({
                 </span>
               }
             </h3>
+            <h3 className="mt-1 flex items-center">Chapters:&nbsp;{count}</h3>
             <h3 className="mt-1 flex items-center">
               Views:&nbsp;{views}&nbsp;
               <VisibilityIcon color="error" />
@@ -141,21 +150,33 @@ const SmallInfoCard = ({
               color="primary"
               className="mr-1 text-medium w-1/2"
               radius="sm"
-              as="a"
-              href={chOne}
-              isDisabled={chOne === "disabled"}
+              isDisabled={!first}
             >
-              Read First
+              {first ? (
+                <ChapterLink
+                  href={`/book/${bookUrl}/${first.url}?num=${first.number}`}
+                >
+                  Read First
+                </ChapterLink>
+              ) : (
+                "Read First"
+              )}
             </Button>
             <Button
               color="danger"
               className="text-medium w-1/2"
               radius="sm"
-              as="a"
-              href={chOne}
-              isDisabled={chOne === "disabled"}
+              isDisabled={!last}
             >
-              Read Last
+              {last ? (
+                <ChapterLink
+                  href={`/book/${bookUrl}/${last.url}?num=${last.number}`}
+                >
+                  Read Last
+                </ChapterLink>
+              ) : (
+                "Read Last"
+              )}
             </Button>
           </div>
         </div>

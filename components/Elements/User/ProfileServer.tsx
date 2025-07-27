@@ -16,12 +16,12 @@ const ProfileServer = async () => {
     firstName: session.firstName!,
     lastName: session.lastName!,
     userName: session.userName!,
-    age: session!.age,
+    age: session.age,
     email: session.email!,
     gender: setGender(session.gender!),
     bio: session.bio!,
     userId: session.userId!,
-    id: session.xata_id,
+    id: session.id,
   };
   return (
     <div className="flex flex-col justify-center items-center mx-4">

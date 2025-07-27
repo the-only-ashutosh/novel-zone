@@ -8,7 +8,8 @@
 }
 
 html {
-  overscroll-behavior: none;
+  overscroll-behavior-y: none;
+  overscroll-behavior-x: auto;
   scrollbar-color: transparent transparent;
   scrollbar-width: none;
 }

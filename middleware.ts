@@ -1,11 +1,22 @@
 import { NextResponse, userAgent } from "next/server";
 import { auth } from "./auth";
 import { cookies } from "next/headers";
-import { getCookie, setCookie } from "cookies-next/server";
+import { setCookie } from "cookies-next/server";
 import { upsertUser } from "./service/useraction";
 
 export default auth(async (req) => {
   const url = req.nextUrl;
+  const { device, ua } = userAgent(req);
+  if (
+    ua.includes("Edg/114.0.1823.43") ||
+    ua.includes("GPTBot") ||
+    ua.includes("meta-externalagent") ||
+    ua.includes("semrush") ||
+    ua.includes("Chrome/101.0.4951.67")
+  ) {
+    return NextResponse.json({ message: "Host is down" }, { status: 403 });
+  }
+
   if (req.auth) {
     await upsertUser(req.auth.user!);
   }
@@ -23,12 +34,8 @@ export default auth(async (req) => {
     const newUrl = new URL("/auth/signin", req.nextUrl.origin);
     return NextResponse.redirect(newUrl);
   }
-  const { device } = userAgent(req);
   const newHeaders = new Headers(req.headers);
-  newHeaders.append(
-    "Access-Control-Allow-Origin",
-    "https://pagead2.googlesyndication.com"
-  );
+  newHeaders.append("Access-Control-Allow-Origin", "*");
   newHeaders.append("Access-Control-Allow-Origin", "https://mc.yandex.ru");
   newHeaders.append("Access-Control-Allow-Origin", "https://yandex.ru");
   newHeaders.append("Access-Control-Allow-Origin", "https://an.yandex.ru");
@@ -42,16 +49,6 @@ export default auth(async (req) => {
   const viewport = device.type === "mobile" ? "mobile" : "desktop";
   newHeaders.append("viewport", viewport);
   url.searchParams.set("viewport", viewport);
-  if (
-    url.pathname.startsWith("/book/") &&
-    url.pathname.split("/").length === 4
-  ) {
-    // console.log(url.pathname,await getCookie("number", { cookies }));
-    url.searchParams.set(
-      "number",
-      String((await getCookie("number", { cookies }))!)
-    );
-  }
   return NextResponse.rewrite(url, { request: { headers: newHeaders } });
 });
 

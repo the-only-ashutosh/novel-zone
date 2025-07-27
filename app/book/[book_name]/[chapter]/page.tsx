@@ -1,18 +1,24 @@
 import ChapterContent from "@/components/Elements/Chapter/ChapterContent";
-import { addChapterView, fetchChapter } from "@/service/dataoperation";
-import Link from "next/link";
 import type { Metadata } from "next";
-import React from "react";
+import React, { cache } from "react";
 import { getCookie } from "cookies-next/server";
 import { cookies } from "next/headers";
 import { correctString } from "@/service/functions";
 import { notFound } from "next/navigation";
-import Script from "next/script";
 import { Typography } from "@mui/material";
 import SelectChapterList from "@/components/Elements/Chapter/SelectChapterList";
+import { fetchChapter } from "@/service/dataoperation";
+import { ProgressBarLink } from "@/components/Shared/Progressbar/progress-bar";
+import CosmicChroniclesCard from "@/components/UI/cosmic-chronicles";
+import AddView from "@/utils/addView";
 
 type SearchParams = Promise<{ [key: string]: string }>;
 
+const getChapterData = cache(
+  async (book: string, chapter: string, num?: number) => {
+    return fetchChapter(book, chapter, num);
+  }
+);
 const ChapterPage = async ({
   params,
   searchParams,
@@ -20,93 +26,70 @@ const ChapterPage = async ({
   params: Promise<{ chapter: string; book_name: string }>;
   searchParams: SearchParams;
 }) => {
-  const { chapter, book_name } = await params;
-  const c = fetchChapter(
-    decodeURIComponent(book_name),
-    decodeURIComponent(chapter)
+  const [{ chapter, book_name }, { viewport, num }] = await Promise.all([
+    params,
+    searchParams,
+  ]);
+  let bn = decodeURIComponent(book_name);
+  if (bn.endsWith("-novel")) {
+    bn = bn.substring(0, bn.length - 6);
+  }
+  const number = Number(num);
+  const c = getChapterData(
+    bn,
+    decodeURIComponent(chapter),
+    isNaN(number) ? undefined : number
   );
-  const v = searchParams;
+
   const fst = getCookie("fontStyle", { cookies });
   const fs = getCookie("fontSize", { cookies });
-  const [chapterData, { viewport }, fontStyle, fontSize] = await Promise.all([
-    c,
-    v,
-    fst,
-    fs,
-    addChapterView(decodeURIComponent(chapter), decodeURIComponent(book_name)),
-  ]);
-  const content =
-    chapterData && chapterData !== "Invalid Chapter"
-      ? correctString(chapterData.content).split("[hereisbreak]")
-      : [""];
-
+  const [chapterData, fontStyle, fontSize] = await Promise.all([c, fst, fs]);
+  if (chapterData === "Invalid Chapter") return notFound();
+  if (!chapterData) return notFound();
+  const content = correctString(chapterData.content).split("[hereisbreak]");
+  const { prevChapter, nextChapter } = chapterData;
   return (
     <div className="flex justify-center flex-col items-center px-[5%] sm:px-[2%] md:px-[3.5%] py-[2%] dark:bg-[#121212]">
-      {chapterData && chapterData !== "Invalid Chapter" ? (
-        <>
-          {chapterData.nextChapter && (
-            <link
-              rel="prefetch"
-              href={`/book/${book_name}/${chapterData.nextChapter}`}
-            />
-          )}
-          {chapterData.prevChapter && (
-            <link
-              rel="prefetch"
-              href={`/book/${book_name}/${chapterData.prevChapter}`}
-            />
-          )}
-          <div className="flex flex-col justify-center items-center mb-6">
-            <Link href={`/book/${chapterData.book.bookUrl}`}>
-              <h1 className="font-bold text-2xl px-6 pt-6 pb-2">
-                {chapterData.book.title}
-              </h1>
-            </Link>
-            <Typography variant="subtitle1" className="text-gray-700">
-              {chapterData.addAt.toDateString()}
-            </Typography>
-          </div>
-          <SelectChapterList
-            book_name={book_name}
-            current={Number(chapterData.number)}
-            device={viewport}
-            nextUrl={chapterData.nextChapter!}
-            prevUrl={chapterData.prevChapter!}
-          />
-          <ChapterContent
-            content={content}
-            title={chapterData.title}
-            fStyle={fontStyle !== undefined ? String(fontStyle) : "Rubik"}
-            fSize={fontSize !== undefined ? String(fontSize) : "18"}
-          />
-          <SelectChapterList
-            book_name={book_name}
-            current={Number(chapterData.number)}
-            device={viewport}
-            nextUrl={chapterData.nextChapter!}
-            prevUrl={chapterData.prevChapter!}
-          />
-          {viewport === "desktop" && (
-            <div className="border-1 border-dotted py-1 px-[6px] rounded-md mt-4 border-primary dark:border-white">
-              Note: To change chapters use Z and N or ← and →
-            </div>
-          )}
-          <Script
-            async
-            src="https://www.googletagmanager.com/gtag/js?id=G-TESRE0F8SW"
-          />
-          <Script id="tag-manager">{`window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-TESRE0F8SW');`}</Script>
-          <Script
-            async
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1624293945329553"
-            crossOrigin="anonymous"
-          />
-        </>
-      ) : (
-        notFound()
+      <div className="flex flex-col justify-center items-center mb-6">
+        <ProgressBarLink href={`/book/${chapterData.book.bookUrl}`}>
+          <h1 className="font-bold text-2xl px-6 pt-6 pb-2 sm:text-xl text-center">
+            {chapterData.book.title}
+          </h1>
+        </ProgressBarLink>
+        <CosmicChroniclesCard />
+        <AddView />
+        <Typography variant="subtitle1" className="text-gray-700">
+          {`${new Date(chapterData.addAt).toDateString()}`}
+        </Typography>
+      </div>
+      <SelectChapterList
+        book_name={book_name}
+        current={Number(chapterData.number)}
+        device={viewport}
+        next={nextChapter}
+        prev={prevChapter}
+      />
+      <ChapterContent
+        content={content}
+        title={chapterData.title}
+        fStyle={
+          fontStyle !== undefined
+            ? String(fontStyle).replaceAll(" ", "")
+            : "Rubik"
+        }
+        fSize={fontSize !== undefined ? String(fontSize) : "18"}
+      />
+      <SelectChapterList
+        book_name={book_name}
+        current={Number(chapterData.number)}
+        device={viewport}
+        next={nextChapter}
+        prev={prevChapter}
+      />
+      {viewport === "desktop" && (
+        <div className="border-1 border-dotted py-1 px-[6px] rounded-md mt-4 border-primary dark:border-white">
+          Note: To change chapter use Z and N or ← and →
+        </div>
       )}
     </div>
   );
@@ -116,16 +99,30 @@ export default ChapterPage;
 
 export async function generateMetadata({
   params,
+  searchParams,
 }: {
   params: Promise<{ chapter: string; book_name: string }>;
+  searchParams: SearchParams;
 }): Promise<Metadata> {
-  const { chapter, book_name } = await params;
-  const chapterData = await fetchChapter(book_name, decodeURI(chapter));
+  const [{ chapter, book_name }, { num }] = await Promise.all([
+    params,
+    searchParams,
+  ]);
+  let bn = decodeURIComponent(book_name);
+  if (bn.endsWith("-novel")) {
+    bn = bn.substring(0, bn.length - 6);
+  }
+  const number = Number(num);
+  const chapterData = await getChapterData(
+    bn,
+    decodeURIComponent(chapter),
+    isNaN(number) ? undefined : number
+  );
 
   if (chapterData && chapterData !== "Invalid Chapter") {
     return {
-      title: `${chapterData.title.trim().substring(0, 50)}`,
-      applicationName: chapterData.title.trim().substring(0, 69),
+      title: `Chapter ${chapterData.number}`,
+      applicationName: "Novel Zone",
       referrer: "origin-when-cross-origin",
       description: chapterData.content
         .replaceAll("[hereisbreak]", " ")

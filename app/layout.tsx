@@ -4,11 +4,11 @@ import { Providers } from "./providers";
 import "./globals.css";
 import Appbar from "@/components/Shared/Appbar/Appbar";
 import Footer from "./Footer";
-import "@/service/fonts";
 import { auth } from "@/auth";
 import dynamic from "next/dynamic";
 import { ProgressBar } from "@/components/Shared/Progressbar/progress-bar";
 import Script from "next/script";
+import BackToTop from "@/components/Shared/BackToTop";
 const MyAvatar = dynamic(
   () => import("@/components/Shared/Appbar/Avatar/MyAvatar"),
   { ssr: true }
@@ -42,21 +42,41 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1624293945329553"
-          crossOrigin="anonymous"
-          strategy="lazyOnload"
-        />
-        <Script id="">{`window.yaContextCb=window.yaContextCb||[]`}</Script>
+        <Script id="YanAd">{`window.yaContextCb=window.yaContextCb||[]`}</Script>
         <Script
           src="https://yandex.ru/ads/system/context.js"
           async
           crossOrigin="anonymous"
           strategy="lazyOnload"
         />
+        <Script strategy="afterInteractive" id="YadTag" type="text/javascript">
+          {`(function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=103493404', 'ym');
+
+    ym(103493404, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true});`}
+        </Script>
       </head>
-      <body className={`antialiased`}>
+      <body className={`antialiased relative`}>
+        <div
+          style={{
+            backgroundImage: `url(${process.env.HOST}/bg.webp)`,
+            backgroundPosition: "center",
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            opacity: 0.3,
+            zIndex: -100,
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            width: "100vw",
+            height: "100vh",
+          }}
+        />
         <Providers>
           <ProgressBar className="fixed top-0 h-1 bg-primary z-50 rounded-r-lg">
             <Appbar
@@ -78,6 +98,7 @@ export default function RootLayout({
             <Footer />
           </ProgressBar>
         </Providers>
+        <BackToTop />
       </body>
     </html>
   );

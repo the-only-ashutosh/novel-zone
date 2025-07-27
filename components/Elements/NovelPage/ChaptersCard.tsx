@@ -1,7 +1,7 @@
 "use client";
-import React, { ReactElement } from "react";
+import React, { ReactElement, useState, useRef } from "react";
 import { Tabs, Tab, Pagination, ScrollShadow } from "@heroui/react";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import { usePathname } from "next/navigation";
 import ChapterSkele from "./ChapterSkele";
 import Comments from "./Comments";
@@ -52,45 +52,44 @@ const ChaptersCard = ({
   );
   const [page, setPage] = React.useState(1);
   const pathname = usePathname();
+  const [section, setSection] = useState("description");
+  const isMounted = useRef(false);
 
   React.useEffect(() => {
-    async function fetchData() {
-      const axios = (await import("axios")).default;
-      await axios
-        .post(`/api/data/getChapters`, { page: 1, book: book })
-        .then((response) => {
-          setChaptersList(response.data);
-        });
+    if (isMounted.current) {
+      async function fetchChapter() {
+        const axios = (await import("axios")).default;
+        await axios
+          .post(`/api/data/getChapters`, { page, book })
+          .then((response) => {
+            setChaptersList(response.data);
+          });
+      }
+      fetchChapter();
+    } else {
+      isMounted.current = true;
     }
-    fetchData();
-  }, [book]);
-
-  React.useEffect(() => {
-    async function fetchChapter() {
-      const axios = (await import("axios")).default;
-      await axios
-        .post(`/api/data/getChapters`, { page, book })
-        .then((response) => {
-          setChaptersList(response.data);
-        });
-    }
-    fetchChapter();
-  }, [page, book]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]);
   return (
     <div className="mx-[5%] flex justify-center flex-col items-center mt-4 w-[90vw]">
       <Tabs
         variant="light"
         aria-label="book-tabs"
-        classNames={{ panel: "w-full" }}
+        classNames={{ panel: "w-full", base: "w-full", tabList: "w-full" }}
         color="primary"
+        selectedKey={section}
+        onSelectionChange={(k) => {
+          setSection(k.toString());
+        }}
       >
-        <Tab key={"description"} title={"Description"}>
+        <Tab key={"description"} title={"Description"} className="w-full">
           {descCard}
         </Tab>
         <Tab
           key={"chapters"}
           title={"Chapters"}
-          className="flex justify-center flex-col items-center"
+          className="flex justify-center flex-col items-center w-full"
         >
           {Math.ceil(chapters / 100) > 0 && (
             <Pagination

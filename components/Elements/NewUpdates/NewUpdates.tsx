@@ -1,8 +1,11 @@
 import { getTimeDiff } from "@/service/functions";
 import Image from "next/image";
-import Link from "next/link";
 import React from "react";
 import { Card, CardBody } from "@heroui/react";
+import {
+  ChapterLink,
+  ProgressBarLink,
+} from "@/components/Shared/Progressbar/progress-bar";
 
 const NewUpdatesItem = ({
   url,
@@ -34,32 +37,30 @@ const NewUpdatesItem = ({
         />
         <div className="flex flex-row justify-between w-full m-2">
           <div className="w-[65%] flex flex-col justify-around">
-            <Link
+            <ProgressBarLink
               href={`/book/${bookUrl}`}
               className="hover:dark:text-primary hover:text-primary dark:text-white"
             >
               <h2 className="font-semibold text-medium line-clamp-1 sm:line-clamp-2 md:line-clamp-2 lg:text-lg xl:text-xl">
                 {title}
               </h2>
-            </Link>
+            </ProgressBarLink>
             <div className="mt-auto flex flex-col">
               <p className="sm:text-small line-clamp-1">{author}</p>
               <p className="sm:text-small mt-1">
                 Updated:&nbsp;
-                {getTimeDiff(
-                  new Date(new Date(time).getTime() - 330 * 60 * 1000)
-                )}
+                {getTimeDiff(time)}
                 &nbsp;ago
               </p>
             </div>
           </div>
           <div className="w-[25%]">
-            <Link
+            <ChapterLink
               href={chapUrl}
               className="line-clamp-4 hover:dark:text-primary hover:text-primary dark:text-white"
             >
               {chapTitle}
-            </Link>
+            </ChapterLink>
           </div>
         </div>
       </CardBody>

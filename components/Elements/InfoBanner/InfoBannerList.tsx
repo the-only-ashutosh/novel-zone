@@ -25,6 +25,7 @@ export type newBooksData = {
   title: string;
   last: RecentsChapter;
   secondLast: RecentsChapter;
+  updatedAt: Date;
 };
 
 const NewInfoBannerList = async ({ data }: { data: Array<newBooksData> }) => {
@@ -39,6 +40,7 @@ const NewInfoBannerList = async ({ data }: { data: Array<newBooksData> }) => {
             img={book.imageUrl}
             last={book.last}
             secondLast={book.secondLast}
+            updated={book.updatedAt}
           />
         );
       })}
